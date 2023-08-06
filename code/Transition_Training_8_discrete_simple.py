@@ -209,7 +209,7 @@ class TiltrotorTransitionTraining(gym.Env):
     
     
     #################### step ####################
-    def step(self, action, timestep):
+    def step(self, action):
         
         # action_in = int(action)
         # action_in = int(27)
@@ -266,13 +266,13 @@ class TiltrotorTransitionTraining(gym.Env):
         # inc_weight는 천천히 증가하다 max_t_threshold 이후에는 1 값을 가짐
         max_t_threshold = 15000
         # time step에 따라 감소하도록 하는 가중치
-        if timestep < max_t_threshold:
-            dec_weight = np.exp(-15 * timestep / max_t_threshold)
+        if self.state[6] < max_t_threshold:
+            dec_weight = np.exp(-15 * self.state[6] / max_t_threshold)
         else:
             dec_weight = 0
         # time step에 따라 증가하도록 하는 가중치
-        if timestep < max_t_threshold:
-            inc_weight = 1 - np.exp(-15 * timestep / max_t_threshold)
+        if self.state[6] < max_t_threshold:
+            inc_weight = 1 - np.exp(-15 * self.state[6] / max_t_threshold)
         else:
             inc_weight = 1
 
@@ -302,18 +302,16 @@ class TiltrotorTransitionTraining(gym.Env):
             done = True
              
         observation = np.hstack((self.state[0],self.state[1],self.state[2],self.state[3],self.state[4],self.state[5],self.state[6], self.f_rpm, self.r_rpm, self.elev, self.tilt))
-        
+        reward_detail = [reward_1, reward_2, reward_3, reward_4, reward_5, reward_6]
         info = {
             'Time': self.state[6],
             'x_pos': self.state[0],
             'z_pos': self.state[1],
             'pitch': self.state[2],
            # 'Tilt': self.action[2]
+            'reward_detail': reward_detail
         }
-        
-        reward_detail = [reward_1, reward_2, reward_3, reward_4, reward_5, reward_6]
-
-        return observation, reward, done, info, reward_detail
+        return observation, reward, done, info
     
     # Flight Dynamics Equations
     def fqdot(self, q):

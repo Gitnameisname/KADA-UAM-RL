@@ -1,0 +1,4 @@
+*.zip
+*.mp4
+__pycache__/
+results/*.txt
