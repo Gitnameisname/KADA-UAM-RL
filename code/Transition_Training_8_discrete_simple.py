@@ -177,8 +177,8 @@ class TiltrotorTransitionTraining(gym.Env):
         self.viewer = None
         self.current_score = 0
         
-        print(self.f_rpm)
-        print(self.r_rpm)
+        # print(self.f_rpm)
+        # print(self.r_rpm)
         
         SCREEN_COLOR = (255, 255, 255)
         if self.viewer == None:
@@ -310,7 +310,10 @@ class TiltrotorTransitionTraining(gym.Env):
             'pitch': self.state[2],
            # 'Tilt': self.action[2]
         }
-        return observation, reward, done, info
+        
+        reward_detail = [reward_1, reward_2, reward_3, reward_4, reward_5, reward_6]
+
+        return observation, reward, done, info, reward_detail
     
     # Flight Dynamics Equations
     def fqdot(self, q):
