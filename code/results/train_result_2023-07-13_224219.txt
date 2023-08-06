@@ -1,0 +1,3968 @@
+episode: 0
+episode was finished at timestep: 25
+reward: 32.00006947834776
+========================================
+episode: 1
+episode was finished at timestep: 43
+reward: 41.794727454250065
+========================================
+episode: 2
+episode was finished at timestep: 71
+reward: 61.50009573388234
+========================================
+episode: 3
+episode was finished at timestep: 80
+reward: 56.00011388986503
+========================================
+episode: 4
+episode was finished at timestep: 17
+reward: 79.5000796793076
+========================================
+episode: 5
+episode was finished at timestep: 109
+reward: 171.8791928347848
+========================================
+episode: 6
+episode was finished at timestep: 73
+reward: 87.50001241642421
+========================================
+episode: 7
+episode was finished at timestep: 88
+reward: 85.50014316631174
+========================================
+episode: 8
+episode was finished at timestep: 34
+reward: 91.00001633336139
+========================================
+episode: 9
+episode was finished at timestep: 105
+reward: 81.50000651347416
+========================================
+episode: 10
+episode was finished at timestep: 55
+reward: 77.50003368868528
+========================================
+episode: 11
+episode was finished at timestep: 3
+reward: 79.50001734755966
+========================================
+episode: 12
+episode was finished at timestep: 52
+reward: 102.00015015292799
+========================================
+episode: 13
+episode was finished at timestep: 121
+reward: 87.00001207610742
+========================================
+episode: 14
+episode was finished at timestep: 52
+reward: 99.0000851844335
+========================================
+episode: 15
+episode was finished at timestep: 79
+reward: 72.50001654342717
+========================================
+episode: 16
+episode was finished at timestep: 29
+reward: 92.50007420229589
+========================================
+episode: 17
+episode was finished at timestep: 24
+reward: 87.00000629205066
+========================================
+episode: 18
+episode was finished at timestep: 2
+reward: 42.50000286021022
+========================================
+episode: 19
+episode was finished at timestep: 74
+reward: 106.50010509355948
+========================================
+episode: 20
+episode was finished at timestep: 82
+reward: 98.50006848303187
+========================================
+episode: 21
+episode was finished at timestep: 35
+reward: 90.00000311980386
+========================================
+episode: 22
+episode was finished at timestep: 101
+reward: 104.50004773881437
+========================================
+episode: 23
+episode was finished at timestep: 133
+reward: 92.50014628713438
+========================================
+episode: 24
+episode was finished at timestep: 180
+reward: 113.52520333546371
+========================================
+episode: 25
+episode was finished at timestep: 173
+reward: 117.22761838448196
+========================================
+episode: 26
+episode was finished at timestep: 19
+reward: 117.95983059029192
+========================================
+episode: 27
+episode was finished at timestep: 94
+reward: 114.00003958308187
+========================================
+episode: 28
+episode was finished at timestep: 151
+reward: 99.0000018100293
+========================================
+episode: 29
+episode was finished at timestep: 164
+reward: 98.00009177188487
+========================================
+episode: 30
+episode was finished at timestep: 75
+reward: 103.00003849836585
+========================================
+episode: 31
+episode was finished at timestep: 74
+reward: 100.00014675149482
+========================================
+episode: 32
+episode was finished at timestep: 265
+reward: 170.50000080885403
+========================================
+episode: 33
+episode was finished at timestep: 164
+reward: 102.00015190373658
+========================================
+episode: 34
+episode was finished at timestep: 13
+reward: 42.00005455578052
+========================================
+episode: 35
+episode was finished at timestep: 222
+reward: 240.42433853921466
+========================================
+episode: 36
+episode was finished at timestep: 25
+reward: 454.56626934461076
+========================================
+episode: 37
+episode was finished at timestep: 237
+reward: 165.00011184763468
+========================================
+episode: 38
+episode was finished at timestep: 346
+reward: 217.77434818354945
+========================================
+episode: 39
+episode was finished at timestep: 330
+reward: 245.50009627888312
+========================================
+episode: 40
+episode was finished at timestep: 295
+reward: 553.3053167647086
+========================================
+episode: 41
+episode was finished at timestep: 67
+reward: 544.2702289427443
+========================================
+episode: 42
+episode was finished at timestep: 36
+reward: 241.60556664865177
+========================================
+episode: 43
+episode was finished at timestep: 260
+reward: 226.5016054464613
+========================================
+episode: 44
+episode was finished at timestep: 21
+reward: 229.10462119897628
+========================================
+episode: 45
+episode was finished at timestep: 333
+reward: 220.2199202642467
+========================================
+episode: 46
+episode was finished at timestep: 69
+reward: 233.32744112006873
+========================================
+episode: 47
+episode was finished at timestep: 87
+reward: 238.0000713716783
+========================================
+episode: 48
+episode was finished at timestep: 168
+reward: 207.0000161509678
+========================================
+episode: 49
+episode was finished at timestep: 179
+reward: 233.50001076346288
+========================================
+episode: 50
+episode was finished at timestep: 24
+reward: 427.5385338776141
+========================================
+episode: 51
+episode was finished at timestep: 450
+reward: 236.00006721677477
+========================================
+episode: 52
+episode was finished at timestep: 298
+reward: 302.64288544501744
+========================================
+episode: 53
+episode was finished at timestep: 33
+reward: 261.0364609543437
+========================================
+episode: 54
+episode was finished at timestep: 233
+reward: 274.2503508806531
+========================================
+episode: 55
+episode was finished at timestep: 85
+reward: 242.90952195622222
+========================================
+episode: 56
+episode was finished at timestep: 185
+reward: 262.5001407005467
+========================================
+episode: 57
+episode was finished at timestep: 544
+reward: 316.3702265457789
+========================================
+episode: 58
+episode was finished at timestep: 179
+reward: 293.50001159762485
+========================================
+episode: 59
+episode was finished at timestep: 35
+reward: 245.50011993031495
+========================================
+episode: 60
+episode was finished at timestep: 19
+reward: 291.2174156632336
+========================================
+episode: 61
+episode was finished at timestep: 246
+reward: 330.7782871866723
+========================================
+episode: 62
+episode was finished at timestep: 404
+reward: 231.5000669698388
+========================================
+episode: 63
+episode was finished at timestep: 411
+reward: 239.5000078035672
+========================================
+episode: 64
+episode was finished at timestep: 330
+reward: 240.50005389588685
+========================================
+episode: 65
+episode was finished at timestep: 55
+reward: 299.50012305426657
+========================================
+episode: 66
+episode was finished at timestep: 247
+reward: 348.0495511051181
+========================================
+episode: 67
+episode was finished at timestep: 450
+reward: 240.50001207093968
+========================================
+episode: 68
+episode was finished at timestep: 396
+reward: 320.54269688645377
+========================================
+episode: 69
+episode was finished at timestep: 333
+reward: 260.5000380392336
+========================================
+episode: 70
+episode was finished at timestep: 246
+reward: 168.50002560493613
+========================================
+episode: 71
+episode was finished at timestep: 252
+reward: 257.00009868842164
+========================================
+episode: 72
+episode was finished at timestep: 498
+reward: 319.00007528976056
+========================================
+episode: 73
+episode was finished at timestep: 174
+reward: 225.00000452645153
+========================================
+episode: 74
+episode was finished at timestep: 59
+reward: 347.535266943633
+========================================
+episode: 75
+episode was finished at timestep: 230
+reward: 167.50013128112977
+========================================
+episode: 76
+episode was finished at timestep: 364
+reward: 291.50146603299777
+========================================
+episode: 77
+episode was finished at timestep: 218
+reward: 260.52775458005357
+========================================
+episode: 78
+episode was finished at timestep: 462
+reward: 280.50001496317685
+========================================
+episode: 79
+episode was finished at timestep: 128
+reward: 328.5000509119329
+========================================
+episode: 80
+episode was finished at timestep: 260
+reward: 158.50004928583914
+========================================
+episode: 81
+episode was finished at timestep: 82
+reward: 285.36745282992774
+========================================
+episode: 82
+episode was finished at timestep: 350
+reward: 466.61264196052934
+========================================
+episode: 83
+episode was finished at timestep: 6
+reward: 222.6356793210798
+========================================
+episode: 84
+episode was finished at timestep: 136
+reward: 203.50014614815987
+========================================
+episode: 85
+episode was finished at timestep: 373
+reward: 350.6725735217718
+========================================
+episode: 86
+episode was finished at timestep: 304
+reward: 234.00005784429703
+========================================
+episode: 87
+episode was finished at timestep: 270
+reward: 197.50012710621147
+========================================
+episode: 88
+episode was finished at timestep: 219
+reward: 420.4483022321326
+========================================
+episode: 89
+episode was finished at timestep: 271
+reward: 207.66922619244974
+========================================
+episode: 90
+episode was finished at timestep: 206
+reward: 233.62617465937277
+========================================
+episode: 91
+episode was finished at timestep: 136
+reward: 286.8005606882141
+========================================
+episode: 92
+episode was finished at timestep: 167
+reward: 237.0108681500396
+========================================
+episode: 93
+episode was finished at timestep: 282
+reward: 241.50007455918472
+========================================
+episode: 94
+episode was finished at timestep: 413
+reward: 331.83156504858766
+========================================
+episode: 95
+episode was finished at timestep: 497
+reward: 283.0016483061949
+========================================
+episode: 96
+episode was finished at timestep: 52
+reward: 272.5011115170182
+========================================
+episode: 97
+episode was finished at timestep: 166
+reward: 245.10619270710802
+========================================
+episode: 98
+episode was finished at timestep: 230
+reward: 185.50008814091717
+========================================
+episode: 99
+episode was finished at timestep: 569
+reward: 566.1088261326621
+========================================
+episode: 100
+episode was finished at timestep: 310
+reward: 272.03596832743034
+========================================
+episode: 101
+episode was finished at timestep: 770
+reward: 427.76075612785917
+========================================
+episode: 102
+episode was finished at timestep: 884
+reward: 457.97708361689246
+========================================
+episode: 103
+episode was finished at timestep: 97
+reward: 214.00006759555933
+========================================
+episode: 104
+episode was finished at timestep: 115
+reward: 292.00010068005764
+========================================
+episode: 105
+episode was finished at timestep: 196
+reward: 251.06238458032368
+========================================
+episode: 106
+episode was finished at timestep: 183
+reward: 261.5000760761287
+========================================
+episode: 107
+episode was finished at timestep: 540
+reward: 288.00000429378554
+========================================
+episode: 108
+episode was finished at timestep: 9
+reward: 276.0000166419936
+========================================
+episode: 109
+episode was finished at timestep: 62
+reward: 256.00000005368724
+========================================
+episode: 110
+episode was finished at timestep: 515
+reward: 299.00006633182045
+========================================
+episode: 111
+episode was finished at timestep: 353
+reward: 258.00003160378805
+========================================
+episode: 112
+episode was finished at timestep: 261
+reward: 266.5000398353343
+========================================
+episode: 113
+episode was finished at timestep: 72
+reward: 236.50013687524387
+========================================
+episode: 114
+episode was finished at timestep: 169
+reward: 231.00000339793053
+========================================
+episode: 115
+episode was finished at timestep: 128
+reward: 288.00006344201665
+========================================
+episode: 116
+episode was finished at timestep: 256
+reward: 278.500002505235
+========================================
+episode: 117
+episode was finished at timestep: 34
+reward: 632.1027349103427
+========================================
+episode: 118
+episode was finished at timestep: 550
+reward: 310.21539792109496
+========================================
+episode: 119
+episode was finished at timestep: 2
+reward: 170.50000071194984
+========================================
+episode: 120
+episode was finished at timestep: 38
+reward: 291.2074128175485
+========================================
+episode: 121
+episode was finished at timestep: 222
+reward: 210.50004269660292
+========================================
+episode: 122
+episode was finished at timestep: 10
+reward: 146.50010125237017
+========================================
+episode: 123
+episode was finished at timestep: 177
+reward: 173.44011780583486
+========================================
+episode: 124
+episode was finished at timestep: 161
+reward: 158.418215550369
+========================================
+episode: 125
+episode was finished at timestep: 205
+reward: 121.00011268066845
+========================================
+episode: 126
+episode was finished at timestep: 13
+reward: 323.0000000038607
+========================================
+episode: 127
+episode was finished at timestep: 431
+reward: 327.0000635699799
+========================================
+episode: 128
+episode was finished at timestep: 207
+reward: 334.5000021901735
+========================================
+episode: 129
+episode was finished at timestep: 432
+reward: 359.5001085221528
+========================================
+episode: 130
+episode was finished at timestep: 488
+reward: 348.5000000737417
+========================================
+episode: 131
+episode was finished at timestep: 493
+reward: 364.00006965807955
+========================================
+episode: 132
+episode was finished at timestep: 461
+reward: 363.50013992326666
+========================================
+episode: 133
+episode was finished at timestep: 209
+reward: 360.50009556868406
+========================================
+episode: 134
+episode was finished at timestep: 169
+reward: 389.0000000004566
+========================================
+episode: 135
+episode was finished at timestep: 390
+reward: 382.50000055586924
+========================================
+episode: 136
+episode was finished at timestep: 493
+reward: 410.00001788085723
+========================================
+episode: 137
+episode was finished at timestep: 134
+reward: 395.5001141237465
+========================================
+episode: 138
+episode was finished at timestep: 13
+reward: 418.5000088072746
+========================================
+episode: 139
+episode was finished at timestep: 334
+reward: 427.50000010940784
+========================================
+episode: 140
+episode was finished at timestep: 669
+reward: 406.0001120911247
+========================================
+episode: 141
+episode was finished at timestep: 224
+reward: 405.5000000059214
+========================================
+episode: 142
+episode was finished at timestep: 13
+reward: 386.500093372238
+========================================
+episode: 143
+episode was finished at timestep: 335
+reward: 499.5001194936651
+========================================
+episode: 144
+episode was finished at timestep: 223
+reward: 406.58632485007115
+========================================
+episode: 145
+episode was finished at timestep: 121
+reward: 412.500106675705
+========================================
+episode: 146
+episode was finished at timestep: 307
+reward: 454.00002554695874
+========================================
+episode: 147
+episode was finished at timestep: 554
+reward: 448.0000197825943
+========================================
+episode: 148
+episode was finished at timestep: 451
+reward: 422.00001572063707
+========================================
+episode: 149
+episode was finished at timestep: 332
+reward: 417.5000000011065
+========================================
+episode: 150
+episode was finished at timestep: 331
+reward: 446.0000014938527
+========================================
+episode: 151
+episode was finished at timestep: 760
+reward: 510.193901546509
+========================================
+episode: 152
+episode was finished at timestep: 220
+reward: 421.930123091622
+========================================
+episode: 153
+episode was finished at timestep: 703
+reward: 483.0000998795144
+========================================
+episode: 154
+episode was finished at timestep: 393
+reward: 343.3979175154459
+========================================
+episode: 155
+episode was finished at timestep: 38
+reward: 471.00013108927385
+========================================
+episode: 156
+episode was finished at timestep: 88
+reward: 790.193979284864
+========================================
+episode: 157
+episode was finished at timestep: 36
+reward: 462.1138831972713
+========================================
+episode: 158
+episode was finished at timestep: 815
+reward: 528.5000598739459
+========================================
+episode: 159
+episode was finished at timestep: 730
+reward: 476.50000058790727
+========================================
+episode: 160
+episode was finished at timestep: 201
+reward: 535.0000768530153
+========================================
+episode: 161
+episode was finished at timestep: 973
+reward: 726.0000000000517
+========================================
+episode: 162
+episode was finished at timestep: 284
+reward: 612.000006500677
+========================================
+episode: 163
+episode was finished at timestep: 147
+reward: 655.5000199553873
+========================================
+episode: 164
+episode was finished at timestep: 1097
+reward: 686.5000970313838
+========================================
+episode: 165
+episode was finished at timestep: 446
+reward: 465.5000084092365
+========================================
+episode: 166
+episode was finished at timestep: 321
+reward: 195.00000028113578
+========================================
+episode: 167
+episode was finished at timestep: 17
+reward: 436.00001829936036
+========================================
+episode: 168
+episode was finished at timestep: 190
+reward: 449.0000069403881
+========================================
+episode: 169
+episode was finished at timestep: 880
+reward: 455.00000000194325
+========================================
+episode: 170
+episode was finished at timestep: 805
+reward: 440.00003763078394
+========================================
+episode: 171
+episode was finished at timestep: 355
+reward: 463.000017944698
+========================================
+episode: 172
+episode was finished at timestep: 804
+reward: 631.0000046606
+========================================
+episode: 173
+episode was finished at timestep: 831
+reward: 716.0000086611429
+========================================
+episode: 174
+episode was finished at timestep: 210
+reward: 677.5001396708344
+========================================
+episode: 175
+episode was finished at timestep: 1178
+reward: 624.0001223870802
+========================================
+episode: 176
+episode was finished at timestep: 1328
+reward: 680.0000760287329
+========================================
+episode: 177
+episode was finished at timestep: 1020
+reward: 650.0001206668252
+========================================
+episode: 178
+episode was finished at timestep: 166
+reward: 690.0000910090027
+========================================
+episode: 179
+episode was finished at timestep: 343
+reward: 660.0000807807605
+========================================
+episode: 180
+episode was finished at timestep: 68
+reward: 720.5000041739497
+========================================
+episode: 181
+episode was finished at timestep: 1241
+reward: 694.0001055740763
+========================================
+episode: 182
+episode was finished at timestep: 1021
+reward: 771.5000866004167
+========================================
+episode: 183
+episode was finished at timestep: 777
+reward: 682.0001338637599
+========================================
+episode: 184
+episode was finished at timestep: 93
+reward: 666.5001280209135
+========================================
+episode: 185
+episode was finished at timestep: 870
+reward: 767.000046727656
+========================================
+episode: 186
+episode was finished at timestep: 617
+reward: 520.5000699902945
+========================================
+episode: 187
+episode was finished at timestep: 496
+reward: 665.0000463084765
+========================================
+episode: 188
+episode was finished at timestep: 17
+reward: 610.5001083113971
+========================================
+episode: 189
+episode was finished at timestep: 343
+reward: 570.0000529869554
+========================================
+episode: 190
+episode was finished at timestep: 734
+reward: 806.0000001090685
+========================================
+episode: 191
+episode was finished at timestep: 1277
+reward: 730.5000535497188
+========================================
+episode: 192
+episode was finished at timestep: 550
+reward: 809.500054365698
+========================================
+episode: 193
+episode was finished at timestep: 279
+reward: 443.50009554679417
+========================================
+episode: 194
+episode was finished at timestep: 438
+reward: 393.500034297614
+========================================
+episode: 195
+episode was finished at timestep: 177
+reward: 308.49469672226945
+========================================
+episode: 196
+episode was finished at timestep: 945
+reward: 517.5001223287577
+========================================
+episode: 197
+episode was finished at timestep: 924
+reward: 485.59899961616503
+========================================
+episode: 198
+episode was finished at timestep: 427
+reward: 808.3544356038441
+========================================
+episode: 199
+episode was finished at timestep: 14
+reward: 410.31248290461053
+========================================
+episode: 200
+episode was finished at timestep: 146
+reward: 194.50013698432863
+========================================
+episode: 201
+episode was finished at timestep: 2707
+reward: 1882.0000045663803
+========================================
+episode: 202
+episode was finished at timestep: 1273
+reward: 767.0000032021778
+========================================
+episode: 203
+episode was finished at timestep: 396
+reward: 29139.457056730058
+========================================
+episode: 204
+episode was finished at timestep: 6274
+reward: 3749.000021567377
+========================================
+episode: 205
+episode was finished at timestep: 854
+reward: 1066.5000063563368
+========================================
+episode: 206
+episode was finished at timestep: 1277
+reward: 824.0000168881761
+========================================
+episode: 207
+episode was finished at timestep: 1449
+reward: 755.5000101060956
+========================================
+episode: 208
+episode was finished at timestep: 396
+reward: 910.500033141865
+========================================
+episode: 209
+episode was finished at timestep: 76
+reward: 227.00003713756348
+========================================
+episode: 210
+episode was finished at timestep: 729
+reward: 1192.5001345692715
+========================================
+episode: 211
+episode was finished at timestep: 1227
+reward: 27626.325366519144
+========================================
+episode: 212
+episode was finished at timestep: 328
+reward: 29056.25866650245
+========================================
+episode: 213
+episode was finished at timestep: 1492
+reward: 1333.5001493350228
+========================================
+episode: 214
+episode was finished at timestep: 1386
+reward: 32989.981534585924
+========================================
+episode: 215
+episode was finished at timestep: 1021
+reward: 33910.080912940306
+========================================
+episode: 216
+episode was finished at timestep: 1126
+reward: 589.5000028911103
+========================================
+episode: 217
+episode was finished at timestep: 315
+reward: 367.500070325666
+========================================
+episode: 218
+episode was finished at timestep: 740
+reward: 506.500036121772
+========================================
+episode: 219
+episode was finished at timestep: 140
+reward: 99.16916926626828
+========================================
+episode: 220
+episode was finished at timestep: 126
+reward: 189.60777089805418
+========================================
+episode: 221
+episode was finished at timestep: 190
+reward: 129.5000191922179
+========================================
+episode: 222
+episode was finished at timestep: 197
+reward: 201.5000115579796
+========================================
+episode: 223
+episode was finished at timestep: 375
+reward: 388.8017076134651
+========================================
+episode: 224
+episode was finished at timestep: 28
+reward: 344.50582669487125
+========================================
+episode: 225
+episode was finished at timestep: 256
+reward: 299.50008715811384
+========================================
+episode: 226
+episode was finished at timestep: 445
+reward: 333.5000888752699
+========================================
+episode: 227
+episode was finished at timestep: 57
+reward: 318.50007753341805
+========================================
+episode: 228
+episode was finished at timestep: 152
+reward: 294.50004180569783
+========================================
+episode: 229
+episode was finished at timestep: 168
+reward: 129.50000340702582
+========================================
+episode: 230
+episode was finished at timestep: 12
+reward: 61.00014244492152
+========================================
+episode: 231
+episode was finished at timestep: 518
+reward: 40079.75221445402
+========================================
+episode: 232
+episode was finished at timestep: 111
+reward: 45745.58751402109
+========================================
+episode: 233
+episode was finished at timestep: 386
+reward: 220.50001858602647
+========================================
+episode: 234
+episode was finished at timestep: 15
+reward: 154.54179877202085
+========================================
+episode: 235
+episode was finished at timestep: 30
+reward: 130.91092001409467
+========================================
+episode: 236
+episode was finished at timestep: 44
+reward: 131.0000133939768
+========================================
+episode: 237
+episode was finished at timestep: 35
+reward: 89.00014236305424
+========================================
+episode: 238
+episode was finished at timestep: 42
+reward: 99.50003289912289
+========================================
+episode: 239
+episode was finished at timestep: 119
+reward: 122.5000279113284
+========================================
+episode: 240
+episode was finished at timestep: 115
+reward: 82.50006642858277
+========================================
+episode: 241
+episode was finished at timestep: 4
+reward: 107.0000077167321
+========================================
+episode: 242
+episode was finished at timestep: 178
+reward: 116.00000062752126
+========================================
+episode: 243
+episode was finished at timestep: 98
+reward: 133.3079939051974
+========================================
+episode: 244
+episode was finished at timestep: 108
+reward: 181.00000017667574
+========================================
+episode: 245
+episode was finished at timestep: 24
+reward: 53.50001632533558
+========================================
+episode: 246
+episode was finished at timestep: 132
+reward: 170.68773424661555
+========================================
+episode: 247
+episode was finished at timestep: 30
+reward: 136.0001094066723
+========================================
+episode: 248
+episode was finished at timestep: 258
+reward: 160.50005276459507
+========================================
+episode: 249
+episode was finished at timestep: 20
+reward: 155.50001967999924
+========================================
+episode: 250
+episode was finished at timestep: 177
+reward: 158.50001059159408
+========================================
+episode: 251
+episode was finished at timestep: 171
+reward: 137.5000062624528
+========================================
+episode: 252
+episode was finished at timestep: 173
+reward: 117.50013945003047
+========================================
+episode: 253
+episode was finished at timestep: 62
+reward: 162.50000266133972
+========================================
+episode: 254
+episode was finished at timestep: 483
+reward: 30070.00694938813
+========================================
+episode: 255
+episode was finished at timestep: 455
+reward: 40877.51022201732
+========================================
+episode: 256
+episode was finished at timestep: 230
+reward: 128.50008068326514
+========================================
+episode: 257
+episode was finished at timestep: 402
+reward: 42610.598965636935
+========================================
+episode: 258
+episode was finished at timestep: 289
+reward: 162.0000005671192
+========================================
+episode: 259
+episode was finished at timestep: 320
+reward: 182.50000014923117
+========================================
+episode: 260
+episode was finished at timestep: 6
+reward: 43.500000351667616
+========================================
+episode: 261
+episode was finished at timestep: 31
+reward: 75.00010593111973
+========================================
+episode: 262
+episode was finished at timestep: 30
+reward: 85.00000718422419
+========================================
+episode: 263
+episode was finished at timestep: 105
+reward: 64.00007409300903
+========================================
+episode: 264
+episode was finished at timestep: 222
+reward: 130.50008699942805
+========================================
+episode: 265
+episode was finished at timestep: 239
+reward: 130.00001492113012
+========================================
+episode: 266
+episode was finished at timestep: 219
+reward: 130.5001268345771
+========================================
+episode: 267
+episode was finished at timestep: 290
+reward: 166.00000742809274
+========================================
+episode: 268
+episode was finished at timestep: 8
+reward: 46.000069112579496
+========================================
+episode: 269
+episode was finished at timestep: 29
+reward: 132.00003505802684
+========================================
+episode: 270
+episode was finished at timestep: 92
+reward: 124.5000714041967
+========================================
+episode: 271
+episode was finished at timestep: 105
+reward: 128.00000602258706
+========================================
+episode: 272
+episode was finished at timestep: 252
+reward: 145.00007884160107
+========================================
+episode: 273
+episode was finished at timestep: 181
+reward: 137.50000922396595
+========================================
+episode: 274
+episode was finished at timestep: 23
+reward: 146.50002507690402
+========================================
+episode: 275
+episode was finished at timestep: 253
+reward: 146.50000881078705
+========================================
+episode: 276
+episode was finished at timestep: 80
+reward: 57.00012990444089
+========================================
+episode: 277
+episode was finished at timestep: 160
+reward: 97.50002117697939
+========================================
+episode: 278
+episode was finished at timestep: 112
+reward: 124.50001521485436
+========================================
+episode: 279
+episode was finished at timestep: 103
+reward: 184.7406777174977
+========================================
+episode: 280
+episode was finished at timestep: 14
+reward: 47.50010162271517
+========================================
+episode: 281
+episode was finished at timestep: 95
+reward: 149.5000006725729
+========================================
+episode: 282
+episode was finished at timestep: 7
+reward: 165.6316034208156
+========================================
+episode: 283
+episode was finished at timestep: 17
+reward: 48.50007696962535
+========================================
+episode: 284
+episode was finished at timestep: 100
+reward: 128.56383333887302
+========================================
+episode: 285
+episode was finished at timestep: 193
+reward: 129.0048526593854
+========================================
+episode: 286
+episode was finished at timestep: 184
+reward: 491.3599549065013
+========================================
+episode: 287
+episode was finished at timestep: 16
+reward: 49.50008361355538
+========================================
+episode: 288
+episode was finished at timestep: 20
+reward: 48.50005694054317
+========================================
+episode: 289
+episode was finished at timestep: 61
+reward: 58.50004741701414
+========================================
+episode: 290
+episode was finished at timestep: 23
+reward: 111.00000061525137
+========================================
+episode: 291
+episode was finished at timestep: 7
+reward: 57.0001163918359
+========================================
+episode: 292
+episode was finished at timestep: 64
+reward: 93.50000258974602
+========================================
+episode: 293
+episode was finished at timestep: 55
+reward: 95.00003163007942
+========================================
+episode: 294
+episode was finished at timestep: 126
+reward: 92.00001129530528
+========================================
+episode: 295
+episode was finished at timestep: 155
+reward: 190.0580132839144
+========================================
+episode: 296
+episode was finished at timestep: 4
+reward: 75.50000300389452
+========================================
+episode: 297
+episode was finished at timestep: 127
+reward: 129.10074195182185
+========================================
+episode: 298
+episode was finished at timestep: 0
+reward: 36.50005892328677
+========================================
+episode: 299
+episode was finished at timestep: 3
+reward: 38.50004416267433
+========================================
+episode: 300
+episode was finished at timestep: 66
+reward: 96.50003763505124
+========================================
+episode: 301
+episode was finished at timestep: 48
+reward: 355.6545709595147
+========================================
+episode: 302
+episode was finished at timestep: 38
+reward: 69.00007714032739
+========================================
+episode: 303
+episode was finished at timestep: 111
+reward: 68.0000735122242
+========================================
+episode: 304
+episode was finished at timestep: 4
+reward: 65.5000785988845
+========================================
+episode: 305
+episode was finished at timestep: 106
+reward: 72.00003973825962
+========================================
+episode: 306
+episode was finished at timestep: 38
+reward: 38.50007497022575
+========================================
+episode: 307
+episode was finished at timestep: 35
+reward: 36.500093197392445
+========================================
+episode: 308
+episode was finished at timestep: 104
+reward: 128.35981811619203
+========================================
+episode: 309
+episode was finished at timestep: 171
+reward: 112.00000013305404
+========================================
+episode: 310
+episode was finished at timestep: 35
+reward: 42.5001482449856
+========================================
+episode: 311
+episode was finished at timestep: 75
+reward: 134.0000659897891
+========================================
+episode: 312
+episode was finished at timestep: 92
+reward: 137.50003836481147
+========================================
+episode: 313
+episode was finished at timestep: 25
+reward: 50.50011182430307
+========================================
+episode: 314
+episode was finished at timestep: 16
+reward: 90.00002323605649
+========================================
+episode: 315
+episode was finished at timestep: 23
+reward: 49.0000427121991
+========================================
+episode: 316
+episode was finished at timestep: 49
+reward: 49.00000423691716
+========================================
+episode: 317
+episode was finished at timestep: 55
+reward: 60.50000079038454
+========================================
+episode: 318
+episode was finished at timestep: 145
+reward: 84.50002683694787
+========================================
+episode: 319
+episode was finished at timestep: 12
+reward: 99.00000086878548
+========================================
+episode: 320
+episode was finished at timestep: 144
+reward: 168.22312533183242
+========================================
+episode: 321
+episode was finished at timestep: 61
+reward: 131.95329320579862
+========================================
+episode: 322
+episode was finished at timestep: 48
+reward: 586.5043601099098
+========================================
+episode: 323
+episode was finished at timestep: 77
+reward: 135.0000439905206
+========================================
+episode: 324
+episode was finished at timestep: 178
+reward: 136.50003747986545
+========================================
+episode: 325
+episode was finished at timestep: 116
+reward: 157.7887867865552
+========================================
+episode: 326
+episode was finished at timestep: 5
+reward: 111.00001760598941
+========================================
+episode: 327
+episode was finished at timestep: 153
+reward: 113.00000785998101
+========================================
+episode: 328
+episode was finished at timestep: 287
+reward: 189.42399113298046
+========================================
+episode: 329
+episode was finished at timestep: 50
+reward: 159.0001464178377
+========================================
+episode: 330
+episode was finished at timestep: 87
+reward: 144.5000020336542
+========================================
+episode: 331
+episode was finished at timestep: 256
+reward: 148.0000161649761
+========================================
+episode: 332
+episode was finished at timestep: 119
+reward: 409.42034286374945
+========================================
+episode: 333
+episode was finished at timestep: 107
+reward: 167.26803964611835
+========================================
+episode: 334
+episode was finished at timestep: 4
+reward: 524.9425714713497
+========================================
+episode: 335
+episode was finished at timestep: 151
+reward: 126.50000064199631
+========================================
+episode: 336
+episode was finished at timestep: 133
+reward: 328.0145510932665
+========================================
+episode: 337
+episode was finished at timestep: 169
+reward: 175.50005137328552
+========================================
+episode: 338
+episode was finished at timestep: 32
+reward: 329.12952865120036
+========================================
+episode: 339
+episode was finished at timestep: 55
+reward: 128.50011747448423
+========================================
+episode: 340
+episode was finished at timestep: 84
+reward: 63.00001216052711
+========================================
+episode: 341
+episode was finished at timestep: 101
+reward: 107.00000062169195
+========================================
+episode: 342
+episode was finished at timestep: 21
+reward: 87.53634460593277
+========================================
+episode: 343
+episode was finished at timestep: 96
+reward: 103.5000031199717
+========================================
+episode: 344
+episode was finished at timestep: 173
+reward: 137.58930505938685
+========================================
+episode: 345
+episode was finished at timestep: 189
+reward: 151.50005954944672
+========================================
+episode: 346
+episode was finished at timestep: 73
+reward: 61.000017756743254
+========================================
+episode: 347
+episode was finished at timestep: 129
+reward: 129.88826549098877
+========================================
+episode: 348
+episode was finished at timestep: 161
+reward: 134.50000986458568
+========================================
+episode: 349
+episode was finished at timestep: 206
+reward: 169.00005775472323
+========================================
+episode: 350
+episode was finished at timestep: 39
+reward: 215.35883320742363
+========================================
+episode: 351
+episode was finished at timestep: 63
+reward: 426.83010265836856
+========================================
+episode: 352
+episode was finished at timestep: 58
+reward: 198.0435335988278
+========================================
+episode: 353
+episode was finished at timestep: 197
+reward: 403.54454430135064
+========================================
+episode: 354
+episode was finished at timestep: 185
+reward: 152.9567890573784
+========================================
+episode: 355
+episode was finished at timestep: 134
+reward: 157.0001007524789
+========================================
+episode: 356
+episode was finished at timestep: 187
+reward: 272.8456493363551
+========================================
+episode: 357
+episode was finished at timestep: 85
+reward: 94.27459514278202
+========================================
+episode: 358
+episode was finished at timestep: 17
+reward: 106.5000172406134
+========================================
+episode: 359
+episode was finished at timestep: 26
+reward: 106.50004997450861
+========================================
+episode: 360
+episode was finished at timestep: 74
+reward: 538.3558000606076
+========================================
+episode: 361
+episode was finished at timestep: 18
+reward: 159.87181598297684
+========================================
+episode: 362
+episode was finished at timestep: 171
+reward: 527.0882060249237
+========================================
+episode: 363
+episode was finished at timestep: 15
+reward: 164.47922276729966
+========================================
+episode: 364
+episode was finished at timestep: 227
+reward: 133.50002619353035
+========================================
+episode: 365
+episode was finished at timestep: 196
+reward: 173.00000004469698
+========================================
+episode: 366
+episode was finished at timestep: 161
+reward: 117.00000013384553
+========================================
+episode: 367
+episode was finished at timestep: 72
+reward: 172.50002921153856
+========================================
+episode: 368
+episode was finished at timestep: 181
+reward: 159.00006744668454
+========================================
+episode: 369
+episode was finished at timestep: 9
+reward: 131.50011363244016
+========================================
+episode: 370
+episode was finished at timestep: 115
+reward: 106.51027355700091
+========================================
+episode: 371
+episode was finished at timestep: 7
+reward: 120.00000124563357
+========================================
+episode: 372
+episode was finished at timestep: 0
+reward: 214.00001243670036
+========================================
+episode: 373
+episode was finished at timestep: 90
+reward: 71.00038342554164
+========================================
+episode: 374
+episode was finished at timestep: 37
+reward: 343.5559546533032
+========================================
+episode: 375
+episode was finished at timestep: 141
+reward: 354.9443801039308
+========================================
+episode: 376
+episode was finished at timestep: 127
+reward: 234.3518140046242
+========================================
+episode: 377
+episode was finished at timestep: 104
+reward: 470.458777077909
+========================================
+episode: 378
+episode was finished at timestep: 86
+reward: 164.50000105787421
+========================================
+episode: 379
+episode was finished at timestep: 189
+reward: 173.19176179799487
+========================================
+episode: 380
+episode was finished at timestep: 73
+reward: 239.749854770093
+========================================
+episode: 381
+episode was finished at timestep: 38
+reward: 164.50005400303203
+========================================
+episode: 382
+episode was finished at timestep: 54
+reward: 113.40537332272751
+========================================
+episode: 383
+episode was finished at timestep: 15
+reward: 158.0000029940345
+========================================
+episode: 384
+episode was finished at timestep: 222
+reward: 135.2950716341777
+========================================
+episode: 385
+episode was finished at timestep: 195
+reward: 117.50000047901652
+========================================
+episode: 386
+episode was finished at timestep: 25
+reward: 46.00009600794874
+========================================
+episode: 387
+episode was finished at timestep: 178
+reward: 182.2288041061511
+========================================
+episode: 388
+episode was finished at timestep: 147
+reward: 257.32312698212263
+========================================
+episode: 389
+episode was finished at timestep: 41
+reward: 213.6762416381921
+========================================
+episode: 390
+episode was finished at timestep: 162
+reward: 108.00000160837334
+========================================
+episode: 391
+episode was finished at timestep: 17
+reward: 153.5022890587427
+========================================
+episode: 392
+episode was finished at timestep: 32
+reward: 43.00006522847579
+========================================
+episode: 393
+episode was finished at timestep: 14
+reward: 45.00015057681988
+========================================
+episode: 394
+episode was finished at timestep: 94
+reward: 361.9729552078418
+========================================
+episode: 395
+episode was finished at timestep: 116
+reward: 109.00002092766029
+========================================
+episode: 396
+episode was finished at timestep: 43
+reward: 55.50010910117048
+========================================
+episode: 397
+episode was finished at timestep: 185
+reward: 264.1089221364762
+========================================
+episode: 398
+episode was finished at timestep: 16
+reward: 687.6451490433659
+========================================
+episode: 399
+episode was finished at timestep: 281
+reward: 277.2018599506896
+========================================
+episode: 400
+episode was finished at timestep: 226
+reward: 244.5421462545272
+========================================
+episode: 401
+episode was finished at timestep: 381
+reward: 283.44048753253276
+========================================
+episode: 402
+episode was finished at timestep: 249
+reward: 140.5000019439369
+========================================
+episode: 403
+episode was finished at timestep: 765
+reward: 23629.053422779016
+========================================
+episode: 404
+episode was finished at timestep: 57
+reward: 148.00000179247965
+========================================
+episode: 405
+episode was finished at timestep: 165
+reward: 100.50003623802208
+========================================
+episode: 406
+episode was finished at timestep: 10
+reward: 38.50010921023096
+========================================
+episode: 407
+episode was finished at timestep: 50
+reward: 180.31630672307492
+========================================
+episode: 408
+episode was finished at timestep: 17
+reward: 285.1333873977495
+========================================
+episode: 409
+episode was finished at timestep: 49
+reward: 63.007544160237344
+========================================
+episode: 410
+episode was finished at timestep: 9
+reward: 93.50004958283482
+========================================
+episode: 411
+episode was finished at timestep: 18
+reward: 41.500009454042306
+========================================
+episode: 412
+episode was finished at timestep: 20
+reward: 30053.68251838932
+========================================
+episode: 413
+episode was finished at timestep: 1422
+reward: 23263.531037085988
+========================================
+episode: 414
+episode was finished at timestep: 22
+reward: 95.00000000283076
+========================================
+episode: 415
+episode was finished at timestep: 49
+reward: 84.50013127993792
+========================================
+episode: 416
+episode was finished at timestep: 43
+reward: 95.00014922168565
+========================================
+episode: 417
+episode was finished at timestep: 146
+reward: 90.00010041889047
+========================================
+episode: 418
+episode was finished at timestep: 44
+reward: 34.00000739611641
+========================================
+episode: 419
+episode was finished at timestep: 55
+reward: 38.00000922312792
+========================================
+episode: 420
+episode was finished at timestep: 91
+reward: 198.90880777534704
+========================================
+episode: 421
+episode was finished at timestep: 69
+reward: 120.50006257806372
+========================================
+episode: 422
+episode was finished at timestep: 7
+reward: 28.000125465912657
+========================================
+episode: 423
+episode was finished at timestep: 61
+reward: 93.00013309717819
+========================================
+episode: 424
+episode was finished at timestep: 0
+reward: 129.50002443265953
+========================================
+episode: 425
+episode was finished at timestep: 31
+reward: 37.50003469159851
+========================================
+episode: 426
+episode was finished at timestep: 32
+reward: 84.50012399123284
+========================================
+episode: 427
+episode was finished at timestep: 17
+reward: 41.00012512558518
+========================================
+episode: 428
+episode was finished at timestep: 2
+reward: 34.00010632873598
+========================================
+episode: 429
+episode was finished at timestep: 10
+reward: 41.50000539792498
+========================================
+episode: 430
+episode was finished at timestep: 56
+reward: 68.50006710708455
+========================================
+episode: 431
+episode was finished at timestep: 67
+reward: 268.5163016536237
+========================================
+episode: 432
+episode was finished at timestep: 22
+reward: 25.000114185948032
+========================================
+episode: 433
+episode was finished at timestep: 6
+reward: 66.00006763416278
+========================================
+episode: 434
+episode was finished at timestep: 17
+reward: 26.000014995339036
+========================================
+episode: 435
+episode was finished at timestep: 19
+reward: 32.500085101463064
+========================================
+episode: 436
+episode was finished at timestep: 98
+reward: 59.50000128959342
+========================================
+episode: 437
+episode was finished at timestep: 17
+reward: 51.5000049843573
+========================================
+episode: 438
+episode was finished at timestep: 25
+reward: 23.50011601877685
+========================================
+episode: 439
+episode was finished at timestep: 46
+reward: 87.00011280018623
+========================================
+episode: 440
+episode was finished at timestep: 1922
+reward: 17731.145582841833
+========================================
+episode: 441
+episode was finished at timestep: 21
+reward: 43.00012390702727
+========================================
+episode: 442
+episode was finished at timestep: 4
+reward: 47.50001290357569
+========================================
+episode: 443
+episode was finished at timestep: 14
+reward: 25.50013997644451
+========================================
+episode: 444
+episode was finished at timestep: 396
+reward: 32528.30902182352
+========================================
+episode: 445
+episode was finished at timestep: 12
+reward: 32.00003121420892
+========================================
+episode: 446
+episode was finished at timestep: 2065
+reward: 1122.2152507706394
+========================================
+episode: 447
+episode was finished at timestep: 47
+reward: 35.500135846075445
+========================================
+episode: 448
+episode was finished at timestep: 19
+reward: 19153.96621657456
+========================================
+episode: 449
+episode was finished at timestep: 1312
+reward: 18880.56072748274
+========================================
+episode: 450
+episode was finished at timestep: 50
+reward: 57.000083663121735
+========================================
+episode: 451
+episode was finished at timestep: 1068
+reward: 19348.669774363192
+========================================
+episode: 452
+episode was finished at timestep: 1616
+reward: 20265.343990872283
+========================================
+episode: 453
+episode was finished at timestep: 838
+reward: 20042.43861596002
+========================================
+episode: 454
+episode was finished at timestep: 467
+reward: 20753.71927660357
+========================================
+episode: 455
+episode was finished at timestep: 131
+reward: 20941.754134339648
+========================================
+episode: 456
+episode was finished at timestep: 1564
+reward: 20714.32563743155
+========================================
+episode: 457
+episode was finished at timestep: 1212
+reward: 21720.999145065354
+========================================
+episode: 458
+episode was finished at timestep: 94
+reward: 23024.06731886298
+========================================
+episode: 459
+episode was finished at timestep: 121
+reward: 22361.15877097828
+========================================
+episode: 460
+episode was finished at timestep: 1171
+reward: 21179.412845197294
+========================================
+episode: 461
+episode was finished at timestep: 1462
+reward: 23319.773079349878
+========================================
+episode: 462
+episode was finished at timestep: 1183
+reward: 21435.146674271422
+========================================
+episode: 463
+episode was finished at timestep: 1415
+reward: 24006.30239100534
+========================================
+episode: 464
+episode was finished at timestep: 1773
+reward: 21826.6075303545
+========================================
+episode: 465
+episode was finished at timestep: 1265
+reward: 22360.469603434358
+========================================
+episode: 466
+episode was finished at timestep: 198
+reward: 28958.46313541301
+========================================
+episode: 467
+episode was finished at timestep: 147
+reward: 39821.245880246905
+========================================
+episode: 468
+episode was finished at timestep: 1414
+reward: 34065.0837556131
+========================================
+episode: 469
+episode was finished at timestep: 1232
+reward: 41988.98504231166
+========================================
+episode: 470
+episode was finished at timestep: 14
+reward: 44431.314723371186
+========================================
+episode: 471
+episode was finished at timestep: 384
+reward: 39830.61849306168
+========================================
+episode: 472
+episode was finished at timestep: 208
+reward: 45284.09114315278
+========================================
+episode: 473
+episode was finished at timestep: 0
+reward: 45280.99465105376
+========================================
+episode: 474
+episode was finished at timestep: 0
+reward: 46046.4355277177
+========================================
+episode: 475
+episode was finished at timestep: 2090
+reward: 46124.086728748465
+========================================
+episode: 476
+episode was finished at timestep: 0
+reward: 45808.66703166165
+========================================
+episode: 477
+episode was finished at timestep: 0
+reward: 45802.372798418
+========================================
+episode: 478
+episode was finished at timestep: 0
+reward: 45987.55397406932
+========================================
+episode: 479
+episode was finished at timestep: 0
+reward: 45785.45701573489
+========================================
+episode: 480
+episode was finished at timestep: 0
+reward: 45281.24743995281
+========================================
+episode: 481
+episode was finished at timestep: 2185
+reward: 46265.23206662026
+========================================
+episode: 482
+episode was finished at timestep: 0
+reward: 45982.36452616748
+========================================
+episode: 483
+episode was finished at timestep: 0
+reward: 45262.29345379967
+========================================
+episode: 484
+episode was finished at timestep: 0
+reward: 46158.42256977336
+========================================
+episode: 485
+episode was finished at timestep: 0
+reward: 46066.29096052745
+========================================
+episode: 486
+episode was finished at timestep: 0
+reward: 45339.48063638506
+========================================
+episode: 487
+episode was finished at timestep: 0
+reward: 45663.397707231794
+========================================
+episode: 488
+episode was finished at timestep: 0
+reward: 45284.16396737646
+========================================
+episode: 489
+episode was finished at timestep: 0
+reward: 45936.77343061816
+========================================
+episode: 490
+episode was finished at timestep: 0
+reward: 46446.42808147216
+========================================
+episode: 491
+episode was finished at timestep: 0
+reward: 46324.181195403
+========================================
+episode: 492
+episode was finished at timestep: 0
+reward: 45504.158487758454
+========================================
+episode: 493
+episode was finished at timestep: 0
+reward: 46446.89555431423
+========================================
+episode: 494
+episode was finished at timestep: 0
+reward: 45391.79233348701
+========================================
+episode: 495
+episode was finished at timestep: 0
+reward: 45530.62931255481
+========================================
+episode: 496
+episode was finished at timestep: 0
+reward: 45481.49514619115
+========================================
+episode: 497
+episode was finished at timestep: 0
+reward: 45281.9677772725
+========================================
+episode: 498
+episode was finished at timestep: 6358
+reward: 47223.339706896404
+========================================
+episode: 499
+episode was finished at timestep: 4946
+reward: 47546.58464665951
+========================================
+episode: 500
+episode was finished at timestep: 0
+reward: 45868.78573823479
+========================================
+episode: 501
+episode was finished at timestep: 0
+reward: 46419.419597860055
+========================================
+episode: 502
+episode was finished at timestep: 3833
+reward: 3420.982559590184
+========================================
+episode: 503
+episode was finished at timestep: 0
+reward: 45394.827922091456
+========================================
+episode: 504
+episode was finished at timestep: 0
+reward: 45755.81037963368
+========================================
+episode: 505
+episode was finished at timestep: 6578
+reward: 49483.46773783812
+========================================
+episode: 506
+episode was finished at timestep: 0
+reward: 46563.433918746785
+========================================
+episode: 507
+episode was finished at timestep: 0
+reward: 45953.54378620866
+========================================
+episode: 508
+episode was finished at timestep: 0
+reward: 45636.489282040035
+========================================
+episode: 509
+episode was finished at timestep: 0
+reward: 45923.46358704987
+========================================
+episode: 510
+episode was finished at timestep: 0
+reward: 47145.51750397452
+========================================
+episode: 511
+episode was finished at timestep: 0
+reward: 45312.04906964552
+========================================
+episode: 512
+episode was finished at timestep: 0
+reward: 45995.05825683834
+========================================
+episode: 513
+episode was finished at timestep: 0
+reward: 46334.38300873123
+========================================
+episode: 514
+episode was finished at timestep: 6
+reward: 42936.95137695342
+========================================
+episode: 515
+episode was finished at timestep: 255
+reward: 45232.48641080397
+========================================
+episode: 516
+episode was finished at timestep: 0
+reward: 47597.073271547226
+========================================
+episode: 517
+episode was finished at timestep: 0
+reward: 45475.84704371603
+========================================
+episode: 518
+episode was finished at timestep: 0
+reward: 47609.134829679984
+========================================
+episode: 519
+episode was finished at timestep: 0
+reward: 47790.474154908225
+========================================
+episode: 520
+episode was finished at timestep: 0
+reward: 46781.94420196258
+========================================
+episode: 521
+episode was finished at timestep: 0
+reward: 46333.77055022115
+========================================
+episode: 522
+episode was finished at timestep: 266
+reward: 45205.67916835547
+========================================
+episode: 523
+episode was finished at timestep: 0
+reward: 46628.88157021691
+========================================
+episode: 524
+episode was finished at timestep: 9754
+reward: 50359.7202249246
+========================================
+episode: 525
+episode was finished at timestep: 1074
+reward: 1235.3405305807048
+========================================
+episode: 526
+episode was finished at timestep: 0
+reward: 45758.41661128635
+========================================
+episode: 527
+episode was finished at timestep: 0
+reward: 46933.49073436763
+========================================
+episode: 528
+episode was finished at timestep: 0
+reward: 46714.45104095373
+========================================
+episode: 529
+episode was finished at timestep: 0
+reward: 46501.64091546776
+========================================
+episode: 530
+episode was finished at timestep: 0
+reward: 47371.48927325291
+========================================
+episode: 531
+episode was finished at timestep: 0
+reward: 45543.291838662175
+========================================
+episode: 532
+episode was finished at timestep: 2938
+reward: 48570.724653289675
+========================================
+episode: 533
+episode was finished at timestep: 0
+reward: 46519.585134925605
+========================================
+episode: 534
+episode was finished at timestep: 0
+reward: 47064.033426048794
+========================================
+episode: 535
+episode was finished at timestep: 0
+reward: 46450.75718753269
+========================================
+episode: 536
+episode was finished at timestep: 0
+reward: 45987.13060517913
+========================================
+episode: 537
+episode was finished at timestep: 0
+reward: 47134.461075530104
+========================================
+episode: 538
+episode was finished at timestep: 0
+reward: 47045.99711742369
+========================================
+episode: 539
+episode was finished at timestep: 0
+reward: 46265.727474493506
+========================================
+episode: 540
+episode was finished at timestep: 0
+reward: 47773.65348201662
+========================================
+episode: 541
+episode was finished at timestep: 0
+reward: 45778.64933352874
+========================================
+episode: 542
+episode was finished at timestep: 0
+reward: 46358.567863341916
+========================================
+episode: 543
+episode was finished at timestep: 0
+reward: 47265.489603511625
+========================================
+episode: 544
+episode was finished at timestep: 9014
+reward: 53148.93653622651
+========================================
+episode: 545
+episode was finished at timestep: 0
+reward: 45629.290177414645
+========================================
+episode: 546
+episode was finished at timestep: 0
+reward: 46632.88165893368
+========================================
+episode: 547
+episode was finished at timestep: 0
+reward: 46343.56415542066
+========================================
+episode: 548
+episode was finished at timestep: 0
+reward: 45664.908213918876
+========================================
+episode: 549
+episode was finished at timestep: 0
+reward: 48497.06962781726
+========================================
+episode: 550
+episode was finished at timestep: 0
+reward: 48475.614264641765
+========================================
+episode: 551
+episode was finished at timestep: 2371
+reward: 48431.221510851814
+========================================
+episode: 552
+episode was finished at timestep: 0
+reward: 45752.73961711394
+========================================
+episode: 553
+episode was finished at timestep: 0
+reward: 45849.11435398538
+========================================
+episode: 554
+episode was finished at timestep: 7282
+reward: 48662.69336726499
+========================================
+episode: 555
+episode was finished at timestep: 9174
+reward: 49739.6483446057
+========================================
+episode: 556
+episode was finished at timestep: 10139
+reward: 50176.02080578605
+========================================
+episode: 557
+episode was finished at timestep: 0
+reward: 47417.993677071194
+========================================
+episode: 558
+episode was finished at timestep: 0
+reward: 45817.90090928363
+========================================
+episode: 559
+episode was finished at timestep: 0
+reward: 46434.219950241655
+========================================
+episode: 560
+episode was finished at timestep: 0
+reward: 47119.28871262002
+========================================
+episode: 561
+episode was finished at timestep: 0
+reward: 45412.67834924709
+========================================
+episode: 562
+episode was finished at timestep: 0
+reward: 47107.07455290703
+========================================
+episode: 563
+episode was finished at timestep: 0
+reward: 46045.466399519275
+========================================
+episode: 564
+episode was finished at timestep: 0
+reward: 45513.37494262314
+========================================
+episode: 565
+episode was finished at timestep: 0
+reward: 47231.48192263832
+========================================
+episode: 566
+episode was finished at timestep: 0
+reward: 47775.59953097233
+========================================
+episode: 567
+episode was finished at timestep: 0
+reward: 47608.40726311433
+========================================
+episode: 568
+episode was finished at timestep: 0
+reward: 46639.778974103974
+========================================
+episode: 569
+episode was finished at timestep: 0
+reward: 47541.86170299915
+========================================
+episode: 570
+episode was finished at timestep: 0
+reward: 46096.5359099201
+========================================
+episode: 571
+episode was finished at timestep: 0
+reward: 47104.136595349315
+========================================
+episode: 572
+episode was finished at timestep: 0
+reward: 47509.40078106172
+========================================
+episode: 573
+episode was finished at timestep: 0
+reward: 46140.50050013608
+========================================
+episode: 574
+episode was finished at timestep: 0
+reward: 46562.79153539703
+========================================
+episode: 575
+episode was finished at timestep: 0
+reward: 45514.84788409433
+========================================
+episode: 576
+episode was finished at timestep: 0
+reward: 47020.66726808272
+========================================
+episode: 577
+episode was finished at timestep: 0
+reward: 47171.12613266225
+========================================
+episode: 578
+episode was finished at timestep: 10262
+reward: 50368.33226852841
+========================================
+episode: 579
+episode was finished at timestep: 0
+reward: 45918.14855610246
+========================================
+episode: 580
+episode was finished at timestep: 0
+reward: 46739.109656414694
+========================================
+episode: 581
+episode was finished at timestep: 0
+reward: 46668.04844835447
+========================================
+episode: 582
+episode was finished at timestep: 0
+reward: 46224.449456527924
+========================================
+episode: 583
+episode was finished at timestep: 0
+reward: 46842.59475490735
+========================================
+episode: 584
+episode was finished at timestep: 0
+reward: 47094.63345695788
+========================================
+episode: 585
+episode was finished at timestep: 0
+reward: 46448.07750424311
+========================================
+episode: 586
+episode was finished at timestep: 0
+reward: 46702.44693555898
+========================================
+episode: 587
+episode was finished at timestep: 0
+reward: 47661.6711577622
+========================================
+episode: 588
+episode was finished at timestep: 2947
+reward: 46608.0067222692
+========================================
+episode: 589
+episode was finished at timestep: 0
+reward: 45930.721419356334
+========================================
+episode: 590
+episode was finished at timestep: 0
+reward: 47153.55534815509
+========================================
+episode: 591
+episode was finished at timestep: 0
+reward: 45494.36253516394
+========================================
+episode: 593
+episode was finished at timestep: 0
+reward: 46672.260518040144
+========================================
+episode: 594
+episode was finished at timestep: 0
+reward: 46462.45512442512
+========================================
+episode: 595
+episode was finished at timestep: 0
+reward: 46095.1722925935
+========================================
+episode: 596
+episode was finished at timestep: 8102
+reward: 52856.295780501525
+========================================
+episode: 597
+episode was finished at timestep: 0
+reward: 46411.74300404947
+========================================
+episode: 598
+episode was finished at timestep: 0
+reward: 46783.79659317024
+========================================
+episode: 599
+episode was finished at timestep: 0
+reward: 47036.94842183068
+========================================
+episode: 600
+episode was finished at timestep: 408
+reward: 41582.322716578885
+========================================
+episode: 601
+episode was finished at timestep: 1528
+reward: 44150.636099998876
+========================================
+episode: 602
+episode was finished at timestep: 2203
+reward: 45933.012803715865
+========================================
+episode: 603
+episode was finished at timestep: 1258
+reward: 45530.31289750416
+========================================
+episode: 604
+episode was finished at timestep: 977
+reward: 46127.6200839306
+========================================
+episode: 605
+episode was finished at timestep: 1837
+reward: 45948.38113419678
+========================================
+episode: 606
+episode was finished at timestep: 0
+reward: 45951.12593345581
+========================================
+episode: 607
+episode was finished at timestep: 0
+reward: 45976.73142040908
+========================================
+episode: 608
+episode was finished at timestep: 3291
+reward: 46676.3213775375
+========================================
+episode: 609
+episode was finished at timestep: 24122
+reward: 57234.52128880598
+========================================
+episode: 610
+episode was finished at timestep: 0
+reward: 47221.05001782748
+========================================
+episode: 611
+episode was finished at timestep: 0
+reward: 45226.61105003318
+========================================
+episode: 612
+episode was finished at timestep: 532
+reward: 45343.32836985007
+========================================
+episode: 613
+episode was finished at timestep: 135
+reward: 45191.31270805701
+========================================
+episode: 614
+episode was finished at timestep: 0
+reward: 46044.21854086698
+========================================
+episode: 615
+episode was finished at timestep: 5548
+reward: 51022.85010841222
+========================================
+episode: 616
+episode was finished at timestep: 0
+reward: 45960.45011803454
+========================================
+episode: 617
+episode was finished at timestep: 730
+reward: 46643.894249827135
+========================================
+episode: 618
+episode was finished at timestep: 0
+reward: 46681.364602091766
+========================================
+episode: 619
+episode was finished at timestep: 0
+reward: 47240.816494990235
+========================================
+episode: 620
+episode was finished at timestep: 0
+reward: 46572.199226379234
+========================================
+episode: 621
+episode was finished at timestep: 0
+reward: 46179.969563343504
+========================================
+episode: 622
+episode was finished at timestep: 0
+reward: 46257.75874401418
+========================================
+episode: 623
+episode was finished at timestep: 0
+reward: 46594.31970253518
+========================================
+episode: 624
+episode was finished at timestep: 0
+reward: 47393.67218288937
+========================================
+episode: 625
+episode was finished at timestep: 0
+reward: 47258.58314731382
+========================================
+episode: 626
+episode was finished at timestep: 0
+reward: 47039.8353303891
+========================================
+episode: 627
+episode was finished at timestep: 0
+reward: 46165.22917386996
+========================================
+episode: 628
+episode was finished at timestep: 0
+reward: 46128.66298024898
+========================================
+episode: 629
+episode was finished at timestep: 6278
+reward: 47883.98094077048
+========================================
+episode: 630
+episode was finished at timestep: 0
+reward: 47680.40044966469
+========================================
+episode: 631
+episode was finished at timestep: 7404
+reward: 48889.07336630141
+========================================
+episode: 632
+episode was finished at timestep: 14120
+reward: 51324.47090001171
+========================================
+episode: 633
+episode was finished at timestep: 1049
+reward: 46917.32262204998
+========================================
+episode: 634
+episode was finished at timestep: 2435
+reward: 50147.11808486433
+========================================
+episode: 635
+episode was finished at timestep: 16443
+reward: 54342.487523758806
+========================================
+episode: 636
+episode was finished at timestep: 77
+reward: 43675.02473571835
+========================================
+episode: 637
+episode was finished at timestep: 1231
+reward: 42641.9364895032
+========================================
+episode: 638
+episode was finished at timestep: 16462
+reward: 53798.57975150275
+========================================
+episode: 639
+episode was finished at timestep: 12107
+reward: 52921.37633466649
+========================================
+episode: 640
+episode was finished at timestep: 5046
+reward: 47324.10472346801
+========================================
+episode: 642
+episode was finished at timestep: 225
+reward: 44328.00613918773
+========================================
+episode: 643
+episode was finished at timestep: 0
+reward: 46067.057993287155
+========================================
+episode: 644
+episode was finished at timestep: 0
+reward: 46106.21919200189
+========================================
+episode: 645
+episode was finished at timestep: 0
+reward: 45833.02962377861
+========================================
+episode: 646
+episode was finished at timestep: 0
+reward: 45879.83865033623
+========================================
+episode: 647
+episode was finished at timestep: 4352
+reward: 47193.7391140354
+========================================
+episode: 648
+episode was finished at timestep: 17
+reward: 46724.43163633755
+========================================
+episode: 649
+episode was finished at timestep: 0
+reward: 47281.05276935689
+========================================
+episode: 650
+episode was finished at timestep: 0
+reward: 46728.90070241496
+========================================
+episode: 651
+episode was finished at timestep: 0
+reward: 46646.25636178208
+========================================
+episode: 652
+episode was finished at timestep: 0
+reward: 45475.10037548406
+========================================
+episode: 653
+episode was finished at timestep: 0
+reward: 45968.10005587382
+========================================
+episode: 654
+episode was finished at timestep: 0
+reward: 46071.647235566255
+========================================
+episode: 655
+episode was finished at timestep: 0
+reward: 45617.10348973546
+========================================
+episode: 656
+episode was finished at timestep: 0
+reward: 46441.970855233965
+========================================
+episode: 657
+episode was finished at timestep: 3491
+reward: 48431.50917581595
+========================================
+episode: 658
+episode was finished at timestep: 6111
+reward: 47910.50439899963
+========================================
+episode: 659
+episode was finished at timestep: 0
+reward: 46140.428455277804
+========================================
+episode: 660
+episode was finished at timestep: 5904
+reward: 48986.22620339191
+========================================
+episode: 661
+episode was finished at timestep: 13991
+reward: 52748.173861566545
+========================================
+episode: 662
+episode was finished at timestep: 3241
+reward: 47978.42729099861
+========================================
+episode: 663
+episode was finished at timestep: 4310
+reward: 47233.0071901228
+========================================
+episode: 664
+episode was finished at timestep: 0
+reward: 46781.196294821595
+========================================
+episode: 665
+episode was finished at timestep: 0
+reward: 46534.78666636326
+========================================
+episode: 666
+episode was finished at timestep: 7934
+reward: 49222.03127653231
+========================================
+episode: 667
+episode was finished at timestep: 0
+reward: 45761.49366529378
+========================================
+episode: 668
+episode was finished at timestep: 6349
+reward: 48087.55413469609
+========================================
+episode: 669
+episode was finished at timestep: 4140
+reward: 47111.37241284064
+========================================
+episode: 670
+episode was finished at timestep: 857
+reward: 45525.0456646511
+========================================
+episode: 671
+episode was finished at timestep: 0
+reward: 46636.05704753917
+========================================
+episode: 672
+episode was finished at timestep: 1208
+reward: 45693.381293054525
+========================================
+episode: 673
+episode was finished at timestep: 13
+reward: 46607.63228818455
+========================================
+episode: 674
+episode was finished at timestep: 0
+reward: 46218.98070158669
+========================================
+episode: 675
+episode was finished at timestep: 0
+reward: 46740.73487990699
+========================================
+episode: 676
+episode was finished at timestep: 3796
+reward: 47162.651056210394
+========================================
+episode: 677
+episode was finished at timestep: 0
+reward: 46493.059970979484
+========================================
+episode: 678
+episode was finished at timestep: 0
+reward: 46610.97153801788
+========================================
+episode: 679
+episode was finished at timestep: 0
+reward: 46662.48777344985
+========================================
+episode: 680
+episode was finished at timestep: 1639
+reward: 46012.366338105996
+========================================
+episode: 681
+episode was finished at timestep: 0
+reward: 49224.39510610292
+========================================
+episode: 682
+episode was finished at timestep: 0
+reward: 46711.164064124525
+========================================
+episode: 683
+episode was finished at timestep: 0
+reward: 45406.44586093234
+========================================
+episode: 684
+episode was finished at timestep: 0
+reward: 46680.913986486805
+========================================
+episode: 685
+episode was finished at timestep: 0
+reward: 45347.13987339526
+========================================
+episode: 686
+episode was finished at timestep: 0
+reward: 47710.91627888857
+========================================
+episode: 687
+episode was finished at timestep: 0
+reward: 45279.52683229588
+========================================
+episode: 688
+episode was finished at timestep: 0
+reward: 47037.44266450189
+========================================
+episode: 689
+episode was finished at timestep: 0
+reward: 45872.351057518
+========================================
+episode: 690
+episode was finished at timestep: 0
+reward: 47338.123644750056
+========================================
+episode: 691
+episode was finished at timestep: 0
+reward: 45464.30481219164
+========================================
+episode: 692
+episode was finished at timestep: 0
+reward: 47460.47328376647
+========================================
+episode: 693
+episode was finished at timestep: 0
+reward: 46730.98991982411
+========================================
+episode: 694
+episode was finished at timestep: 0
+reward: 46897.04840226248
+========================================
+episode: 695
+episode was finished at timestep: 0
+reward: 45689.39820232477
+========================================
+episode: 696
+episode was finished at timestep: 222
+reward: 47369.72515524237
+========================================
+episode: 697
+episode was finished at timestep: 909
+reward: 45204.38728027508
+========================================
+episode: 698
+episode was finished at timestep: 0
+reward: 46645.583980735195
+========================================
+episode: 699
+episode was finished at timestep: 0
+reward: 45957.11908502292
+========================================
+episode: 700
+episode was finished at timestep: 0
+reward: 46858.41936961265
+========================================
+episode: 701
+episode was finished at timestep: 0
+reward: 46048.42161825085
+========================================
+episode: 702
+episode was finished at timestep: 5539
+reward: 48167.736891584376
+========================================
+episode: 703
+episode was finished at timestep: 0
+reward: 45965.39253193618
+========================================
+episode: 704
+episode was finished at timestep: 0
+reward: 45948.46616333619
+========================================
+episode: 705
+episode was finished at timestep: 0
+reward: 46557.02870823393
+========================================
+episode: 706
+episode was finished at timestep: 8013
+reward: 49425.01651438665
+========================================
+episode: 707
+episode was finished at timestep: 4096
+reward: 46368.8921162742
+========================================
+episode: 708
+episode was finished at timestep: 0
+reward: 46508.20120254357
+========================================
+episode: 709
+episode was finished at timestep: 0
+reward: 47414.633303120965
+========================================
+episode: 710
+episode was finished at timestep: 6493
+reward: 48705.34736796685
+========================================
+episode: 711
+episode was finished at timestep: 0
+reward: 46523.59293668677
+========================================
+episode: 712
+episode was finished at timestep: 0
+reward: 45740.075187775874
+========================================
+episode: 713
+episode was finished at timestep: 0
+reward: 46222.752341939056
+========================================
+episode: 714
+episode was finished at timestep: 0
+reward: 45725.05519277592
+========================================
+episode: 715
+episode was finished at timestep: 62
+reward: 46639.16333715246
+========================================
+episode: 716
+episode was finished at timestep: 3839
+reward: 46812.67241576382
+========================================
+episode: 717
+episode was finished at timestep: 0
+reward: 46348.70042238914
+========================================
+episode: 718
+episode was finished at timestep: 220
+reward: 45677.48175331164
+========================================
+episode: 719
+episode was finished at timestep: 215
+reward: 45062.08367195721
+========================================
+episode: 720
+episode was finished at timestep: 0
+reward: 45997.08493619085
+========================================
+episode: 721
+episode was finished at timestep: 4484
+reward: 47385.56228510841
+========================================
+episode: 722
+episode was finished at timestep: 5455
+reward: 47549.90230959224
+========================================
+episode: 723
+episode was finished at timestep: 0
+reward: 47250.938011121456
+========================================
+episode: 724
+episode was finished at timestep: 0
+reward: 46199.69627581285
+========================================
+episode: 725
+episode was finished at timestep: 0
+reward: 46787.45573703323
+========================================
+episode: 726
+episode was finished at timestep: 26
+reward: 267.9016910322636
+========================================
+episode: 727
+episode was finished at timestep: 1652
+reward: 45907.24051229497
+========================================
+episode: 728
+episode was finished at timestep: 2877
+reward: 46575.25209557392
+========================================
+episode: 729
+episode was finished at timestep: 9176
+reward: 49443.259326978114
+========================================
+episode: 730
+episode was finished at timestep: 663
+reward: 45563.576638215956
+========================================
+episode: 731
+episode was finished at timestep: 11349
+reward: 51124.32287951627
+========================================
+episode: 732
+episode was finished at timestep: 5006
+reward: 47499.63947560145
+========================================
+episode: 733
+episode was finished at timestep: 0
+reward: 46286.54196306531
+========================================
+episode: 734
+episode was finished at timestep: 0
+reward: 46077.8512892525
+========================================
+episode: 735
+episode was finished at timestep: 0
+reward: 46021.87242414964
+========================================
+episode: 736
+episode was finished at timestep: 0
+reward: 46146.29458389887
+========================================
+episode: 737
+episode was finished at timestep: 0
+reward: 45295.39732308658
+========================================
+episode: 738
+episode was finished at timestep: 1556
+reward: 46186.616615821185
+========================================
+episode: 739
+episode was finished at timestep: 0
+reward: 45749.02212502894
+========================================
+episode: 740
+episode was finished at timestep: 0
+reward: 46914.23857948141
+========================================
+episode: 741
+episode was finished at timestep: 0
+reward: 46109.91554398686
+========================================
+episode: 742
+episode was finished at timestep: 0
+reward: 46594.633013039114
+========================================
+episode: 743
+episode was finished at timestep: 0
+reward: 46394.040911280965
+========================================
+episode: 744
+episode was finished at timestep: 0
+reward: 45994.87385166488
+========================================
+episode: 745
+episode was finished at timestep: 7030
+reward: 47875.589745528436
+========================================
+episode: 746
+episode was finished at timestep: 0
+reward: 46852.28241040291
+========================================
+episode: 747
+episode was finished at timestep: 0
+reward: 46010.28544872013
+========================================
+episode: 748
+episode was finished at timestep: 0
+reward: 45217.9426152725
+========================================
+episode: 749
+episode was finished at timestep: 4116
+reward: 47687.36400760094
+========================================
+episode: 750
+episode was finished at timestep: 0
+reward: 45635.11453567929
+========================================
+episode: 751
+episode was finished at timestep: 0
+reward: 46497.103569024584
+========================================
+episode: 752
+episode was finished at timestep: 0
+reward: 46014.158048682446
+========================================
+episode: 753
+episode was finished at timestep: 1789
+reward: 45828.79705559435
+========================================
+episode: 754
+episode was finished at timestep: 0
+reward: 46201.82570862363
+========================================
+episode: 755
+episode was finished at timestep: 0
+reward: 46274.291154898
+========================================
+episode: 756
+episode was finished at timestep: 0
+reward: 45442.22867700079
+========================================
+episode: 757
+episode was finished at timestep: 199
+reward: 45061.065267540595
+========================================
+episode: 758
+episode was finished at timestep: 0
+reward: 45635.1091125808
+========================================
+episode: 759
+episode was finished at timestep: 0
+reward: 45647.03338752668
+========================================
+episode: 760
+episode was finished at timestep: 0
+reward: 47538.5593352816
+========================================
+episode: 761
+episode was finished at timestep: 3517
+reward: 46775.378834244286
+========================================
+episode: 762
+episode was finished at timestep: 0
+reward: 46034.150126211185
+========================================
+episode: 763
+episode was finished at timestep: 0
+reward: 45670.20932102463
+========================================
+episode: 764
+episode was finished at timestep: 0
+reward: 48941.06620690061
+========================================
+episode: 765
+episode was finished at timestep: 0
+reward: 46390.722155620795
+========================================
+episode: 766
+episode was finished at timestep: 0
+reward: 46493.31056843529
+========================================
+episode: 767
+episode was finished at timestep: 0
+reward: 46780.23671455347
+========================================
+episode: 768
+episode was finished at timestep: 0
+reward: 47927.886836037935
+========================================
+episode: 769
+episode was finished at timestep: 0
+reward: 46062.54740097768
+========================================
+episode: 770
+episode was finished at timestep: 0
+reward: 45691.36717935525
+========================================
+episode: 771
+episode was finished at timestep: 0
+reward: 46247.837945327236
+========================================
+episode: 772
+episode was finished at timestep: 0
+reward: 45617.32007109813
+========================================
+episode: 773
+episode was finished at timestep: 4869
+reward: 48695.87662163536
+========================================
+episode: 774
+episode was finished at timestep: 0
+reward: 48651.6110515935
+========================================
+episode: 775
+episode was finished at timestep: 0
+reward: 45733.85757786985
+========================================
+episode: 776
+episode was finished at timestep: 11332
+reward: 50515.08892912533
+========================================
+episode: 777
+episode was finished at timestep: 0
+reward: 46949.99875536141
+========================================
+episode: 778
+episode was finished at timestep: 0
+reward: 46460.13677286595
+========================================
+episode: 779
+episode was finished at timestep: 0
+reward: 45804.11033537394
+========================================
+episode: 780
+episode was finished at timestep: 0
+reward: 46171.173032980216
+========================================
+episode: 781
+episode was finished at timestep: 0
+reward: 45764.39275152215
+========================================
+episode: 782
+episode was finished at timestep: 0
+reward: 47286.30106698052
+========================================
+episode: 783
+episode was finished at timestep: 0
+reward: 46445.02253097312
+========================================
+episode: 784
+episode was finished at timestep: 0
+reward: 45602.247790151785
+========================================
+episode: 785
+episode was finished at timestep: 0
+reward: 47655.4765369328
+========================================
+episode: 786
+episode was finished at timestep: 0
+reward: 47725.326948280075
+========================================
+episode: 787
+episode was finished at timestep: 498
+reward: 32797.031828097926
+========================================
+episode: 788
+episode was finished at timestep: 15692
+reward: 52842.07471138264
+========================================
+episode: 789
+episode was finished at timestep: 0
+reward: 45480.216503708616
+========================================
+episode: 790
+episode was finished at timestep: 0
+reward: 48674.70285503917
+========================================
+episode: 791
+episode was finished at timestep: 0
+reward: 46055.83295866061
+========================================
+episode: 792
+episode was finished at timestep: 2932
+reward: 46521.69025459856
+========================================
+episode: 793
+episode was finished at timestep: 0
+reward: 45657.087208289
+========================================
+episode: 794
+episode was finished at timestep: 0
+reward: 46772.274879290584
+========================================
+episode: 795
+episode was finished at timestep: 0
+reward: 47494.494077352785
+========================================
+episode: 796
+episode was finished at timestep: 0
+reward: 46785.756322394205
+========================================
+episode: 799
+episode was finished at timestep: 0
+reward: 45435.05191159947
+========================================
+episode: 800
+episode was finished at timestep: 6651
+reward: 48389.053251246325
+========================================
+episode: 801
+episode was finished at timestep: 0
+reward: 47379.73859690903
+========================================
+episode: 802
+episode was finished at timestep: 0
+reward: 47015.83090525388
+========================================
+episode: 803
+episode was finished at timestep: 0
+reward: 45779.17025506656
+========================================
+episode: 804
+episode was finished at timestep: 0
+reward: 45866.86881329954
+========================================
+episode: 805
+episode was finished at timestep: 0
+reward: 45527.87882147378
+========================================
+episode: 806
+episode was finished at timestep: 0
+reward: 46097.274424165575
+========================================
+episode: 809
+episode was finished at timestep: 0
+reward: 46496.68781221787
+========================================
+episode: 810
+episode was finished at timestep: 79
+reward: 280.5000003997073
+========================================
+episode: 811
+episode was finished at timestep: 2
+reward: 285.4664323056456
+========================================
+episode: 812
+episode was finished at timestep: 230
+reward: 45235.28653094455
+========================================
+episode: 813
+episode was finished at timestep: 86
+reward: 45317.268978795946
+========================================
+episode: 814
+episode was finished at timestep: 628
+reward: 45380.76289563216
+========================================
+episode: 815
+episode was finished at timestep: 343
+reward: 45354.00154491613
+========================================
+episode: 816
+episode was finished at timestep: 128
+reward: 45482.65757872141
+========================================
+episode: 817
+episode was finished at timestep: 4413
+reward: 47406.908321126
+========================================
+episode: 818
+episode was finished at timestep: 1340
+reward: 38514.92341783986
+========================================
+episode: 819
+episode was finished at timestep: 5738
+reward: 38819.59519170772
+========================================
+episode: 820
+episode was finished at timestep: 0
+reward: 46022.23183338352
+========================================
+episode: 821
+episode was finished at timestep: 4252
+reward: 47388.13649832174
+========================================
+episode: 822
+episode was finished at timestep: 0
+reward: 46558.81663748047
+========================================
+episode: 823
+episode was finished at timestep: 0
+reward: 45580.07988568717
+========================================
+episode: 824
+episode was finished at timestep: 989
+reward: 45441.03361141027
+========================================
+episode: 825
+episode was finished at timestep: 5904
+reward: 49992.54352451306
+========================================
+episode: 826
+episode was finished at timestep: 0
+reward: 45188.455777922725
+========================================
+episode: 827
+episode was finished at timestep: 4
+reward: 46422.615506002745
+========================================
+episode: 828
+episode was finished at timestep: 24082
+reward: 57415.79302408826
+========================================
+episode: 829
+episode was finished at timestep: 615
+reward: 45518.11228677518
+========================================
+episode: 831
+episode was finished at timestep: 0
+reward: 46401.92277540258
+========================================
+episode: 832
+episode was finished at timestep: 0
+reward: 48170.200558778146
+========================================
+episode: 833
+episode was finished at timestep: 1168
+reward: 46649.67472008141
+========================================
+episode: 834
+episode was finished at timestep: 11
+reward: 42809.92030225165
+========================================
+episode: 835
+episode was finished at timestep: 18479
+reward: 53916.53674049422
+========================================
+episode: 836
+episode was finished at timestep: 0
+reward: 47872.31877212407
+========================================
+episode: 837
+episode was finished at timestep: 4779
+reward: 47797.62024645905
+========================================
+episode: 838
+episode was finished at timestep: 0
+reward: 46635.718158825686
+========================================
+episode: 839
+episode was finished at timestep: 3189
+reward: 47202.25449998836
+========================================
+episode: 840
+episode was finished at timestep: 0
+reward: 45455.24535383438
+========================================
+episode: 841
+episode was finished at timestep: 262
+reward: 45379.8906058981
+========================================
+episode: 842
+episode was finished at timestep: 270
+reward: 45073.11313295453
+========================================
+episode: 843
+episode was finished at timestep: 252
+reward: 45079.01344849376
+========================================
+episode: 844
+episode was finished at timestep: 1
+reward: 42709.920516199825
+========================================
+episode: 845
+episode was finished at timestep: 13958
+reward: 51627.933590588866
+========================================
+episode: 846
+episode was finished at timestep: 3383
+reward: 47157.9956404314
+========================================
+episode: 847
+episode was finished at timestep: 0
+reward: 46060.143143955036
+========================================
+episode: 848
+episode was finished at timestep: 0
+reward: 47568.95072805909
+========================================
+episode: 849
+episode was finished at timestep: 0
+reward: 45963.07290532907
+========================================
+episode: 850
+episode was finished at timestep: 6444
+reward: 50481.4445351859
+========================================
+episode: 851
+episode was finished at timestep: 5877
+reward: 50824.16885623582
+========================================
+episode: 852
+episode was finished at timestep: 997
+reward: 42124.095754076414
+========================================
+episode: 853
+episode was finished at timestep: 10710
+reward: 50000.821541842204
+========================================
+episode: 854
+episode was finished at timestep: 0
+reward: 45935.09759353757
+========================================
+episode: 855
+episode was finished at timestep: 0
+reward: 46606.7697436278
+========================================
+episode: 856
+episode was finished at timestep: 24
+reward: 44639.98367564349
+========================================
+episode: 857
+episode was finished at timestep: 0
+reward: 46621.652512518034
+========================================
+episode: 858
+episode was finished at timestep: 0
+reward: 47316.283525728635
+========================================
+episode: 860
+episode was finished at timestep: 9696
+reward: 50004.74050309491
+========================================
+episode: 861
+episode was finished at timestep: 0
+reward: 47018.80462290451
+========================================
+episode: 862
+episode was finished at timestep: 583
+reward: 47524.22699984609
+========================================
+episode: 863
+episode was finished at timestep: 0
+reward: 47966.16336174232
+========================================
+episode: 864
+episode was finished at timestep: 0
+reward: 47195.10791404505
+========================================
+episode: 865
+episode was finished at timestep: 0
+reward: 47081.35117131852
+========================================
+episode: 866
+episode was finished at timestep: 0
+reward: 46318.871995718895
+========================================
+episode: 867
+episode was finished at timestep: 0
+reward: 48199.36878998649
+========================================
+episode: 868
+episode was finished at timestep: 2946
+reward: 46518.46063458621
+========================================
+episode: 869
+episode was finished at timestep: 0
+reward: 45982.67623590086
+========================================
+episode: 870
+episode was finished at timestep: 0
+reward: 48523.874630959566
+========================================
+episode: 871
+episode was finished at timestep: 198
+reward: 44960.26625493325
+========================================
+episode: 872
+episode was finished at timestep: 2242
+reward: 46069.640074761475
+========================================
+episode: 873
+episode was finished at timestep: 0
+reward: 45482.17817886763
+========================================
+episode: 874
+episode was finished at timestep: 6146
+reward: 48576.58544334041
+========================================
+episode: 875
+episode was finished at timestep: 18843
+reward: 54663.28133799329
+========================================
+episode: 876
+episode was finished at timestep: 0
+reward: 47272.1157987861
+========================================
+episode: 877
+episode was finished at timestep: 0
+reward: 48489.740513026656
+========================================
+episode: 878
+episode was finished at timestep: 0
+reward: 46205.31626343705
+========================================
+episode: 879
+episode was finished at timestep: 0
+reward: 46823.14069250258
+========================================
+episode: 880
+episode was finished at timestep: 0
+reward: 48126.876078517336
+========================================
+episode: 881
+episode was finished at timestep: 7052
+reward: 48466.41344153016
+========================================
+episode: 882
+episode was finished at timestep: 0
+reward: 46415.59301985145
+========================================
+episode: 883
+episode was finished at timestep: 0
+reward: 46287.18757883115
+========================================
+episode: 884
+episode was finished at timestep: 0
+reward: 46240.053170966705
+========================================
+episode: 885
+episode was finished at timestep: 356
+reward: 44999.94264062361
+========================================
+episode: 886
+episode was finished at timestep: 0
+reward: 45815.3829627255
+========================================
+episode: 887
+episode was finished at timestep: 0
+reward: 46468.17710444621
+========================================
+episode: 888
+episode was finished at timestep: 0
+reward: 45590.95887680873
+========================================
+episode: 889
+episode was finished at timestep: 0
+reward: 46122.91941016601
+========================================
+episode: 890
+episode was finished at timestep: 1849
+reward: 46496.06900006046
+========================================
+episode: 891
+episode was finished at timestep: 0
+reward: 45718.10468417126
+========================================
+episode: 892
+episode was finished at timestep: 0
+reward: 46101.32602316541
+========================================
+episode: 893
+episode was finished at timestep: 0
+reward: 46398.0888267387
+========================================
+episode: 894
+episode was finished at timestep: 10680
+reward: 49669.34329499032
+========================================
+episode: 895
+episode was finished at timestep: 0
+reward: 46172.33449325396
+========================================
+episode: 896
+episode was finished at timestep: 0
+reward: 46774.58949129732
+========================================
+episode: 897
+episode was finished at timestep: 0
+reward: 45628.374240142584
+========================================
+episode: 898
+episode was finished at timestep: 0
+reward: 45468.12132692823
+========================================
+episode: 899
+episode was finished at timestep: 0
+reward: 45467.947841624824
+========================================
+episode: 900
+episode was finished at timestep: 1377
+reward: 1398.268014969499
+========================================
+episode: 901
+episode was finished at timestep: 0
+reward: 46428.26744206325
+========================================
+episode: 902
+episode was finished at timestep: 0
+reward: 46141.871843589135
+========================================
+episode: 903
+episode was finished at timestep: 0
+reward: 45438.60671481143
+========================================
+episode: 904
+episode was finished at timestep: 0
+reward: 47264.547993912245
+========================================
+episode: 905
+episode was finished at timestep: 0
+reward: 46394.68362900529
+========================================
+episode: 906
+episode was finished at timestep: 0
+reward: 45392.05332608548
+========================================
+episode: 907
+episode was finished at timestep: 0
+reward: 47218.334442969775
+========================================
+episode: 908
+episode was finished at timestep: 0
+reward: 47205.33851968935
+========================================
+episode: 909
+episode was finished at timestep: 1516
+reward: 45743.7759935482
+========================================
+episode: 910
+episode was finished at timestep: 0
+reward: 46816.92718002113
+========================================
+episode: 911
+episode was finished at timestep: 0
+reward: 46117.610705140694
+========================================
+episode: 912
+episode was finished at timestep: 0
+reward: 46228.07211509346
+========================================
+episode: 913
+episode was finished at timestep: 0
+reward: 46017.73284927912
+========================================
+episode: 914
+episode was finished at timestep: 3557
+reward: 46852.94453755864
+========================================
+episode: 915
+episode was finished at timestep: 0
+reward: 46263.95633016976
+========================================
+episode: 916
+episode was finished at timestep: 0
+reward: 45954.29670017969
+========================================
+episode: 917
+episode was finished at timestep: 0
+reward: 46099.13932808578
+========================================
+episode: 918
+episode was finished at timestep: 0
+reward: 47174.266290832304
+========================================
+episode: 919
+episode was finished at timestep: 0
+reward: 46592.662584915335
+========================================
+episode: 920
+episode was finished at timestep: 0
+reward: 46404.29826501331
+========================================
+episode: 921
+episode was finished at timestep: 0
+reward: 46552.8696287137
+========================================
+episode: 922
+episode was finished at timestep: 0
+reward: 45786.734283661746
+========================================
+episode: 923
+episode was finished at timestep: 0
+reward: 46782.59402405168
+========================================
+episode: 924
+episode was finished at timestep: 0
+reward: 46728.951588987846
+========================================
+episode: 925
+episode was finished at timestep: 0
+reward: 45764.87926756318
+========================================
+episode: 926
+episode was finished at timestep: 0
+reward: 45480.57903300368
+========================================
+episode: 927
+episode was finished at timestep: 0
+reward: 46798.205223662204
+========================================
+episode: 928
+episode was finished at timestep: 0
+reward: 47094.868098259176
+========================================
+episode: 929
+episode was finished at timestep: 420
+reward: 241.50000549339163
+========================================
+episode: 930
+episode was finished at timestep: 67
+reward: 45135.4640275537
+========================================
+episode: 931
+episode was finished at timestep: 35
+reward: 45210.69439431187
+========================================
+episode: 932
+episode was finished at timestep: 513
+reward: 45449.637020400565
+========================================
+episode: 933
+episode was finished at timestep: 72
+reward: 45391.140492716644
+========================================
+episode: 934
+episode was finished at timestep: 356
+reward: 45261.40337068696
+========================================
+episode: 935
+episode was finished at timestep: 2
+reward: 45675.83073825431
+========================================
+episode: 936
+episode was finished at timestep: 0
+reward: 45324.21184019516
+========================================
+episode: 937
+episode was finished at timestep: 0
+reward: 46134.93374463286
+========================================
+episode: 938
+episode was finished at timestep: 0
+reward: 46686.74941323147
+========================================
+episode: 939
+episode was finished at timestep: 0
+reward: 46070.751386583834
+========================================
+episode: 940
+episode was finished at timestep: 3756
+reward: 47022.20542462145
+========================================
+episode: 941
+episode was finished at timestep: 8066
+reward: 49129.490176564344
+========================================
+episode: 942
+episode was finished at timestep: 126
+reward: 40847.38088531897
+========================================
+episode: 943
+episode was finished at timestep: 7424
+reward: 48632.64983474787
+========================================
+episode: 944
+episode was finished at timestep: 0
+reward: 45982.41800417069
+========================================
+episode: 945
+episode was finished at timestep: 0
+reward: 48073.0418236189
+========================================
+episode: 946
+episode was finished at timestep: 0
+reward: 45809.258136961646
+========================================
+episode: 947
+episode was finished at timestep: 507
+reward: 39611.96856069331
+========================================
+episode: 948
+episode was finished at timestep: 7180
+reward: 48124.68821546626
+========================================
+episode: 949
+episode was finished at timestep: 0
+reward: 46107.307177711904
+========================================
+episode: 950
+episode was finished at timestep: 531
+reward: 36902.40697959265
+========================================
+episode: 951
+episode was finished at timestep: 2
+reward: 13.500013597890579
+========================================
+episode: 952
+episode was finished at timestep: 2400
+reward: 46589.95085255547
+========================================
+episode: 953
+episode was finished at timestep: 2342
+reward: 46121.91492258674
+========================================
+episode: 954
+episode was finished at timestep: 0
+reward: 46673.37005291123
+========================================
+episode: 955
+episode was finished at timestep: 0
+reward: 45840.08620945475
+========================================
+episode: 956
+episode was finished at timestep: 0
+reward: 45759.39594711608
+========================================
+episode: 957
+episode was finished at timestep: 0
+reward: 46083.54521667503
+========================================
+episode: 958
+episode was finished at timestep: 0
+reward: 46358.03370867704
+========================================
+episode: 959
+episode was finished at timestep: 2977
+reward: 46600.07237489251
+========================================
+episode: 960
+episode was finished at timestep: 4307
+reward: 47339.9088489063
+========================================
+episode: 961
+episode was finished at timestep: 0
+reward: 46631.27801840372
+========================================
+episode: 962
+episode was finished at timestep: 0
+reward: 46198.21793563257
+========================================
+episode: 963
+episode was finished at timestep: 0
+reward: 47029.728527513296
+========================================
+episode: 964
+episode was finished at timestep: 2155
+reward: 46053.58892545447
+========================================
+episode: 965
+episode was finished at timestep: 2523
+reward: 46376.44019699135
+========================================
+episode: 966
+episode was finished at timestep: 0
+reward: 46901.778434174805
+========================================
+episode: 967
+episode was finished at timestep: 2570
+reward: 46096.31397065762
+========================================
+episode: 968
+episode was finished at timestep: 2345
+reward: 46335.05011866465
+========================================
+episode: 969
+episode was finished at timestep: 0
+reward: 46058.493251162945
+========================================
+episode: 970
+episode was finished at timestep: 0
+reward: 46381.48426614641
+========================================
+episode: 971
+episode was finished at timestep: 0
+reward: 46252.463860533564
+========================================
+episode: 972
+episode was finished at timestep: 0
+reward: 46200.15522932184
+========================================
+episode: 973
+episode was finished at timestep: 0
+reward: 46708.17864554876
+========================================
+episode: 974
+episode was finished at timestep: 0
+reward: 47749.14147745033
+========================================
+episode: 975
+episode was finished at timestep: 0
+reward: 46651.353987796196
+========================================
+episode: 976
+episode was finished at timestep: 0
+reward: 46841.028802029046
+========================================
+episode: 977
+episode was finished at timestep: 0
+reward: 45715.206209260185
+========================================
+episode: 978
+episode was finished at timestep: 0
+reward: 46533.886482777205
+========================================
+episode: 979
+episode was finished at timestep: 648
+reward: 45244.60592103011
+========================================
+episode: 980
+episode was finished at timestep: 2769
+reward: 46662.22548650166
+========================================
+episode: 981
+episode was finished at timestep: 1132
+reward: 16115.615100011906
+========================================
+episode: 982
+episode was finished at timestep: 142
+reward: 45340.15225321294
+========================================
+episode: 983
+episode was finished at timestep: 0
+reward: 46054.908197522265
+========================================
+episode: 984
+episode was finished at timestep: 0
+reward: 45777.06928708388
+========================================
+episode: 985
+episode was finished at timestep: 184
+reward: 27525.080856371987
+========================================
+episode: 986
+episode was finished at timestep: 0
+reward: 426.80731025136254
+========================================
+episode: 987
+episode was finished at timestep: 0
+reward: 45859.757865382686
+========================================
+episode: 988
+episode was finished at timestep: 8357
+reward: 49292.80892023391
+========================================
+episode: 989
+episode was finished at timestep: 0
+reward: 46232.31800601687
+========================================
+episode: 990
+episode was finished at timestep: 560
+reward: 45245.022287861044
+========================================
+episode: 991
+episode was finished at timestep: 0
+reward: 46638.00897666806
+========================================
+episode: 992
+episode was finished at timestep: 0
+reward: 46384.5584659328
+========================================
+episode: 993
+episode was finished at timestep: 1352
+reward: 1064.5000905356048
+========================================
+episode: 994
+episode was finished at timestep: 0
+reward: 45951.944982208406
+========================================
+episode: 995
+episode was finished at timestep: 6672
+reward: 48513.97084503816
+========================================
+episode: 996
+episode was finished at timestep: 0
+reward: 46073.97219275009
+========================================
+episode: 997
+episode was finished at timestep: 3600
+reward: 47056.39799430465
+========================================
+episode: 998
+episode was finished at timestep: 0
+reward: 45858.609513171694
+========================================
+episode: 999
+episode was finished at timestep: 0
+reward: 47301.836797924596
+========================================
