@@ -242,7 +242,10 @@ class TiltrotorTransitionTraining(gym.Env):
         # 조건 2: 피치 값 차이 | 작을 수록 좋음 | 0~90
         # reward 2는 클수록 좋게 설정하였음(positive)
         pitch_target = 4.0
-        reward_2 = (10 - np.abs(pitch_state - pitch_target)) / 10
+        if 0 <= pitch_state<= 8:
+            reward_2 = (10 - np.abs(pitch_state - pitch_target)) / 10
+        else:
+            reward_2 = -10
         
         # 조건 3: 비행 시간 | 클수록 좋음 | 0 ~ inf, 1 timestep = 0.05 sec, 30,000 timestep = 1,500 sec = 25 min
         # 조건 3은 클수록 좋게 설정하였음(positive)
@@ -254,7 +257,7 @@ class TiltrotorTransitionTraining(gym.Env):
         if Vcruise_target <=25:
             reward_4 = (25 - np.abs(self.state[3] - Vcruise_target)) / 25
         else:
-            reward_4 = -1
+            reward_4 = -10
 
         # 조건 5: 순항 고도 | 초기 고도: 0m > 15m나 0m나 대기 조건 차이 크지 않음 | 작을 수록 좋음 | -15 ~ +15
         # 조건 5는 클수록 좋게 설정하였음(positive)
@@ -302,6 +305,9 @@ class TiltrotorTransitionTraining(gym.Env):
             done = True
         
         if (self.tilt < 0 or self.tilt > 90):
+            done = True
+
+        if self.state[3] > 30:
             done = True
              
         observation = np.hstack((self.state[0],self.state[1],self.state[2],self.state[3],self.state[4],self.state[5],self.state[6], self.f_rpm, self.r_rpm, self.elev, self.tilt))
