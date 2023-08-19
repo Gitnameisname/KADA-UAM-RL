@@ -285,10 +285,11 @@ class TiltrotorTransitionTraining(gym.Env):
         # 비행 속도가 20 미만일 경우와 20 이상일 경우 가중치를 다르게 배정
         # [틸트각, 피치, 비행 시간, 비행 속도, 순항 고도, 프로펠러 rpm]
         # [P,     P,    P,        P,        P,         P         ]
-        if self.state[3] < 20:
-            weight = [1, 8, 2 / max_t_threshold, 2, 1, 1]
+        # 8/19: 분기점을 10m/s로 조정
+        if self.state[3] < 10:
+            weight = [1, 8, 2 / max_t_threshold, 8, 1, 1]
         else:
-            weight = [2, 4, 1 / max_t_threshold, 2, 2, 2]
+            weight = [2, 4, 1 / max_t_threshold, 2, 4, 2]
 
         rewards_list = [reward_1, reward_2, reward_3, reward_4, reward_5, reward_6]
         reward = np.dot(weight, rewards_list)
