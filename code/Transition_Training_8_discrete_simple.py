@@ -177,6 +177,11 @@ class TiltrotorTransitionTraining(gym.Env):
         self.viewer = None
         self.current_score = 0
         
+        self.T_f = 0
+        self.T_r = 0
+        self.L = 0
+        self.D = 0
+        self.Mp = 0
         # print(self.f_rpm)
         # print(self.r_rpm)
         
@@ -404,9 +409,9 @@ class TiltrotorTransitionTraining(gym.Env):
         Cm_CS = self.Cm_elev_0 + self.Cm_elev*self.elev
         
         if (self.al >= (-20*math.pi/180)) and (self.al <= (30*math.pi/180)):
-            self.L = 0.5*1.225*self.vel**2*self.S*(CL_clean + CL_CS)
-            self.D = 0.5*1.225*self.vel**2*self.S*(CD_clean + CD_CS)
-            self.Mp =0.5*1.225*self.vel**2*self.S*self.cbar*(Cm_clean + Cm_CS)
+            self.L = 0.5*1.225*(self.vel**2)*self.S*(CL_clean + CL_CS)
+            self.D = 0.5*1.225*(self.vel**2)*self.S*(CD_clean + CD_CS)
+            self.Mp =0.5*1.225*(self.vel**2)*self.S*self.cbar*(Cm_clean + Cm_CS)
         else:
             self.L = 0
             self.D = 0
@@ -515,6 +520,12 @@ class TiltrotorTransitionTraining(gym.Env):
         text_r_rpm = self.font.render("Rear_RPM(%) : "+str(round(self.r_rpm*100,8)),True,(28,0,0))
         text_elev = self.font.render("Elevator(deg) : "+str(round(self.elev,8)),True,(28,0,0))
         text_tilt = self.font.render("Tilt_Angle(deg) : "+str(round(self.tilt,8)),True,(28,0,0))
+        text_Tf = self.font.render("Front Thrust(N) : "+str(round(self.T_f,8)),True,(28,0,0))
+        text_Tr = self.font.render("Rear Thrust(N) : "+str(round(self.T_r,8)),True,(28,0,0))
+        text_W = self.font.render("Weight(N) : "+str(round(self.m*self.g,8)),True,(28,0,0))
+        text_L = self.font.render("Lift(N) : "+str(round(self.L*100,8)),True,(28,0,0))
+        text_D = self.font.render("Drag(N) : "+str(round(self.D,8)),True,(28,0,0))
+        text_M = self.font.render("Pithching(N) : "+str(round(self.Mp,8)),True,(28,0,0))
         
         self.screen.blit(self.Textboard, (700, 10))
         self.screen.blit(text_x, (700,10))
@@ -527,6 +538,12 @@ class TiltrotorTransitionTraining(gym.Env):
         self.screen.blit(text_r_rpm, (700,150))
         self.screen.blit(text_elev, (700,170))
         self.screen.blit(text_tilt, (700,190))
+        self.screen.blit(text_Tf, (700,210))
+        self.screen.blit(text_Tr, (700,230))
+        self.screen.blit(text_W, (700,250))
+        self.screen.blit(text_L, (700,270))
+        self.screen.blit(text_D, (700,290))
+        self.screen.blit(text_M, (700,310))
         
         self.clock.tick(120)
         pygame.display.flip() 
