@@ -237,7 +237,7 @@ class TiltrotorTransitionTraining(gym.Env):
         
         # Reward 계산 | Reward Calculation | 보상 계산
         pitch_state = abs(self.state[2])*180/math.pi # degree
-        print(f"pitch state: {pitch_state}")
+        # print(f"pitch state: {pitch_state}")
         alt_state = self.state[1]
 
         # 조건 1: tilt각 차이 | self.tilt 초기값: 90 deg | 작을수록 좋음 | 0~90
@@ -366,9 +366,9 @@ class TiltrotorTransitionTraining(gym.Env):
         if self.state[3] == 0:
             self.al = self.state[2]
         else:
-            self.al = math.atan(self.w/self.u)
+            self.al = -1 * math.atan(self.w/self.u)
         
-        print(f"u: {self.u} | w: {self.w}")
+        # print(f"u: {self.u} | w: {self.w}")
         
         self.vel = math.sqrt(self.w**2 + self.u**2)
         
@@ -465,7 +465,7 @@ class TiltrotorTransitionTraining(gym.Env):
             self.L = 0.5 * 1.225 * (self.vel**2) * self.S * (CL_clean + CL_CS)
             self.D = 0.5 * 1.225 * (self.vel**2) * self.S * (CD_clean + CD_CS)
             self.Mp =0.5 * 1.225 * (self.vel**2) * self.S * self.cbar * (Cm_clean + Cm_CS)
-            print(f"Lift: {self.L} | Velocity: {self.vel} | Wing Area: {self.S} | Cl:{(CL_clean)} | pitch: {self.al} vs {self.state[2]}")
+            # print(f"Lift: {self.L} | Velocity: {self.vel} | Wing Area: {self.S} | Cl:{(CL_clean)} | pitch: {self.al} vs {self.state[2]}")
         else:
             self.L = 0
             self.D = 0
