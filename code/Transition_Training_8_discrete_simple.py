@@ -237,6 +237,7 @@ class TiltrotorTransitionTraining(gym.Env):
         
         # Reward 계산 | Reward Calculation | 보상 계산
         pitch_state = abs(self.state[2])*180/math.pi # degree
+        print(f"pitch state: {pitch_state}")
         alt_state = self.state[1]
 
         # 조건 1: tilt각 차이 | self.tilt 초기값: 90 deg | 작을수록 좋음 | 0~90
@@ -367,61 +368,104 @@ class TiltrotorTransitionTraining(gym.Env):
         else:
             self.al = math.atan(self.w/self.u)
         
-        
+        print(f"u: {self.u} | w: {self.w}")
         
         self.vel = math.sqrt(self.w**2 + self.u**2)
         
-        
-        
+        # ckchoi: 추정식 잘못되어서 수정
+        # guess_value = ((d-b)/(c-a))*(x-a)+b
         if (self.al <= -15*math.pi/180):
-            CL_clean = self.CL_a_20 + (self.CL_a_15 - self.CL_a_20)*(self.al*180/math.pi)/5
-            CD_clean = self.CD_a_20 + (self.CD_a_15 - self.CD_a_20)*(self.al*180/math.pi)/5
-            Cm_clean = self.Cm_a_20 + (self.Cm_a_15 - self.Cm_a_20)*(self.al*180/math.pi)/5
+            CL_clean = self.CL_a_20 + (self.al*180/math.pi + 20)*(self.CL_a_15 - self.CL_a_20)/5
+            CD_clean = self.CD_a_20 + (self.al*180/math.pi + 20)*(self.CD_a_15 - self.CD_a_20)/5
+            Cm_clean = self.Cm_a_20 + (self.al*180/math.pi + 20)*(self.Cm_a_15 - self.Cm_a_20)/5
         elif (self.al <= -10*math.pi/180):
-            CL_clean = self.CL_a_15 + (self.CL_a_10 - self.CL_a_15)*(self.al*180/math.pi)/5
-            CD_clean = self.CD_a_15 + (self.CD_a_10 - self.CD_a_15)*(self.al*180/math.pi)/5
-            Cm_clean = self.Cm_a_15 + (self.Cm_a_10 - self.Cm_a_15)*(self.al*180/math.pi)/5
+            CL_clean = self.CL_a_15 + (self.al*180/math.pi + 15)*(self.CL_a_10 - self.CL_a_15)/5
+            CD_clean = self.CD_a_15 + (self.al*180/math.pi + 15)*(self.CD_a_10 - self.CD_a_15)/5
+            Cm_clean = self.Cm_a_15 + (self.al*180/math.pi + 15)*(self.Cm_a_10 - self.Cm_a_15)/5
         elif (self.al <= -5*math.pi/180):
-            CL_clean = self.CL_a_10 + (self.CL_a_5 - self.CL_a_10)*(self.al*180/math.pi)/5
-            CD_clean = self.CD_a_10 + (self.CD_a_5 - self.CD_a_10)*(self.al*180/math.pi)/5
-            Cm_clean = self.Cm_a_10 + (self.Cm_a_5 - self.Cm_a_10)*(self.al*180/math.pi)/5
+            CL_clean = self.CL_a_10 + (self.al*180/math.pi + 10)*(self.CL_a_5 - self.CL_a_10)/5
+            CD_clean = self.CD_a_10 + (self.al*180/math.pi + 10)*(self.CD_a_5 - self.CD_a_10)/5
+            Cm_clean = self.Cm_a_10 + (self.al*180/math.pi + 10)*(self.Cm_a_5 - self.Cm_a_10)/5
         elif (self.al <= 0*math.pi/180):
-            CL_clean = self.CL_a_5 + (self.CL_a0 - self.CL_a_5)*(self.al*180/math.pi)/5
-            CD_clean = self.CD_a_5 + (self.CD_a0 - self.CD_a_5)*(self.al*180/math.pi)/5
-            Cm_clean = self.Cm_a_5 + (self.Cm_a0 - self.Cm_a_5)*(self.al*180/math.pi)/5
+            CL_clean = self.CL_a_5 + (self.al*180/math.pi + 5)*(self.CL_a0 - self.CL_a_5)/5
+            CD_clean = self.CD_a_5 + (self.al*180/math.pi + 5)*(self.CD_a0 - self.CD_a_5)/5
+            Cm_clean = self.Cm_a_5 + (self.al*180/math.pi + 5)*(self.Cm_a0 - self.Cm_a_5)/5
         elif (self.al <= 5*math.pi/180):
-            CL_clean = self.CL_a0 + (self.CL_a5 - self.CL_a0)*(self.al*180/math.pi)/5
-            CD_clean = self.CD_a0 + (self.CD_a5 - self.CD_a0)*(self.al*180/math.pi)/5
-            Cm_clean = self.Cm_a0 + (self.Cm_a5 - self.Cm_a0)*(self.al*180/math.pi)/5
+            CL_clean = self.CL_a0 + (self.al*180/math.pi - 0)*(self.CL_a5 - self.CL_a0)/5
+            CD_clean = self.CD_a0 + (self.al*180/math.pi - 0)*(self.CD_a5 - self.CD_a0)/5
+            Cm_clean = self.Cm_a0 + (self.al*180/math.pi - 0)*(self.Cm_a5 - self.Cm_a0)/5
         elif (self.al <= 10*math.pi/180):
-            CL_clean = self.CL_a5 + (self.CL_a10 - self.CL_a5)*(self.al*180/math.pi)/5
-            CD_clean = self.CD_a5 + (self.CD_a10 - self.CD_a5)*(self.al*180/math.pi)/5
-            Cm_clean = self.Cm_a5 + (self.Cm_a10 - self.Cm_a5)*(self.al*180/math.pi)/5
+            CL_clean = self.CL_a5 + (self.al*180/math.pi - 5)*(self.CL_a10 - self.CL_a5)/5
+            CD_clean = self.CD_a5 + (self.al*180/math.pi - 5)*(self.CD_a10 - self.CD_a5)/5
+            Cm_clean = self.Cm_a5 + (self.al*180/math.pi - 5)*(self.Cm_a10 - self.Cm_a5)/5
         elif (self.al <= 15*math.pi/180):
-            CL_clean = self.CL_a10 + (self.CL_a15 - self.CL_a10)*(self.al*180/math.pi)/5
-            CD_clean = self.CD_a10 + (self.CD_a15 - self.CD_a10)*(self.al*180/math.pi)/5
-            Cm_clean = self.Cm_a10 + (self.Cm_a15 - self.Cm_a10)*(self.al*180/math.pi)/5
+            CL_clean = self.CL_a10 + (self.al*180/math.pi - 10)*(self.CL_a15 - self.CL_a10)/5
+            CD_clean = self.CD_a10 + (self.al*180/math.pi - 10)*(self.CD_a15 - self.CD_a10)/5
+            Cm_clean = self.Cm_a10 + (self.al*180/math.pi - 10)*(self.Cm_a15 - self.Cm_a10)/5
         elif (self.al <= 20*math.pi/180):
-            CL_clean = self.CL_a15 + (self.CL_a20 - self.CL_a15)*(self.al*180/math.pi)/5
-            CD_clean = self.CD_a15 + (self.CD_a20 - self.CD_a15)*(self.al*180/math.pi)/5
-            Cm_clean = self.Cm_a15 + (self.Cm_a20 - self.Cm_a15)*(self.al*180/math.pi)/5
+            CL_clean = self.CL_a15 + (self.al*180/math.pi - 15)*(self.CL_a20 - self.CL_a15)/5
+            CD_clean = self.CD_a15 + (self.al*180/math.pi - 15)*(self.CD_a20 - self.CD_a15)/5
+            Cm_clean = self.Cm_a15 + (self.al*180/math.pi - 15)*(self.Cm_a20 - self.Cm_a15)/5
         elif (self.al <= 25*math.pi/180):
-            CL_clean = self.CL_a20 + (self.CL_a25 - self.CL_a20)*(self.al*180/math.pi)/5
-            CD_clean = self.CD_a20 + (self.CD_a25 - self.CD_a20)*(self.al*180/math.pi)/5
-            Cm_clean = self.Cm_a20 + (self.Cm_a25 - self.Cm_a20)*(self.al*180/math.pi)/5
+            CL_clean = self.CL_a20 + (self.al*180/math.pi - 20)*(self.CL_a25 - self.CL_a20)/5
+            CD_clean = self.CD_a20 + (self.al*180/math.pi - 20)*(self.CD_a25 - self.CD_a20)/5
+            Cm_clean = self.Cm_a20 + (self.al*180/math.pi - 20)*(self.Cm_a25 - self.Cm_a20)/5
         else:
-            CL_clean = self.CL_a25 + (self.CL_a30 - self.CL_a25)*(self.al*180/math.pi)/5
-            CD_clean = self.CD_a25 + (self.CD_a30 - self.CD_a25)*(self.al*180/math.pi)/5
-            Cm_clean = self.Cm_a25 + (self.Cm_a30 - self.Cm_a25)*(self.al*180/math.pi)/5
+            CL_clean = self.CL_a25 + (self.al*180/math.pi - 25)*(self.CL_a30 - self.CL_a25)/5
+            CD_clean = self.CD_a25 + (self.al*180/math.pi - 25)*(self.CD_a30 - self.CD_a25)/5
+            Cm_clean = self.Cm_a25 + (self.al*180/math.pi - 25)*(self.Cm_a30 - self.Cm_a25)/5
+        
+        # js hyeon의 시뮬레이션 원본 코드
+        # if (self.al <= -15*math.pi/180):
+        #     CL_clean = self.CL_a_20 + (self.CL_a_15 - self.CL_a_20)*(self.al*180/math.pi)/5
+        #     CD_clean = self.CD_a_20 + (self.CD_a_15 - self.CD_a_20)*(self.al*180/math.pi)/5
+        #     Cm_clean = self.Cm_a_20 + (self.Cm_a_15 - self.Cm_a_20)*(self.al*180/math.pi)/5
+        # elif (self.al <= -10*math.pi/180):
+        #     CL_clean = self.CL_a_15 + (self.CL_a_10 - self.CL_a_15)*(self.al*180/math.pi)/5
+        #     CD_clean = self.CD_a_15 + (self.CD_a_10 - self.CD_a_15)*(self.al*180/math.pi)/5
+        #     Cm_clean = self.Cm_a_15 + (self.Cm_a_10 - self.Cm_a_15)*(self.al*180/math.pi)/5
+        # elif (self.al <= -5*math.pi/180):
+        #     CL_clean = self.CL_a_10 + (self.CL_a_5 - self.CL_a_10)*(self.al*180/math.pi)/5
+        #     CD_clean = self.CD_a_10 + (self.CD_a_5 - self.CD_a_10)*(self.al*180/math.pi)/5
+        #     Cm_clean = self.Cm_a_10 + (self.Cm_a_5 - self.Cm_a_10)*(self.al*180/math.pi)/5
+        # elif (self.al <= 0*math.pi/180):
+        #     CL_clean = self.CL_a_5 + (self.CL_a0 - self.CL_a_5)*(self.al*180/math.pi)/5
+        #     CD_clean = self.CD_a_5 + (self.CD_a0 - self.CD_a_5)*(self.al*180/math.pi)/5
+        #     Cm_clean = self.Cm_a_5 + (self.Cm_a0 - self.Cm_a_5)*(self.al*180/math.pi)/5
+        # elif (self.al <= 5*math.pi/180):
+        #     CL_clean = self.CL_a0 + (self.CL_a5 - self.CL_a0)*(self.al*180/math.pi)/5
+        #     CD_clean = self.CD_a0 + (self.CD_a5 - self.CD_a0)*(self.al*180/math.pi)/5
+        #     Cm_clean = self.Cm_a0 + (self.Cm_a5 - self.Cm_a0)*(self.al*180/math.pi)/5
+        # elif (self.al <= 10*math.pi/180):
+        #     CL_clean = self.CL_a5 + (self.CL_a10 - self.CL_a5)*(self.al*180/math.pi)/5
+        #     CD_clean = self.CD_a5 + (self.CD_a10 - self.CD_a5)*(self.al*180/math.pi)/5
+        #     Cm_clean = self.Cm_a5 + (self.Cm_a10 - self.Cm_a5)*(self.al*180/math.pi)/5
+        # elif (self.al <= 15*math.pi/180):
+        #     CL_clean = self.CL_a10 + (self.CL_a15 - self.CL_a10)*(self.al*180/math.pi)/5
+        #     CD_clean = self.CD_a10 + (self.CD_a15 - self.CD_a10)*(self.al*180/math.pi)/5
+        #     Cm_clean = self.Cm_a10 + (self.Cm_a15 - self.Cm_a10)*(self.al*180/math.pi)/5
+        # elif (self.al <= 20*math.pi/180):
+        #     CL_clean = self.CL_a15 + (self.CL_a20 - self.CL_a15)*(self.al*180/math.pi)/5
+        #     CD_clean = self.CD_a15 + (self.CD_a20 - self.CD_a15)*(self.al*180/math.pi)/5
+        #     Cm_clean = self.Cm_a15 + (self.Cm_a20 - self.Cm_a15)*(self.al*180/math.pi)/5
+        # elif (self.al <= 25*math.pi/180):
+        #     CL_clean = self.CL_a20 + (self.CL_a25 - self.CL_a20)*(self.al*180/math.pi)/5
+        #     CD_clean = self.CD_a20 + (self.CD_a25 - self.CD_a20)*(self.al*180/math.pi)/5
+        #     Cm_clean = self.Cm_a20 + (self.Cm_a25 - self.Cm_a20)*(self.al*180/math.pi)/5
+        # else:
+        #     CL_clean = self.CL_a25 + (self.CL_a30 - self.CL_a25)*(self.al*180/math.pi)/5
+        #     CD_clean = self.CD_a25 + (self.CD_a30 - self.CD_a25)*(self.al*180/math.pi)/5
+        #     Cm_clean = self.Cm_a25 + (self.Cm_a30 - self.Cm_a25)*(self.al*180/math.pi)/5
         
         CL_CS = self.CL_elev_0 + self.CL_elev*self.elev
         CD_CS = self.CD_elev_0 + self.CD_elev*self.elev
         Cm_CS = self.Cm_elev_0 + self.Cm_elev*self.elev
         
         if (self.al >= (-20*math.pi/180)) and (self.al <= (30*math.pi/180)):
-            self.L = 0.5*1.225*(self.vel**2)*self.S*(CL_clean + CL_CS)
-            self.D = 0.5*1.225*(self.vel**2)*self.S*(CD_clean + CD_CS)
-            self.Mp =0.5*1.225*(self.vel**2)*self.S*self.cbar*(Cm_clean + Cm_CS)
+            self.L = 0.5 * 1.225 * (self.vel**2) * self.S * (CL_clean + CL_CS)
+            self.D = 0.5 * 1.225 * (self.vel**2) * self.S * (CD_clean + CD_CS)
+            self.Mp =0.5 * 1.225 * (self.vel**2) * self.S * self.cbar * (Cm_clean + Cm_CS)
+            print(f"Lift: {self.L} | Velocity: {self.vel} | Wing Area: {self.S} | Cl:{(CL_clean)} | pitch: {self.al} vs {self.state[2]}")
         else:
             self.L = 0
             self.D = 0
@@ -533,8 +577,12 @@ class TiltrotorTransitionTraining(gym.Env):
         text_Tf = self.font.render("Front Thrust(N) : "+str(round(self.T_f,8)),True,(28,0,0))
         text_Tr = self.font.render("Rear Thrust(N) : "+str(round(self.T_r,8)),True,(28,0,0))
         text_W = self.font.render("Weight(N) : "+str(round(self.m*self.g,8)),True,(28,0,0))
-        text_L = self.font.render("Lift(N) : "+str(round(self.L*100,8)),True,(28,0,0))
+        # ckchoi(8.24): 원본 코드에서 양력에 100을 곱했는데 제거함
+        # original: text_L = self.font.render("Lift(N) : "+str(round(self.L*100,8)),True,(28,0,0))
+        text_L = self.font.render("Lift(N) : "+str(round(self.L,8)),True,(28,0,0))
         text_D = self.font.render("Drag(N) : "+str(round(self.D,8)),True,(28,0,0))
+        text_LperD = self.font.render(f"Lift/Weight: {str(round(self.L/(self.m*self.g),8))}", True, (28,0,0))
+        text_LTperD = self.font.render(f"Lift+Thrust/Weight: {str(round((self.L + self.T_f + self.T_r)/(self.m*self.g),8))}", True, (28,0,0))
         text_M = self.font.render("Pithching(N) : "+str(round(self.Mp,8)),True,(28,0,0))
         
         self.screen.blit(self.Textboard, (700, 10))
@@ -552,8 +600,10 @@ class TiltrotorTransitionTraining(gym.Env):
         self.screen.blit(text_Tr, (700,230))
         self.screen.blit(text_W, (700,250))
         self.screen.blit(text_L, (700,270))
-        self.screen.blit(text_D, (700,290))
-        self.screen.blit(text_M, (700,310))
+        self.screen.blit(text_LperD, (700,290))
+        self.screen.blit(text_LTperD, (700,310))
+        self.screen.blit(text_D, (700,330))
+        self.screen.blit(text_M, (700,350))
         
         self.clock.tick(120)
         pygame.display.flip() 
