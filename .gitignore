@@ -1,4 +1,6 @@
 *.zip
 *.mp4
 __pycache__/
-results/*.txt
+results/
+*.pyc
+code/__pycache__/*.pyc
