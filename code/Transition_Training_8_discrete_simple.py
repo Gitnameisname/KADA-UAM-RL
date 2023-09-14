@@ -47,7 +47,7 @@ class TiltrotorTransitionTraining(gym.Env):
         
     def set_render(self, window_size):
         self.window_size = window_size
-        img_path = "F:\YJLEE's code\image"
+        img_path = "/home/andy/Documents/GitHub/KADA-UAM-RL/code/image"
 
         self.background = pygame.image.load(os.path.join(f"{img_path}/Background.png"))
 
