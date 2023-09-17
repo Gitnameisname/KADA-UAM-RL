@@ -279,12 +279,27 @@ class TiltrotorTransitionTraining(gym.Env):
         # 비행 속도가 20 미만일 경우와 20 이상일 경우 가중치를 다르게 배정
         # [틸트각, 피치, 비행 시간, 비행 속도, 순항 고도, 프로펠러 rpm]
         # [P,     P,    P,        P,        P,         P         ]
+<<<<<<< Updated upstream
         if self.state[3] < 20:
             weight = [1, 1, 1 / max_t_threshold, 1, 1, 1]
         else:
             weight = [2, 2, 1 / max_t_threshold, 2, 2, 2]
+=======
+        # 8/19: 분기점을 10m/s로 조정
+>>>>>>> Stashed changes
 
-        rewards_list = [reward_1, reward_2, reward_3, reward_4, reward_5, reward_6]
+        # 조건 7: 양력 관련
+        if round((self.L + self.T_f + self.T_r)/(self.m*self.g),8) >= 1:
+            reward_7 = 1
+        else:
+            reward_7 = -1
+
+        if self.state[3] < 10:
+            weight = [1, 8, 2 / max_t_threshold, 8, 1, 1, 1]
+        else:
+            weight = [2, 4, 1 / max_t_threshold, 2, 4, 2, 1]
+
+        rewards_list = [reward_1, reward_2, reward_3, reward_4, reward_5, reward_6, reward_7]
         reward = np.dot(weight, rewards_list)
         
         # Sharp reward(editing)
@@ -302,7 +317,7 @@ class TiltrotorTransitionTraining(gym.Env):
             done = True
              
         observation = np.hstack((self.state[0],self.state[1],self.state[2],self.state[3],self.state[4],self.state[5],self.state[6], self.f_rpm, self.r_rpm, self.elev, self.tilt))
-        reward_detail = [reward_1, reward_2, reward_3, reward_4, reward_5, reward_6]
+        reward_detail = [reward_1, reward_2, reward_3, reward_4, reward_5, reward_6, reward_7]
         info = {
             'Time': self.state[6],
             'x_pos': self.state[0],
