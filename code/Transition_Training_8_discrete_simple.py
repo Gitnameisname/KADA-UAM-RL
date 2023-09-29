@@ -16,8 +16,8 @@ class TiltrotorTransitionTraining(gym.Env):
         self.set_render([1000,500])
         
         self.set_DB(
-                    [0.5,0,0.003,0.1512,0.9997,0.1512,0.8544,0.32,23],
-                    # [cg_x,  cg_z,    f_p_x,    f_p_z, r_p_x, r_p_z, S, cbar, elev_max]
+                    [0.6136, 0.0871, 0.14, 0.14, 1.1, 0.14, 0.5621, 0.2, 0.8544, 0.2695, 23],
+                    # [cg_x,  cg_z,    f_p_x,    f_p_z, r_p_x, r_p_z, aerorp_x, aerorp_z, S, cbar, elev_max]
                     
                     [6.73E-07, 10000, 0.0, math.pi/2],
                     # [K_T, rpm_max, tilt_min, tilt_max]
@@ -34,7 +34,7 @@ class TiltrotorTransitionTraining(gym.Env):
                     [-0.0082,0.0073,0.0088,-0.0002,0.0339,-0.0367],
                     # [CL_elev_0, CL_elev, CD_elev_0, CD_elev, Cm_elev_0, Cm_elev]
                     
-                    [14.28,2.073,9.80665]
+                    [11.828,2.073,9.80665]
                     # [m, Iyy, g]
                     )
         
@@ -47,7 +47,7 @@ class TiltrotorTransitionTraining(gym.Env):
         
     def set_render(self, window_size):
         self.window_size = window_size
-        img_path = "F:\YJLEE's code\image"
+        img_path = "C:/Users/ds040/Desktop/KADA-UAM-RL-personal-jeongseok/code/image"
 
         self.background = pygame.image.load(os.path.join(f"{img_path}/Background.png"))
 
@@ -73,8 +73,8 @@ class TiltrotorTransitionTraining(gym.Env):
     def set_DB(self, Conf, Prop, Aero_CL, Aero_CD, Aero_Cm, Aero_CS, WnB):
         '''            
             DB : [config, Propulsion, Aerodynamics, WeightnBalance]
-                config : [    loc_cg, loc_front_prop, loc_rear_prop, wing_area,  MAC, elev_max]
-                         [cg_x, cg_z,   f_p_x, f_p_z,  r_p_x, r_p_z,         S, cbar, elev_max]
+                config : [    loc_cg, loc_front_prop, loc_rear_prop, loc_aerorp, wing_area,  MAC, elev_max]
+                         [cg_x, cg_z,   f_p_x, f_p_z,  r_p_x, r_p_z, aerorp_x, aerorp_z,   S,     cbar, elev_max]
                 
                 Propulsion : [K_T, RPM_max, Tilt_Angle_min, Tilt_Angle_max]
                              [K_T, rpm_max,       tilt_min,       tilt_max]
@@ -97,14 +97,18 @@ class TiltrotorTransitionTraining(gym.Env):
         self.f_p_z = Conf[3]                            # m
         self.r_p_x = Conf[4]                            # m
         self.r_p_z = Conf[5]                            # m
-        self.S = Conf[6]                                # m^2
-        self.cbar = Conf[7]                             # m
-        self.elev_max = Conf[8]                         # deg
+        self.aerorp_x = Conf[6]                            # m
+        self.aerorp_z = Conf[7]                            # m
+        self.S = Conf[8]                                # m^2
+        self.cbar = Conf[9]                             # m
+        self.elev_max = Conf[10]                         # deg
         
-        self.f_Lx = abs(self.cg_x - self.f_p_x)         # m
-        self.f_Lz = abs(self.cg_z - self.f_p_z)         # m
-        self.r_Lx = abs(self.cg_x - self.r_p_x)         # m
-        self.r_Lz = abs(self.cg_z - self.r_p_z)         # m
+        self.D_X_prop_f = self.cg_x - self.f_p_x        # m
+        self.D_Z_prop_f = self.cg_z - self.f_p_z        # m
+        self.D_X_prop_r = self.cg_x - self.r_p_x        # m
+        self.D_Z_prop_r = self.cg_z - self.r_p_z        # m
+        self.D_X_aero = self.cg_x - self.aerorp_x       # m
+        self.D_Z_aero = self.cg_z - self.aerorp_z       # m
         
         self.K_T = Prop[0]                               # none
         self.rpm_max = Prop[1]                          # rpm
@@ -182,6 +186,7 @@ class TiltrotorTransitionTraining(gym.Env):
         self.L = 0
         self.D = 0
         self.Mp = 0
+        self.al = 0
         # print(self.f_rpm)
         # print(self.r_rpm)
         
@@ -330,14 +335,23 @@ class TiltrotorTransitionTraining(gym.Env):
         return observation, reward, done, info
     
     # Flight Dynamics Equations
+    # def fqdot(self, q):
+    #     return ((-self.f_Lz*math.cos(self.tilt * math.pi/180) + self.f_Lx*math.sin(self.tilt * math.pi/180))*self.T_f - self.r_Lx*self.T_r + self.Mp)/self.Iyy
+    
+    # def fudot(self, u):
+    #     return -self.g*math.sin(self.state[2]) - self.state[5]*self.state[4] + (self.T_f*math.cos(self.tilt * math.pi/180) - self.D*math.cos(self.al) - self.L*math.sin(self.al))/self.m
+    
+    # def fwdot(self, w):
+    #     return self.g*math.cos(self.state[2]) + self.state[5]*self.state[3] + (- self.T_f*math.sin(self.tilt * math.pi/180) - self.T_r + self.D*math.sin(self.al) - self.L*math.cos(self.al))/self.m
+    
     def fqdot(self, q):
-        return ((-self.f_Lz*math.cos(self.tilt * math.pi/180) + self.f_Lx*math.sin(self.tilt * math.pi/180))*self.T_f - self.r_Lx*self.T_r + self.Mp)/self.Iyy
+        return self.Myb/self.Iyy
     
     def fudot(self, u):
-        return -self.g*math.sin(self.state[2]) - self.state[5]*self.state[4] + (self.T_f*math.cos(self.tilt * math.pi/180) - self.D*math.cos(self.al) - self.L*math.sin(self.al))/self.m
+        return self.Fxb/self.m
     
     def fwdot(self, w):
-        return self.g*math.cos(self.state[2]) + self.state[5]*self.state[3] + (- self.T_f*math.sin(self.tilt * math.pi/180) - self.T_r + self.D*math.sin(self.al) - self.L*math.cos(self.al))/self.m
+        return self.Fzb/self.m
     
     def fthedot(self, the):
         return self.q
@@ -428,7 +442,10 @@ class TiltrotorTransitionTraining(gym.Env):
             self.L = 0
             self.D = 0
             self.Mp = 0
-            
+        
+        self.Myb = self.D_Z_prop_f*self.T_f*math.cos(math.radians(self.tilt)) + self.D_X_prop_f*self.T_f*math.sin(math.radians(self.tilt)) + self.D_X_prop_r*self.T_r - self.D_Z_aero*(self.D*math.cos(math.radians(self.al)) + self.L*math.sin(math.radians(self.al))) - self.D_X_aero*(self.D*math.sin(math.radians(self.al)) - self.L*math.cos(math.radians(self.al))) + self.Mp
+        self.Fxb = self.T_f*math.cos(math.radians(self.tilt)) - self.D*math.cos(math.radians(self.al)) - self.L*math.sin(math.radians(self.al)) + self.m*self.g*math.sin(math.radians(self.al))
+        self.Fzb = -self.T_r - self.T_f*math.sin(math.radians(self.tilt)) + self.D*math.sin(math.radians(self.al)) - self.L*math.cos(math.radians(self.al)) + self.m*self.g*math.cos(math.radians(self.al))
         # =============== Vehicle Model (Calculate Force&Moments) ===============
         
         # =============== Flight Dynamics with RK-4 (Calculate Next Status) ===============
@@ -542,7 +559,7 @@ class TiltrotorTransitionTraining(gym.Env):
         text_LperD = self.font.render(f"Lift/Weight: {str(round(self.L/(self.m*self.g),8))}", True, (28,0,0))
         text_LTperD = self.font.render(f"Lift+Thrust/Weight: {str(round((self.L + self.T_f + self.T_r)/(self.m*self.g),8))}", True, (28,0,0))
         text_M = self.font.render("Pithching(N) : "+str(round(self.Mp,8)),True,(28,0,0))
-        text_alpha = self.font.render("AoA(deg) : "+str(round(self.alpha,1)),True,(28,0,0))
+        text_alpha = self.font.render("AoA(deg) : "+str(round(self.al,1)),True,(28,0,0))
         
         self.screen.blit(self.Textboard, (700, 10))
         self.screen.blit(text_x, (700,10))
@@ -670,3 +687,35 @@ class TiltrotorTransitionTraining(gym.Env):
         if self.viewer != None:
             pygame.quit()
     ################### close ####################
+
+
+# env = TiltrotorTransitionTraining()
+
+# for i_episode in range(10000):
+#     observation = env.reset()
+#     for k in range(60000):
+#         env.render()
+        
+#         action = env.action_space.sample()
+#         observation, reward, done, info = env.step(action)
+        
+#         if done:
+#             print("\n\n\n====================")
+#             print("done")
+#             print("{} Episode finished".format(i_episode+1))
+#             print("After {} timesteps".format(k+1))
+#             print("====================")
+#             print("Reward")
+#             print(reward)
+#             print("Distance(m)")
+#             print(observation[0])
+#             print("Altitude(m)")
+#             print(observation[1])
+#             print("Pitch(m)")
+#             print(observation[2]*180/math.pi)
+#             print("Time(sec)")
+#             print(observation[6])
+#             print("====================")
+#             break
+        
+# env.close()
