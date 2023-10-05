@@ -16,8 +16,8 @@ class TiltrotorTransitionTraining(gym.Env):
         self.set_render([1000,500])
         
         self.set_DB(
-                    [0.5,0,0.003,0.1512,0.9997,0.1512,0.8544,0.32,23],
-                    # [cg_x,  cg_z,    f_p_x,    f_p_z, r_p_x, r_p_z, S, cbar, elev_max]
+                    [0.6136, 0.0871, 0.14, 0.14, 1.1, 0.14, 0.5621, 0.2, 0.8544, 0.2695, 23],
+                    # [cg_x,  cg_z,    f_p_x,    f_p_z, r_p_x, r_p_z, aerorp_x, aerorp_z, S, cbar, elev_max]
                     
                     [6.73E-07, 10000, 0.0, math.pi/2],
                     # [K_T, rpm_max, tilt_min, tilt_max]
@@ -34,7 +34,7 @@ class TiltrotorTransitionTraining(gym.Env):
                     [-0.0082,0.0073,0.0088,-0.0002,0.0339,-0.0367],
                     # [CL_elev_0, CL_elev, CD_elev_0, CD_elev, Cm_elev_0, Cm_elev]
                     
-                    [14.28,2.073,9.80665]
+                    [11.828,2.073,9.80665]
                     # [m, Iyy, g]
                     )
         
@@ -47,7 +47,7 @@ class TiltrotorTransitionTraining(gym.Env):
         
     def set_render(self, window_size):
         self.window_size = window_size
-        img_path = "F:\YJLEE's code\image"
+        img_path = "C:/Users/ds040/Desktop/KADA-UAM-RL-personal-jeongseok/code/image"
 
         self.background = pygame.image.load(os.path.join(f"{img_path}/Background.png"))
 
@@ -73,8 +73,8 @@ class TiltrotorTransitionTraining(gym.Env):
     def set_DB(self, Conf, Prop, Aero_CL, Aero_CD, Aero_Cm, Aero_CS, WnB):
         '''            
             DB : [config, Propulsion, Aerodynamics, WeightnBalance]
-                config : [    loc_cg, loc_front_prop, loc_rear_prop, wing_area,  MAC, elev_max]
-                         [cg_x, cg_z,   f_p_x, f_p_z,  r_p_x, r_p_z,         S, cbar, elev_max]
+                config : [    loc_cg, loc_front_prop, loc_rear_prop, loc_aerorp, wing_area,  MAC, elev_max]
+                         [cg_x, cg_z,   f_p_x, f_p_z,  r_p_x, r_p_z, aerorp_x, aerorp_z,   S,     cbar, elev_max]
                 
                 Propulsion : [K_T, RPM_max, Tilt_Angle_min, Tilt_Angle_max]
                              [K_T, rpm_max,       tilt_min,       tilt_max]
@@ -97,14 +97,18 @@ class TiltrotorTransitionTraining(gym.Env):
         self.f_p_z = Conf[3]                            # m
         self.r_p_x = Conf[4]                            # m
         self.r_p_z = Conf[5]                            # m
-        self.S = Conf[6]                                # m^2
-        self.cbar = Conf[7]                             # m
-        self.elev_max = Conf[8]                         # deg
+        self.aerorp_x = Conf[6]                            # m
+        self.aerorp_z = Conf[7]                            # m
+        self.S = Conf[8]                                # m^2
+        self.cbar = Conf[9]                             # m
+        self.elev_max = Conf[10]                         # deg
         
-        self.f_Lx = abs(self.cg_x - self.f_p_x)         # m
-        self.f_Lz = abs(self.cg_z - self.f_p_z)         # m
-        self.r_Lx = abs(self.cg_x - self.r_p_x)         # m
-        self.r_Lz = abs(self.cg_z - self.r_p_z)         # m
+        self.D_X_prop_f = self.cg_x - self.f_p_x        # m
+        self.D_Z_prop_f = self.cg_z - self.f_p_z        # m
+        self.D_X_prop_r = self.cg_x - self.r_p_x        # m
+        self.D_Z_prop_r = self.cg_z - self.r_p_z        # m
+        self.D_X_aero = self.cg_x - self.aerorp_x       # m
+        self.D_Z_aero = self.cg_z - self.aerorp_z       # m
         
         self.K_T = Prop[0]                               # none
         self.rpm_max = Prop[1]                          # rpm
@@ -182,6 +186,7 @@ class TiltrotorTransitionTraining(gym.Env):
         self.L = 0
         self.D = 0
         self.Mp = 0
+        self.al = 0
         # print(self.f_rpm)
         # print(self.r_rpm)
         
@@ -238,6 +243,7 @@ class TiltrotorTransitionTraining(gym.Env):
         # Reward 계산 | Reward Calculation | 보상 계산
         pitch_state = abs(self.state[2])*180/math.pi # degree
         # print(f"pitch state: {pitch_state}")
+        # print(f"pitch state: {pitch_state}")
         alt_state = self.state[1]
 
         # 조건 1: tilt각 차이 | self.tilt 초기값: 90 deg | 작을수록 좋음 | 0~90
@@ -248,6 +254,10 @@ class TiltrotorTransitionTraining(gym.Env):
         # 조건 2: 피치 값 차이 | 작을 수록 좋음 | 0~90
         # reward 2는 클수록 좋게 설정하였음(positive)
         pitch_target = 4.0
+        if 0 <= pitch_state<= 8:
+            reward_2 = (10 - np.abs(pitch_state - pitch_target)) / 10
+        else:
+            reward_2 = -10
         if 0 <= pitch_state<= 8:
             reward_2 = (10 - np.abs(pitch_state - pitch_target)) / 10
         else:
@@ -264,29 +274,37 @@ class TiltrotorTransitionTraining(gym.Env):
             reward_4 = (30 - np.abs(self.state[3] - Vcruise_target)) / 30
         else:
             reward_4 = -10
+        Vcruise_target = 25
+        if Vcruise_target <=25:
+            reward_4 = (25 - np.abs(self.state[3] - Vcruise_target)) / 25
+        else:
+            reward_4 = -10
 
         # 조건 5: 순항 고도 | 초기 고도: 0m > 15m나 0m나 대기 조건 차이 크지 않음 | 작을 수록 좋음 | -15 ~ +15
         # 조건 5는 클수록 좋게 설정하였음(positive)
         reward_5 = (15 - np.abs(self.state[1])) / 15
+        reward_5 = (15 - np.abs(self.state[1])) / 15
 
         # 조건 6: 프로펠러 rpm 최소화 | 작을수록 좋음 | 0 ~ 1
+        # 조건 6: 프로펠러 rpm 최소화 | 작을수록 좋음 | 0 ~ 1
         # 조건 6은 클수록 좋게 설정하였음(Positive)
+        reward_6 = (1 - self.r_rpm)
         reward_6 = (1 - self.r_rpm)
 
         # timestep 임계
         # dec_weight는 천천히 줄어들다 max_t_threshold 이후에는 0 값을 가짐
         # inc_weight는 천천히 증가하다 max_t_threshold 이후에는 1 값을 가짐
         max_t_threshold = 15000
-        # # time step에 따라 감소하도록 하는 가중치
-        # if self.state[6] < max_t_threshold:
-        #     dec_weight = np.exp(-15 * self.state[6] / max_t_threshold)
-        # else:
-        #     dec_weight = 0
-        # # time step에 따라 증가하도록 하는 가중치
-        # if self.state[6] < max_t_threshold:
-        #     inc_weight = 1 - np.exp(-15 * self.state[6] / max_t_threshold)
-        # else:
-        #     inc_weight = 1
+        # # # time step에 따라 감소하도록 하는 가중치
+        # # if self.state[6] < max_t_threshold:
+        # #     dec_weight = np.exp(-15 * self.state[6] / max_t_threshold)
+        # # else:
+        # #     dec_weight = 0
+        # # # time step에 따라 증가하도록 하는 가중치
+        # # if self.state[6] < max_t_threshold:
+        # #     inc_weight = 1 - np.exp(-15 * self.state[6] / max_t_threshold)
+        # # else:
+        # #     inc_weight = 1
 
         # 비행 속도가 20 미만일 경우와 20 이상일 경우 가중치를 다르게 배정
         # [틸트각, 피치, 비행 시간, 비행 속도, 순항 고도, 프로펠러 rpm]
@@ -295,7 +313,7 @@ class TiltrotorTransitionTraining(gym.Env):
         if self.state[3] < 10:
             weight = [2, 1, 2 / max_t_threshold, 1, 1, 1]
         else:
-            weight = [1, 2, 1 / max_t_threshold, 2, 2, 2]
+            weight = [2, 4, 1 / max_t_threshold, 2, 4, 2]
 
         rewards_list = [reward_1, reward_2, reward_3, reward_4, reward_5, reward_6]
         reward = np.dot(weight, rewards_list)
@@ -330,14 +348,23 @@ class TiltrotorTransitionTraining(gym.Env):
         return observation, reward, done, info
     
     # Flight Dynamics Equations
+    # def fqdot(self, q):
+    #     return ((-self.f_Lz*math.cos(self.tilt * math.pi/180) + self.f_Lx*math.sin(self.tilt * math.pi/180))*self.T_f - self.r_Lx*self.T_r + self.Mp)/self.Iyy
+    
+    # def fudot(self, u):
+    #     return -self.g*math.sin(self.state[2]) - self.state[5]*self.state[4] + (self.T_f*math.cos(self.tilt * math.pi/180) - self.D*math.cos(self.al) - self.L*math.sin(self.al))/self.m
+    
+    # def fwdot(self, w):
+    #     return self.g*math.cos(self.state[2]) + self.state[5]*self.state[3] + (- self.T_f*math.sin(self.tilt * math.pi/180) - self.T_r + self.D*math.sin(self.al) - self.L*math.cos(self.al))/self.m
+    
     def fqdot(self, q):
-        return ((-self.f_Lz*math.cos(self.tilt * math.pi/180) + self.f_Lx*math.sin(self.tilt * math.pi/180))*self.T_f - self.r_Lx*self.T_r + self.Mp)/self.Iyy
+        return self.Myb/self.Iyy
     
     def fudot(self, u):
-        return -self.g*math.sin(self.state[2]) - self.state[5]*self.state[4] + (self.T_f*math.cos(self.tilt * math.pi/180) - self.D*math.cos(self.al) - self.L*math.sin(self.al))/self.m
+        return self.Fxb/self.m
     
     def fwdot(self, w):
-        return self.g*math.cos(self.state[2]) + self.state[5]*self.state[3] + (- self.T_f*math.sin(self.tilt * math.pi/180) - self.T_r + self.D*math.sin(self.al) - self.L*math.cos(self.al))/self.m
+        return self.Fzb/self.m
     
     def fthedot(self, the):
         return self.q
@@ -368,7 +395,7 @@ class TiltrotorTransitionTraining(gym.Env):
         else:
             self.al = -1 * math.atan(self.w/self.u)
         
-        # print(f"u: {self.u} | w: {self.w}")
+        
         
         self.vel = math.sqrt(self.w**2 + self.u**2)
         
@@ -378,7 +405,13 @@ class TiltrotorTransitionTraining(gym.Env):
             CL_clean = self.CL_a_20 + (self.al*180/math.pi + 20)*(self.CL_a_15 - self.CL_a_20)/5
             CD_clean = self.CD_a_20 + (self.al*180/math.pi + 20)*(self.CD_a_15 - self.CD_a_20)/5
             Cm_clean = self.Cm_a_20 + (self.al*180/math.pi + 20)*(self.Cm_a_15 - self.Cm_a_20)/5
+            CL_clean = self.CL_a_20 + (self.al*180/math.pi + 20)*(self.CL_a_15 - self.CL_a_20)/5
+            CD_clean = self.CD_a_20 + (self.al*180/math.pi + 20)*(self.CD_a_15 - self.CD_a_20)/5
+            Cm_clean = self.Cm_a_20 + (self.al*180/math.pi + 20)*(self.Cm_a_15 - self.Cm_a_20)/5
         elif (self.al <= -10*math.pi/180):
+            CL_clean = self.CL_a_15 + (self.al*180/math.pi + 15)*(self.CL_a_10 - self.CL_a_15)/5
+            CD_clean = self.CD_a_15 + (self.al*180/math.pi + 15)*(self.CD_a_10 - self.CD_a_15)/5
+            Cm_clean = self.Cm_a_15 + (self.al*180/math.pi + 15)*(self.Cm_a_10 - self.Cm_a_15)/5
             CL_clean = self.CL_a_15 + (self.al*180/math.pi + 15)*(self.CL_a_10 - self.CL_a_15)/5
             CD_clean = self.CD_a_15 + (self.al*180/math.pi + 15)*(self.CD_a_10 - self.CD_a_15)/5
             Cm_clean = self.Cm_a_15 + (self.al*180/math.pi + 15)*(self.Cm_a_10 - self.Cm_a_15)/5
@@ -386,7 +419,13 @@ class TiltrotorTransitionTraining(gym.Env):
             CL_clean = self.CL_a_10 + (self.al*180/math.pi + 10)*(self.CL_a_5 - self.CL_a_10)/5
             CD_clean = self.CD_a_10 + (self.al*180/math.pi + 10)*(self.CD_a_5 - self.CD_a_10)/5
             Cm_clean = self.Cm_a_10 + (self.al*180/math.pi + 10)*(self.Cm_a_5 - self.Cm_a_10)/5
+            CL_clean = self.CL_a_10 + (self.al*180/math.pi + 10)*(self.CL_a_5 - self.CL_a_10)/5
+            CD_clean = self.CD_a_10 + (self.al*180/math.pi + 10)*(self.CD_a_5 - self.CD_a_10)/5
+            Cm_clean = self.Cm_a_10 + (self.al*180/math.pi + 10)*(self.Cm_a_5 - self.Cm_a_10)/5
         elif (self.al <= 0*math.pi/180):
+            CL_clean = self.CL_a_5 + (self.al*180/math.pi + 5)*(self.CL_a0 - self.CL_a_5)/5
+            CD_clean = self.CD_a_5 + (self.al*180/math.pi + 5)*(self.CD_a0 - self.CD_a_5)/5
+            Cm_clean = self.Cm_a_5 + (self.al*180/math.pi + 5)*(self.Cm_a0 - self.Cm_a_5)/5
             CL_clean = self.CL_a_5 + (self.al*180/math.pi + 5)*(self.CL_a0 - self.CL_a_5)/5
             CD_clean = self.CD_a_5 + (self.al*180/math.pi + 5)*(self.CD_a0 - self.CD_a_5)/5
             Cm_clean = self.Cm_a_5 + (self.al*180/math.pi + 5)*(self.Cm_a0 - self.Cm_a_5)/5
@@ -394,7 +433,13 @@ class TiltrotorTransitionTraining(gym.Env):
             CL_clean = self.CL_a0 + (self.al*180/math.pi - 0)*(self.CL_a5 - self.CL_a0)/5
             CD_clean = self.CD_a0 + (self.al*180/math.pi - 0)*(self.CD_a5 - self.CD_a0)/5
             Cm_clean = self.Cm_a0 + (self.al*180/math.pi - 0)*(self.Cm_a5 - self.Cm_a0)/5
+            CL_clean = self.CL_a0 + (self.al*180/math.pi - 0)*(self.CL_a5 - self.CL_a0)/5
+            CD_clean = self.CD_a0 + (self.al*180/math.pi - 0)*(self.CD_a5 - self.CD_a0)/5
+            Cm_clean = self.Cm_a0 + (self.al*180/math.pi - 0)*(self.Cm_a5 - self.Cm_a0)/5
         elif (self.al <= 10*math.pi/180):
+            CL_clean = self.CL_a5 + (self.al*180/math.pi - 5)*(self.CL_a10 - self.CL_a5)/5
+            CD_clean = self.CD_a5 + (self.al*180/math.pi - 5)*(self.CD_a10 - self.CD_a5)/5
+            Cm_clean = self.Cm_a5 + (self.al*180/math.pi - 5)*(self.Cm_a10 - self.Cm_a5)/5
             CL_clean = self.CL_a5 + (self.al*180/math.pi - 5)*(self.CL_a10 - self.CL_a5)/5
             CD_clean = self.CD_a5 + (self.al*180/math.pi - 5)*(self.CD_a10 - self.CD_a5)/5
             Cm_clean = self.Cm_a5 + (self.al*180/math.pi - 5)*(self.Cm_a10 - self.Cm_a5)/5
@@ -402,11 +447,20 @@ class TiltrotorTransitionTraining(gym.Env):
             CL_clean = self.CL_a10 + (self.al*180/math.pi - 10)*(self.CL_a15 - self.CL_a10)/5
             CD_clean = self.CD_a10 + (self.al*180/math.pi - 10)*(self.CD_a15 - self.CD_a10)/5
             Cm_clean = self.Cm_a10 + (self.al*180/math.pi - 10)*(self.Cm_a15 - self.Cm_a10)/5
+            CL_clean = self.CL_a10 + (self.al*180/math.pi - 10)*(self.CL_a15 - self.CL_a10)/5
+            CD_clean = self.CD_a10 + (self.al*180/math.pi - 10)*(self.CD_a15 - self.CD_a10)/5
+            Cm_clean = self.Cm_a10 + (self.al*180/math.pi - 10)*(self.Cm_a15 - self.Cm_a10)/5
         elif (self.al <= 20*math.pi/180):
             CL_clean = self.CL_a15 + (self.al*180/math.pi - 15)*(self.CL_a20 - self.CL_a15)/5
             CD_clean = self.CD_a15 + (self.al*180/math.pi - 15)*(self.CD_a20 - self.CD_a15)/5
             Cm_clean = self.Cm_a15 + (self.al*180/math.pi - 15)*(self.Cm_a20 - self.Cm_a15)/5
+            CL_clean = self.CL_a15 + (self.al*180/math.pi - 15)*(self.CL_a20 - self.CL_a15)/5
+            CD_clean = self.CD_a15 + (self.al*180/math.pi - 15)*(self.CD_a20 - self.CD_a15)/5
+            Cm_clean = self.Cm_a15 + (self.al*180/math.pi - 15)*(self.Cm_a20 - self.Cm_a15)/5
         elif (self.al <= 25*math.pi/180):
+            CL_clean = self.CL_a20 + (self.al*180/math.pi - 20)*(self.CL_a25 - self.CL_a20)/5
+            CD_clean = self.CD_a20 + (self.al*180/math.pi - 20)*(self.CD_a25 - self.CD_a20)/5
+            Cm_clean = self.Cm_a20 + (self.al*180/math.pi - 20)*(self.Cm_a25 - self.Cm_a20)/5
             CL_clean = self.CL_a20 + (self.al*180/math.pi - 20)*(self.CL_a25 - self.CL_a20)/5
             CD_clean = self.CD_a20 + (self.al*180/math.pi - 20)*(self.CD_a25 - self.CD_a20)/5
             Cm_clean = self.Cm_a20 + (self.al*180/math.pi - 20)*(self.Cm_a25 - self.Cm_a20)/5
@@ -415,48 +469,6 @@ class TiltrotorTransitionTraining(gym.Env):
             CD_clean = self.CD_a25 + (self.al*180/math.pi - 25)*(self.CD_a30 - self.CD_a25)/5
             Cm_clean = self.Cm_a25 + (self.al*180/math.pi - 25)*(self.Cm_a30 - self.Cm_a25)/5
         
-        # js hyeon의 시뮬레이션 원본 코드
-        # if (self.al <= -15*math.pi/180):
-        #     CL_clean = self.CL_a_20 + (self.CL_a_15 - self.CL_a_20)*(self.al*180/math.pi)/5
-        #     CD_clean = self.CD_a_20 + (self.CD_a_15 - self.CD_a_20)*(self.al*180/math.pi)/5
-        #     Cm_clean = self.Cm_a_20 + (self.Cm_a_15 - self.Cm_a_20)*(self.al*180/math.pi)/5
-        # elif (self.al <= -10*math.pi/180):
-        #     CL_clean = self.CL_a_15 + (self.CL_a_10 - self.CL_a_15)*(self.al*180/math.pi)/5
-        #     CD_clean = self.CD_a_15 + (self.CD_a_10 - self.CD_a_15)*(self.al*180/math.pi)/5
-        #     Cm_clean = self.Cm_a_15 + (self.Cm_a_10 - self.Cm_a_15)*(self.al*180/math.pi)/5
-        # elif (self.al <= -5*math.pi/180):
-        #     CL_clean = self.CL_a_10 + (self.CL_a_5 - self.CL_a_10)*(self.al*180/math.pi)/5
-        #     CD_clean = self.CD_a_10 + (self.CD_a_5 - self.CD_a_10)*(self.al*180/math.pi)/5
-        #     Cm_clean = self.Cm_a_10 + (self.Cm_a_5 - self.Cm_a_10)*(self.al*180/math.pi)/5
-        # elif (self.al <= 0*math.pi/180):
-        #     CL_clean = self.CL_a_5 + (self.CL_a0 - self.CL_a_5)*(self.al*180/math.pi)/5
-        #     CD_clean = self.CD_a_5 + (self.CD_a0 - self.CD_a_5)*(self.al*180/math.pi)/5
-        #     Cm_clean = self.Cm_a_5 + (self.Cm_a0 - self.Cm_a_5)*(self.al*180/math.pi)/5
-        # elif (self.al <= 5*math.pi/180):
-        #     CL_clean = self.CL_a0 + (self.CL_a5 - self.CL_a0)*(self.al*180/math.pi)/5
-        #     CD_clean = self.CD_a0 + (self.CD_a5 - self.CD_a0)*(self.al*180/math.pi)/5
-        #     Cm_clean = self.Cm_a0 + (self.Cm_a5 - self.Cm_a0)*(self.al*180/math.pi)/5
-        # elif (self.al <= 10*math.pi/180):
-        #     CL_clean = self.CL_a5 + (self.CL_a10 - self.CL_a5)*(self.al*180/math.pi)/5
-        #     CD_clean = self.CD_a5 + (self.CD_a10 - self.CD_a5)*(self.al*180/math.pi)/5
-        #     Cm_clean = self.Cm_a5 + (self.Cm_a10 - self.Cm_a5)*(self.al*180/math.pi)/5
-        # elif (self.al <= 15*math.pi/180):
-        #     CL_clean = self.CL_a10 + (self.CL_a15 - self.CL_a10)*(self.al*180/math.pi)/5
-        #     CD_clean = self.CD_a10 + (self.CD_a15 - self.CD_a10)*(self.al*180/math.pi)/5
-        #     Cm_clean = self.Cm_a10 + (self.Cm_a15 - self.Cm_a10)*(self.al*180/math.pi)/5
-        # elif (self.al <= 20*math.pi/180):
-        #     CL_clean = self.CL_a15 + (self.CL_a20 - self.CL_a15)*(self.al*180/math.pi)/5
-        #     CD_clean = self.CD_a15 + (self.CD_a20 - self.CD_a15)*(self.al*180/math.pi)/5
-        #     Cm_clean = self.Cm_a15 + (self.Cm_a20 - self.Cm_a15)*(self.al*180/math.pi)/5
-        # elif (self.al <= 25*math.pi/180):
-        #     CL_clean = self.CL_a20 + (self.CL_a25 - self.CL_a20)*(self.al*180/math.pi)/5
-        #     CD_clean = self.CD_a20 + (self.CD_a25 - self.CD_a20)*(self.al*180/math.pi)/5
-        #     Cm_clean = self.Cm_a20 + (self.Cm_a25 - self.Cm_a20)*(self.al*180/math.pi)/5
-        # else:
-        #     CL_clean = self.CL_a25 + (self.CL_a30 - self.CL_a25)*(self.al*180/math.pi)/5
-        #     CD_clean = self.CD_a25 + (self.CD_a30 - self.CD_a25)*(self.al*180/math.pi)/5
-        #     Cm_clean = self.Cm_a25 + (self.Cm_a30 - self.Cm_a25)*(self.al*180/math.pi)/5
-        
         CL_CS = self.CL_elev_0 + self.CL_elev*self.elev
         CD_CS = self.CD_elev_0 + self.CD_elev*self.elev
         Cm_CS = self.Cm_elev_0 + self.Cm_elev*self.elev
@@ -464,13 +476,16 @@ class TiltrotorTransitionTraining(gym.Env):
         if (self.al >= (-20*math.pi/180)) and (self.al <= (30*math.pi/180)):
             self.L = 0.5 * 1.225 * (self.vel**2) * self.S * (CL_clean + CL_CS)
             self.D = 0.5 * 1.225 * (self.vel**2) * self.S * (CD_clean + CD_CS)
-            self.Mp =0.5 * 1.225 * (self.vel**2) * self.S * self.cbar * (Cm_clean + Cm_CS)
+            self.Mp = 0.5 * 1.225 * (self.vel**2) * self.S * self.cbar * (Cm_clean + Cm_CS)
             # print(f"Lift: {self.L} | Velocity: {self.vel} | Wing Area: {self.S} | Cl:{(CL_clean)} | pitch: {self.al} vs {self.state[2]}")
         else:
             self.L = 0
             self.D = 0
             self.Mp = 0
-            
+        
+        self.Myb = self.D_Z_prop_f*self.T_f*math.cos(math.radians(self.tilt)) + self.D_X_prop_f*self.T_f*math.sin(math.radians(self.tilt)) + self.D_X_prop_r*self.T_r - self.D_Z_aero*(self.D*math.cos(math.radians(self.al)) + self.L*math.sin(math.radians(self.al))) - self.D_X_aero*(self.D*math.sin(math.radians(self.al)) - self.L*math.cos(math.radians(self.al))) + self.Mp
+        self.Fxb = self.T_f*math.cos(math.radians(self.tilt)) - self.D*math.cos(math.radians(self.al)) - self.L*math.sin(math.radians(self.al)) + self.m*self.g*math.sin(math.radians(self.al))
+        self.Fzb = -self.T_r - self.T_f*math.sin(math.radians(self.tilt)) + self.D*math.sin(math.radians(self.al)) - self.L*math.cos(math.radians(self.al)) + self.m*self.g*math.cos(math.radians(self.al))
         # =============== Vehicle Model (Calculate Force&Moments) ===============
         
         # =============== Flight Dynamics with RK-4 (Calculate Next Status) ===============
@@ -584,6 +599,7 @@ class TiltrotorTransitionTraining(gym.Env):
         text_LperD = self.font.render(f"Lift/Weight: {str(round(self.L/(self.m*self.g),8))}", True, (28,0,0))
         text_LTperD = self.font.render(f"Lift+Thrust/Weight: {str(round((self.L + self.T_f + self.T_r)/(self.m*self.g),8))}", True, (28,0,0))
         text_M = self.font.render("Pithching(N) : "+str(round(self.Mp,8)),True,(28,0,0))
+        text_alpha = self.font.render("AoA(deg) : "+str(round(self.al,1)),True,(28,0,0))
         
         self.screen.blit(self.Textboard, (700, 10))
         self.screen.blit(text_x, (700,10))
@@ -604,6 +620,7 @@ class TiltrotorTransitionTraining(gym.Env):
         self.screen.blit(text_LTperD, (700,310))
         self.screen.blit(text_D, (700,330))
         self.screen.blit(text_M, (700,350))
+        self.screen.blit(text_alpha, (700,370))
         
         self.clock.tick(120)
         pygame.display.flip() 
@@ -710,3 +727,35 @@ class TiltrotorTransitionTraining(gym.Env):
         if self.viewer != None:
             pygame.quit()
     ################### close ####################
+
+
+# env = TiltrotorTransitionTraining()
+
+# for i_episode in range(10000):
+#     observation = env.reset()
+#     for k in range(60000):
+#         env.render()
+        
+#         action = env.action_space.sample()
+#         observation, reward, done, info = env.step(action)
+        
+#         if done:
+#             print("\n\n\n====================")
+#             print("done")
+#             print("{} Episode finished".format(i_episode+1))
+#             print("After {} timesteps".format(k+1))
+#             print("====================")
+#             print("Reward")
+#             print(reward)
+#             print("Distance(m)")
+#             print(observation[0])
+#             print("Altitude(m)")
+#             print(observation[1])
+#             print("Pitch(m)")
+#             print(observation[2]*180/math.pi)
+#             print("Time(sec)")
+#             print(observation[6])
+#             print("====================")
+#             break
+        
+# env.close()
