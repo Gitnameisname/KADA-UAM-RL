@@ -259,9 +259,9 @@ class TiltrotorTransitionTraining(gym.Env):
         
         # 조건 4: 크루즈 속도 차이 | 작을 수록 좋음 | 0~20
         # 조건 4는 클수록 좋게 설정하였음(positive)
-        Vcruise_target = 25
-        if Vcruise_target <=25:
-            reward_4 = (25 - np.abs(self.state[3] - Vcruise_target)) / 25
+        Vcruise_target = 30
+        if Vcruise_target <=40:
+            reward_4 = (30 - np.abs(self.state[3] - Vcruise_target)) / 30
         else:
             reward_4 = -10
 
@@ -293,9 +293,9 @@ class TiltrotorTransitionTraining(gym.Env):
         # [P,     P,    P,        P,        P,         P         ]
         # 8/19: 분기점을 10m/s로 조정
         if self.state[3] < 10:
-            weight = [1, 8, 2 / max_t_threshold, 8, 1, 1]
+            weight = [2, 1, 2 / max_t_threshold, 1, 1, 1]
         else:
-            weight = [2, 4, 1 / max_t_threshold, 2, 4, 2]
+            weight = [1, 2, 1 / max_t_threshold, 2, 2, 2]
 
         rewards_list = [reward_1, reward_2, reward_3, reward_4, reward_5, reward_6]
         reward = np.dot(weight, rewards_list)
