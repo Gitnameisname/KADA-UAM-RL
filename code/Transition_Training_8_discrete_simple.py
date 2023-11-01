@@ -47,7 +47,7 @@ class TiltrotorTransitionTraining(gym.Env):
         
     def set_render(self, window_size):
         self.window_size = window_size
-        img_path = "C:/Users/ds040/Desktop/KADA-UAM-RL-personal-jeongseok/code/image"
+        img_path = "./image"
 
         self.background = pygame.image.load(os.path.join(f"{img_path}/Background.png"))
 
@@ -253,15 +253,11 @@ class TiltrotorTransitionTraining(gym.Env):
 
         # 조건 2: 피치 값 차이 | 작을 수록 좋음 | 0~90
         # reward 2는 클수록 좋게 설정하였음(positive)
-        pitch_target = 4.0
+        pitch_target = 0.0
         if 0 <= pitch_state<= 8:
             reward_2 = (10 - np.abs(pitch_state - pitch_target)) / 10
         else:
-            reward_2 = -10
-        if 0 <= pitch_state<= 8:
-            reward_2 = (10 - np.abs(pitch_state - pitch_target)) / 10
-        else:
-            reward_2 = -10
+            reward_2 = -1
         
         # 조건 3: 비행 시간 | 클수록 좋음 | 0 ~ inf, 1 timestep = 0.05 sec, 30,000 timestep = 1,500 sec = 25 min
         # 조건 3은 클수록 좋게 설정하였음(positive)
@@ -271,51 +267,31 @@ class TiltrotorTransitionTraining(gym.Env):
         # 조건 4는 클수록 좋게 설정하였음(positive)
         Vcruise_target = 30
         if Vcruise_target <=40:
-            reward_4 = (30 - np.abs(self.state[3] - Vcruise_target)) / 30
+            reward_4 = (Vcruise_target - np.abs(self.state[3] - Vcruise_target)) / Vcruise_target
         else:
-            reward_4 = -10
-        Vcruise_target = 25
-        if Vcruise_target <=25:
-            reward_4 = (25 - np.abs(self.state[3] - Vcruise_target)) / 25
-        else:
-            reward_4 = -10
+            reward_4 = -1
 
         # 조건 5: 순항 고도 | 초기 고도: 0m > 15m나 0m나 대기 조건 차이 크지 않음 | 작을 수록 좋음 | -15 ~ +15
         # 조건 5는 클수록 좋게 설정하였음(positive)
-        reward_5 = (15 - np.abs(self.state[1])) / 15
         reward_5 = (15 - np.abs(self.state[1])) / 15
 
         # 조건 6: 프로펠러 rpm 최소화 | 작을수록 좋음 | 0 ~ 1
         # 조건 6: 프로펠러 rpm 최소화 | 작을수록 좋음 | 0 ~ 1
         # 조건 6은 클수록 좋게 설정하였음(Positive)
-        reward_6 = (1 - self.r_rpm)
-        reward_6 = (1 - self.r_rpm)
+        reward_6 = (1 - self.r_rpm) + (1 - self.f_rpm)
 
-        # timestep 임계
-        # dec_weight는 천천히 줄어들다 max_t_threshold 이후에는 0 값을 가짐
-        # inc_weight는 천천히 증가하다 max_t_threshold 이후에는 1 값을 가짐
-        max_t_threshold = 15000
-        # # # time step에 따라 감소하도록 하는 가중치
-        # # if self.state[6] < max_t_threshold:
-        # #     dec_weight = np.exp(-15 * self.state[6] / max_t_threshold)
-        # # else:
-        # #     dec_weight = 0
-        # # # time step에 따라 증가하도록 하는 가중치
-        # # if self.state[6] < max_t_threshold:
-        # #     inc_weight = 1 - np.exp(-15 * self.state[6] / max_t_threshold)
-        # # else:
-        # #     inc_weight = 1
+        # 조건 7: 이동 거리
+        reward_7 = self.state[0]
 
         # 비행 속도가 20 미만일 경우와 20 이상일 경우 가중치를 다르게 배정
-        # [틸트각, 피치, 비행 시간, 비행 속도, 순항 고도, 프로펠러 rpm]
-        # [P,     P,    P,        P,        P,         P         ]
+        # [틸트각, 피치, 비행 시간, 비행 속도, 순항 고도, 프로펠러 rpm, 이동 거리]
         # 8/19: 분기점을 10m/s로 조정
         if self.state[3] < 10:
-            weight = [2, 1, 2 / max_t_threshold, 1, 1, 1]
+            weight = [500, 100, 20, 100, 100, 100, 2]
         else:
-            weight = [2, 4, 1 / max_t_threshold, 2, 4, 2]
+            weight = [500, 100, 1, 200, 200, 50, 1]
 
-        rewards_list = [reward_1, reward_2, reward_3, reward_4, reward_5, reward_6]
+        rewards_list = [reward_1, reward_2, reward_3, reward_4, reward_5, reward_6, reward_7]
         reward = np.dot(weight, rewards_list)
         
         # Sharp reward(editing)
@@ -336,7 +312,7 @@ class TiltrotorTransitionTraining(gym.Env):
             done = True
              
         observation = np.hstack((self.state[0],self.state[1],self.state[2],self.state[3],self.state[4],self.state[5],self.state[6], self.f_rpm, self.r_rpm, self.elev, self.tilt))
-        reward_detail = [reward_1, reward_2, reward_3, reward_4, reward_5, reward_6]
+        reward_detail = [reward_1, reward_2, reward_3, reward_4, reward_5, reward_6, reward_7]
         info = {
             'Time': self.state[6],
             'x_pos': self.state[0],
@@ -393,7 +369,7 @@ class TiltrotorTransitionTraining(gym.Env):
         if self.state[3] == 0:
             self.al = self.state[2]
         else:
-            self.al = -1 * math.atan(self.w/self.u)
+            self.al = math.atan(self.w/self.u)
         
         
         
