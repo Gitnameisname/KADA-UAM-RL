@@ -1,13 +1,12 @@
 import gym
 import math
-import random
 import pygame
 import os
 import numpy as np
-from gym import utils
-from gym import error
 from gym import spaces
 from gym.utils import seeding
+
+from src.loadDB import dataLoader
 
 class TiltrotorTransitionTraining(gym.Env):
     metadata = {'render.modes': ['human']}
@@ -15,28 +14,7 @@ class TiltrotorTransitionTraining(gym.Env):
     def __init__(self):
         self.set_render([1000,500])
         
-        self.set_DB(
-                    [0.6136, 0.0871, 0.14, 0.14, 1.1, 0.14, 0.5621, 0.2, 0.8544, 0.2695, 23],
-                    # [cg_x,  cg_z,    f_p_x,    f_p_z, r_p_x, r_p_z, aerorp_x, aerorp_z, S, cbar, elev_max]
-                    
-                    [6.73E-07, 10000, 0.0, math.pi/2],
-                    # [K_T, rpm_max, tilt_min, tilt_max]
-                    
-                    [-0.73740136,-0.663644936,-0.539236383,-0.216338563,0.186051992,0.563297446,0.899195567,0.894625901,0.925674827,0.885013624,0.928228578],
-                    # [CL_a_20, CL_a_15, CL_a_10, CL_a_5, CL_a0, CL_a5, CL_a10, CL_a15, CL_a20, CL_a25, CL_a30]
-                    
-                    [0.39312906,0.265786097,0.105501944,0.050508736,0.033407476,0.048690636,0.093493499,0.179125138,0.283977688,0.484827535,0.531822918],
-                    # [CD_a_20, CD_a_15, CD_a_10, CD_a_5, CD_a0, CD_a5, CD_a10, CD_a15, CD_a20, CD_a25, CD_a30]
-                    
-                    [0.151,0.088338869,0.060296053,0.011978107,-0.0124,-0.028696035,-0.046803415,-0.110953022,-0.107976505,-0.213458484,-0.0998],
-                    # [Cm_a_20, Cm_a_15, Cm_a_10, Cm_a_5, Cm_a0, Cm_a5, Cm_a10, Cm_a15, Cm_a20, Cm_a25, Cm_a30]
-                    
-                    [-0.0082,0.0073,0.0088,-0.0002,0.0339,-0.0367],
-                    # [CL_elev_0, CL_elev, CD_elev_0, CD_elev, Cm_elev_0, Cm_elev]
-                    
-                    [11.828,2.073,9.80665]
-                    # [m, Iyy, g]
-                    )
+        self.set_DB("aero.json")
         
         self.observation_space = spaces.Box(np.finfo(np.float32).min, np.finfo(np.float32).max, shape=(11,), dtype=np.float32)
         
@@ -70,97 +48,80 @@ class TiltrotorTransitionTraining(gym.Env):
         pygame.font.init()
         self.font = pygame.font.SysFont('arial',20, True, True)  #폰트 설정
         
-    def set_DB(self, Conf, Prop, Aero_CL, Aero_CD, Aero_Cm, Aero_CS, WnB):
-        '''            
-            DB : [config, Propulsion, Aerodynamics, WeightnBalance]
-                config : [    loc_cg, loc_front_prop, loc_rear_prop, loc_aerorp, wing_area,  MAC, elev_max]
-                         [cg_x, cg_z,   f_p_x, f_p_z,  r_p_x, r_p_z, aerorp_x, aerorp_z,   S,     cbar, elev_max]
-                
-                Propulsion : [K_T, RPM_max, Tilt_Angle_min, Tilt_Angle_max]
-                             [K_T, rpm_max,       tilt_min,       tilt_max]
-                
-                Aerodynamics_CL : [CL_a_20, CL_a_15, CL_a_10, CL_a_5, CL_a0, CL_a5, CL_a10, CL_a15, CL_a20, CL_a25, CL_a30]
-                
-                Aerodynamics_CD : [CD_a_20, CD_a_15, CD_a_10, CD_a_5, CD_a0, CD_a5, CD_a10, CD_a15, CD_a20, CD_a25, CD_a30]
-                
-                Aerodynamics_Cm : [Cm_a_20, Cm_a_15, Cm_a_10, Cm_a_5, Cm_a0, Cm_a5, Cm_a10, Cm_a15, Cm_a20, Cm_a25, Cm_a30]
-                
-                Aerodynamics_CS : [CL_elev_0, CL_elev, CD_elev_0, CD_elev, Cm_elev_0, Cm_elev]
-                
-                WeightnBalance : [Mass, Iyy, Gravity]
-                                 [   m, Iyy,       g]            
-        '''
+    def set_DB(self, DBname):
+
+        DB = dataLoader('aero.json')
         
-        self.cg_x = Conf[0]                             # m
-        self.cg_z = Conf[1]                             # m
-        self.f_p_x = Conf[2]                            # m
-        self.f_p_z = Conf[3]                            # m
-        self.r_p_x = Conf[4]                            # m
-        self.r_p_z = Conf[5]                            # m
-        self.aerorp_x = Conf[6]                            # m
-        self.aerorp_z = Conf[7]                            # m
-        self.S = Conf[8]                                # m^2
-        self.cbar = Conf[9]                             # m
-        self.elev_max = Conf[10]                         # deg
+        self.cg_x       = DB["Configurations"]["cg_x"]                          # m
+        self.cg_z       = DB["Configurations"]["cg_z"]                          # m
+        self.f_p_x      = DB["Configurations"]["f_p_x"]                         # m
+        self.f_p_z      = DB["Configurations"]["f_p_z"]                         # m
+        self.r_p_x      = DB["Configurations"]["r_p_x"]                         # m
+        self.r_p_z      = DB["Configurations"]["r_p_z"]                         # m
+        self.aerorp_x   = DB["Configurations"]["aerorp_x"]                      # m
+        self.aerorp_z   = DB["Configurations"]["aerorp_z"]                      # m
+        self.S          = DB["Configurations"]["S"]                             # m^2
+        self.cbar       = DB["Configurations"]["cbar"]                          # m
+        self.elev_max   = DB["Configurations"]["elev_max"]                      # deg
         
-        self.D_X_prop_f = self.cg_x - self.f_p_x        # m
-        self.D_Z_prop_f = self.cg_z - self.f_p_z        # m
-        self.D_X_prop_r = self.cg_x - self.r_p_x        # m
-        self.D_Z_prop_r = self.cg_z - self.r_p_z        # m
-        self.D_X_aero = self.cg_x - self.aerorp_x       # m
-        self.D_Z_aero = self.cg_z - self.aerorp_z       # m
+        self.D_X_prop_f = self.cg_x - self.f_p_x                                # m
+        self.D_Z_prop_f = self.cg_z - self.f_p_z                                # m
+        self.D_X_prop_r = self.cg_x - self.r_p_x                                # m
+        self.D_Z_prop_r = self.cg_z - self.r_p_z                                # m
+        self.D_X_aero   = self.cg_x - self.aerorp_x                             # m
+        self.D_Z_aero   = self.cg_z - self.aerorp_z                             # m
         
-        self.K_T = Prop[0]                               # none
-        self.rpm_max = Prop[1]                          # rpm
-        self.tilt_min = Prop[2]                         # rad
-        self.tilt_max = Prop[3]                         # rad
+        self.K_T        = DB["Propulsion"]["K_T"]                               # none
+        self.rpm_max    = DB["Propulsion"]["rpm_max"]                           # rpm
+        self.tilt_min   = DB["Propulsion"]["tilt_min"]                          # rad
+        self.tilt_max   = math.pi/2                                             # rad
         
-        self.CL_a_20 = Aero_CL[0]                       # none
-        self.CL_a_15 = Aero_CL[1]                       # none
-        self.CL_a_10 = Aero_CL[2]                       # none
-        self.CL_a_5 = Aero_CL[3]                       # none
-        self.CL_a0 = Aero_CL[4]                       # none
-        self.CL_a5 = Aero_CL[5]                        # none
-        self.CL_a10 = Aero_CL[6]                         # none
-        self.CL_a15 = Aero_CL[7]                         # none
-        self.CL_a20 = Aero_CL[8]                        # none
-        self.CL_a25 = Aero_CL[9]                        # none
-        self.CL_a30 = Aero_CL[10]                       # none
+        self.CL_a_20    = DB["Aerodynamics"]["CL_a_20"]                         # none
+        self.CL_a_15    = DB["Aerodynamics"]["CL_a_15"]                         # none
+        self.CL_a_10    = DB["Aerodynamics"]["CL_a_10"]                         # none
+        self.CL_a_5     = DB["Aerodynamics"]["CL_a_5"]                          # none
+        self.CL_a0      = DB["Aerodynamics"]["CL_a0"]                           # none
+        self.CL_a5      = DB["Aerodynamics"]["CL_a5"]                           # none
+        self.CL_a10     = DB["Aerodynamics"]["CL_a10"]                          # none
+        self.CL_a15     = DB["Aerodynamics"]["CL_a15"]                          # none
+        self.CL_a20     = DB["Aerodynamics"]["CL_a20"]                          # none
+        self.CL_a25     = DB["Aerodynamics"]["CL_a25"]                          # none
+        self.CL_a30     = DB["Aerodynamics"]["CL_a30"]                          # none
         
-        self.CD_a_20 = Aero_CD[0]                       # none
-        self.CD_a_15 = Aero_CD[1]                       # none
-        self.CD_a_10 = Aero_CD[2]                       # none
-        self.CD_a_5 = Aero_CD[3]                       # none
-        self.CD_a0 = Aero_CD[4]                       # none
-        self.CD_a5 = Aero_CD[5]                        # none
-        self.CD_a10 = Aero_CD[6]                         # none
-        self.CD_a15 = Aero_CD[7]                         # none
-        self.CD_a20 = Aero_CD[8]                        # none
-        self.CD_a25 = Aero_CD[9]                        # none
-        self.CD_a30 = Aero_CD[10]                       # none
+        self.CD_a_20    = DB["Aerodynamics"]["CD_a_20"]                         # none
+        self.CD_a_15    = DB["Aerodynamics"]["CD_a_15"]                         # none
+        self.CD_a_10    = DB["Aerodynamics"]["CD_a_10"]                         # none
+        self.CD_a_5     = DB["Aerodynamics"]["CD_a_5"]                          # none
+        self.CD_a0      = DB["Aerodynamics"]["CD_a0"]                           # none
+        self.CD_a5      = DB["Aerodynamics"]["CD_a5"]                           # none
+        self.CD_a10     = DB["Aerodynamics"]["CD_a10"]                          # none
+        self.CD_a15     = DB["Aerodynamics"]["CD_a15"]                          # none
+        self.CD_a20     = DB["Aerodynamics"]["CD_a20"]                          # none
+        self.CD_a25     = DB["Aerodynamics"]["CD_a25"]                          # none
+        self.CD_a30     = DB["Aerodynamics"]["CD_a30"]                          # none
         
-        self.Cm_a_20 = Aero_Cm[0]                       # none
-        self.Cm_a_15 = Aero_Cm[1]                       # none
-        self.Cm_a_10 = Aero_Cm[2]                       # none
-        self.Cm_a_5 = Aero_Cm[3]                       # none
-        self.Cm_a0 = Aero_Cm[4]                       # none
-        self.Cm_a5 = Aero_Cm[5]                        # none
-        self.Cm_a10 = Aero_Cm[6]                         # none
-        self.Cm_a15 = Aero_Cm[7]                         # none
-        self.Cm_a20 = Aero_Cm[8]                        # none
-        self.Cm_a25 = Aero_Cm[9]                        # none
-        self.Cm_a30 = Aero_Cm[10]                       # none
+        self.Cm_a_20    = DB["Aerodynamics"]["Cm_a_20"]                         # none
+        self.Cm_a_15    = DB["Aerodynamics"]["Cm_a_15"]                         # none
+        self.Cm_a_10    = DB["Aerodynamics"]["Cm_a_10"]                         # none
+        self.Cm_a_5     = DB["Aerodynamics"]["Cm_a_5"]                          # none
+        self.Cm_a0      = DB["Aerodynamics"]["Cm_a0"]                           # none
+        self.Cm_a5      = DB["Aerodynamics"]["Cm_a5"]                           # none
+        self.Cm_a10     = DB["Aerodynamics"]["Cm_a10"]                          # none
+        self.Cm_a15     = DB["Aerodynamics"]["Cm_a15"]                          # none
+        self.Cm_a20     = DB["Aerodynamics"]["Cm_a20"]                          # none
+        self.Cm_a25     = DB["Aerodynamics"]["Cm_a25"]                          # none
+        self.Cm_a30     = DB["Aerodynamics"]["Cm_a30"]                          # none
         
-        self.CL_elev_0 = Aero_CS[0]                     # none
-        self.CL_elev = Aero_CS[1]                       # none/deg
-        self.CD_elev_0 = Aero_CS[2]                     # none
-        self.CD_elev = Aero_CS[3]                       # none/deg
-        self.Cm_elev_0 = Aero_CS[4]                     # none
-        self.Cm_elev = Aero_CS[5]                       # none/deg
+        self.CL_elev_0  = DB["Aerodynamics"]["CL_elev_0"]                       # none
+        self.CL_elev    = DB["Aerodynamics"]["CL_elev"]                         # none/deg
+        self.CD_elev_0  = DB["Aerodynamics"]["CD_elev_0"]                       # none
+        self.CD_elev    = DB["Aerodynamics"]["CD_elev"]                         # none/deg
+        self.Cm_elev_0  = DB["Aerodynamics"]["Cm_elev_0"]                       # none
+        self.Cm_elev    = DB["Aerodynamics"]["Cm_elev"]                         # none/deg
         
-        self.m = WnB[0]                                 # kg
-        self.Iyy = WnB[1]                               # kg*m^2
-        self.g = WnB[2]                                 # kg/m^2
+        self.m          = DB["WnB"]["m"]                                        # kg
+        self.Iyy        = DB["WnB"]["Iyy"]                                      # kg*m^2
+        self.g          = DB["WnB"]["g"]                                        # kg/m^2
         
     def set_init_state(self):
         self.state = [0, 0, 0, 0, 0, 0, 0]
@@ -266,7 +227,8 @@ class TiltrotorTransitionTraining(gym.Env):
         # 조건 4: 크루즈 속도 차이 | 작을 수록 좋음 | 0~20
         # 조건 4는 클수록 좋게 설정하였음(positive)
         Vcruise_target = 30
-        if Vcruise_target <=40:
+        Vcruise_limit = 50
+        if Vcruise_target <=Vcruise_limit:
             reward_4 = (Vcruise_target - np.abs(self.state[3] - Vcruise_target)) / Vcruise_target
         else:
             reward_4 = -1
@@ -308,7 +270,7 @@ class TiltrotorTransitionTraining(gym.Env):
         if (self.tilt < 0 or self.tilt > 90):
             done = True
 
-        if self.state[3] > 30:
+        if self.state[3] > Vcruise_limit:
             done = True
              
         observation = np.hstack((self.state[0],self.state[1],self.state[2],self.state[3],self.state[4],self.state[5],self.state[6], self.f_rpm, self.r_rpm, self.elev, self.tilt))
