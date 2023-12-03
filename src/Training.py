@@ -1,5 +1,5 @@
 import torch as th
-from src.Simulator import TiltrotorTransitionTraining
+from src.Simulator import TiltrotorTransitionSimulator
 from stable_baselines3 import SAC
 from datetime import datetime
 
@@ -8,7 +8,7 @@ class Trainer:
         self.filename = self.get_filename()
 
         # Parallel environments
-        self.env = TiltrotorTransitionTraining()
+        self.env = TiltrotorTransitionSimulator()
         self.device = device
         policy_kwargs = dict(activation_fn=th.nn.ReLU, net_arch=dict(pi=[256,256,256], qf=[128,128]))
         self.model = SAC("MlpPolicy", self.env, policy_kwargs=policy_kwargs, verbose=1, device=device)

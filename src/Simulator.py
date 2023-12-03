@@ -8,7 +8,7 @@ from gym.utils import seeding
 
 from src.loadDB import dataLoader
 
-class TiltrotorTransitionTraining(gym.Env):
+class TiltrotorTransitionSimulator(gym.Env):
     metadata = {'render.modes': ['human']}
     ################### __init__ ####################
     def __init__(self):
