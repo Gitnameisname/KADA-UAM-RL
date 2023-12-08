@@ -275,13 +275,15 @@ class TiltrotorTransitionSimulator(gym.Env):
              
         observation = np.hstack((self.state[0],self.state[1],self.state[2],self.state[3],self.state[4],self.state[5],self.state[6], self.f_rpm, self.r_rpm, self.elev, self.tilt))
         reward_detail = [reward_1, reward_2, reward_3, reward_4, reward_5, reward_6, reward_7]
+        step_data = self.dataCollection()
         info = {
             'Time': self.state[6],
             'x_pos': self.state[0],
             'z_pos': self.state[1],
             'pitch': self.state[2],
            # 'Tilt': self.action[2]
-            'reward_detail': reward_detail
+            'reward_detail': reward_detail,
+            'data': step_data
         }
         return observation, reward, done, info
     
@@ -412,6 +414,9 @@ class TiltrotorTransitionSimulator(gym.Env):
         Cm_CS = self.Cm_elev_0 + self.Cm_elev*self.elev
         
         if (self.al >= (-20*math.pi/180)) and (self.al <= (30*math.pi/180)):
+            self.CL = (CL_clean + CL_CS) # 항공기 전체 양력 계수입니다.
+            self.CD = (CD_clean + CD_CS) # 항공기 전체 항력 계수입니다.
+
             self.L = 0.5 * 1.225 * (self.vel**2) * self.S * (CL_clean + CL_CS)
             self.D = 0.5 * 1.225 * (self.vel**2) * self.S * (CD_clean + CD_CS)
             self.Mp = 0.5 * 1.225 * (self.vel**2) * self.S * self.cbar * (Cm_clean + Cm_CS)
@@ -459,14 +464,6 @@ class TiltrotorTransitionSimulator(gym.Env):
         self.u = un
         self.w = wn
         
-        # print("u\tw\tq")
-        # print(self.u)
-        # print(self.w)
-        # print(self.q*180/math.pi)
-        # print("ax\tax")
-        # print(self.ax)
-        # print(self.az)
-       
         # the
         k1 = self.sim_time_dt * (self.fthedot(self.the))
         k2 = self.sim_time_dt * (self.fthedot((self.the + k1/2)))
@@ -495,24 +492,33 @@ class TiltrotorTransitionSimulator(gym.Env):
         
         self.x = xn
         self.z = zn
-        
-        
-        # print("x\tz\tthe\ttime")
-        # print(self.x)
-        # print(self.z)
-        # print(self.the*180/math.pi)
-        
+
         self.Sim_time = t + self.sim_time_dt
-        # print(self.Sim_time)
-        
+
         self.state = [self.x, self.z, self.the, self.u, self.w, self.q, self.Sim_time]
         # =============== Flight Dynamics with RK-4 (Calculate Next Status) ===============
     #################### step ####################
     
-       
-    
-    
-    
+    #################### data collection ####################
+    def dataCollection(self):
+        data = {
+            "time": self.Sim_time,
+            "CL": self.CL,
+            "CD": self.CD,
+            "X": self.state[0],
+            "Z": self.state[1],
+            "theta": self.the,
+            "f_rpm": self.f_rpm,
+            "r_rpm": self.r_rpm,
+            "U": self.u,
+            "tilt": self.tilt,
+            "Lift": self.L,
+            "L/W": round(self.L/(self.m*self.g), 8),
+            "(L+T)/W": round((self.L + self.T_f + self.T_r)/(self.m*self.g), 8)
+        }
+        return data
+    #################### data collection ####################
+
     #################### render ####################
     def render(self, mode='human'):
         self.draw_vehicle(self.state[0], self.state[1], self.state[2], self.tilt*math.pi/180)
@@ -665,35 +671,3 @@ class TiltrotorTransitionSimulator(gym.Env):
         if self.viewer != None:
             pygame.quit()
     ################### close ####################
-
-
-# env = TiltrotorTransitionTraining()
-
-# for i_episode in range(10000):
-#     observation = env.reset()
-#     for k in range(60000):
-#         env.render()
-        
-#         action = env.action_space.sample()
-#         observation, reward, done, info = env.step(action)
-        
-#         if done:
-#             print("\n\n\n====================")
-#             print("done")
-#             print("{} Episode finished".format(i_episode+1))
-#             print("After {} timesteps".format(k+1))
-#             print("====================")
-#             print("Reward")
-#             print(reward)
-#             print("Distance(m)")
-#             print(observation[0])
-#             print("Altitude(m)")
-#             print(observation[1])
-#             print("Pitch(m)")
-#             print(observation[2]*180/math.pi)
-#             print("Time(sec)")
-#             print(observation[6])
-#             print("====================")
-#             break
-        
-# env.close()
