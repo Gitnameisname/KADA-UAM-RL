@@ -25,7 +25,7 @@ class TiltrotorTransitionSimulator(gym.Env):
         
     def set_render(self, window_size):
         self.window_size = window_size
-        img_path = "./image"
+        img_path = "./src/image"
 
         self.background = pygame.image.load(os.path.join(f"{img_path}/Background.png"))
 
@@ -76,52 +76,52 @@ class TiltrotorTransitionSimulator(gym.Env):
         self.tilt_min   = DB["Propulsion"]["tilt_min"]                          # rad
         self.tilt_max   = math.pi/2                                             # rad
         
-        self.CL_a_20    = DB["Aerodynamics"]["CL_a_20"]                         # none
-        self.CL_a_15    = DB["Aerodynamics"]["CL_a_15"]                         # none
-        self.CL_a_10    = DB["Aerodynamics"]["CL_a_10"]                         # none
-        self.CL_a_5     = DB["Aerodynamics"]["CL_a_5"]                          # none
-        self.CL_a0      = DB["Aerodynamics"]["CL_a0"]                           # none
-        self.CL_a5      = DB["Aerodynamics"]["CL_a5"]                           # none
-        self.CL_a10     = DB["Aerodynamics"]["CL_a10"]                          # none
-        self.CL_a15     = DB["Aerodynamics"]["CL_a15"]                          # none
-        self.CL_a20     = DB["Aerodynamics"]["CL_a20"]                          # none
-        self.CL_a25     = DB["Aerodynamics"]["CL_a25"]                          # none
-        self.CL_a30     = DB["Aerodynamics"]["CL_a30"]                          # none
+        self.CL_a_20    = DB["Aerodynamics"]["CL"]["CL_a_20"]                   # none
+        self.CL_a_15    = DB["Aerodynamics"]["CL"]["CL_a_15"]                   # none
+        self.CL_a_10    = DB["Aerodynamics"]["CL"]["CL_a_10"]                   # none
+        self.CL_a_5     = DB["Aerodynamics"]["CL"]["CL_a_5"]                    # none
+        self.CL_a0      = DB["Aerodynamics"]["CL"]["CL_a0"]                     # none
+        self.CL_a5      = DB["Aerodynamics"]["CL"]["CL_a5"]                     # none
+        self.CL_a10     = DB["Aerodynamics"]["CL"]["CL_a10"]                    # none
+        self.CL_a15     = DB["Aerodynamics"]["CL"]["CL_a15"]                    # none
+        self.CL_a20     = DB["Aerodynamics"]["CL"]["CL_a20"]                    # none
+        self.CL_a25     = DB["Aerodynamics"]["CL"]["CL_a25"]                    # none
+        self.CL_a30     = DB["Aerodynamics"]["CL"]["CL_a30"]                    # none
         
-        self.CD_a_20    = DB["Aerodynamics"]["CD_a_20"]                         # none
-        self.CD_a_15    = DB["Aerodynamics"]["CD_a_15"]                         # none
-        self.CD_a_10    = DB["Aerodynamics"]["CD_a_10"]                         # none
-        self.CD_a_5     = DB["Aerodynamics"]["CD_a_5"]                          # none
-        self.CD_a0      = DB["Aerodynamics"]["CD_a0"]                           # none
-        self.CD_a5      = DB["Aerodynamics"]["CD_a5"]                           # none
-        self.CD_a10     = DB["Aerodynamics"]["CD_a10"]                          # none
-        self.CD_a15     = DB["Aerodynamics"]["CD_a15"]                          # none
-        self.CD_a20     = DB["Aerodynamics"]["CD_a20"]                          # none
-        self.CD_a25     = DB["Aerodynamics"]["CD_a25"]                          # none
-        self.CD_a30     = DB["Aerodynamics"]["CD_a30"]                          # none
+        self.CD_a_20    = DB["Aerodynamics"]["CD"]["CD_a_20"]                   # none
+        self.CD_a_15    = DB["Aerodynamics"]["CD"]["CD_a_15"]                   # none
+        self.CD_a_10    = DB["Aerodynamics"]["CD"]["CD_a_10"]                   # none
+        self.CD_a_5     = DB["Aerodynamics"]["CD"]["CD_a_5"]                    # none
+        self.CD_a0      = DB["Aerodynamics"]["CD"]["CD_a0"]                     # none
+        self.CD_a5      = DB["Aerodynamics"]["CD"]["CD_a5"]                     # none
+        self.CD_a10     = DB["Aerodynamics"]["CD"]["CD_a10"]                    # none
+        self.CD_a15     = DB["Aerodynamics"]["CD"]["CD_a15"]                    # none
+        self.CD_a20     = DB["Aerodynamics"]["CD"]["CD_a20"]                    # none
+        self.CD_a25     = DB["Aerodynamics"]["CD"]["CD_a25"]                    # none
+        self.CD_a30     = DB["Aerodynamics"]["CD"]["CD_a30"]                    # none
         
-        self.Cm_a_20    = DB["Aerodynamics"]["Cm_a_20"]                         # none
-        self.Cm_a_15    = DB["Aerodynamics"]["Cm_a_15"]                         # none
-        self.Cm_a_10    = DB["Aerodynamics"]["Cm_a_10"]                         # none
-        self.Cm_a_5     = DB["Aerodynamics"]["Cm_a_5"]                          # none
-        self.Cm_a0      = DB["Aerodynamics"]["Cm_a0"]                           # none
-        self.Cm_a5      = DB["Aerodynamics"]["Cm_a5"]                           # none
-        self.Cm_a10     = DB["Aerodynamics"]["Cm_a10"]                          # none
-        self.Cm_a15     = DB["Aerodynamics"]["Cm_a15"]                          # none
-        self.Cm_a20     = DB["Aerodynamics"]["Cm_a20"]                          # none
-        self.Cm_a25     = DB["Aerodynamics"]["Cm_a25"]                          # none
-        self.Cm_a30     = DB["Aerodynamics"]["Cm_a30"]                          # none
+        self.Cm_a_20    = DB["Aerodynamics"]["Cm"]["Cm_a_20"]                   # none
+        self.Cm_a_15    = DB["Aerodynamics"]["Cm"]["Cm_a_15"]                   # none
+        self.Cm_a_10    = DB["Aerodynamics"]["Cm"]["Cm_a_10"]                   # none
+        self.Cm_a_5     = DB["Aerodynamics"]["Cm"]["Cm_a_5"]                    # none
+        self.Cm_a0      = DB["Aerodynamics"]["Cm"]["Cm_a0"]                     # none
+        self.Cm_a5      = DB["Aerodynamics"]["Cm"]["Cm_a5"]                     # none
+        self.Cm_a10     = DB["Aerodynamics"]["Cm"]["Cm_a10"]                    # none
+        self.Cm_a15     = DB["Aerodynamics"]["Cm"]["Cm_a15"]                    # none
+        self.Cm_a20     = DB["Aerodynamics"]["Cm"]["Cm_a20"]                    # none
+        self.Cm_a25     = DB["Aerodynamics"]["Cm"]["Cm_a25"]                    # none
+        self.Cm_a30     = DB["Aerodynamics"]["Cm"]["Cm_a30"]                    # none
         
-        self.CL_elev_0  = DB["Aerodynamics"]["CL_elev_0"]                       # none
-        self.CL_elev    = DB["Aerodynamics"]["CL_elev"]                         # none/deg
-        self.CD_elev_0  = DB["Aerodynamics"]["CD_elev_0"]                       # none
-        self.CD_elev    = DB["Aerodynamics"]["CD_elev"]                         # none/deg
-        self.Cm_elev_0  = DB["Aerodynamics"]["Cm_elev_0"]                       # none
-        self.Cm_elev    = DB["Aerodynamics"]["Cm_elev"]                         # none/deg
+        self.CL_elev_0  = DB["Aerodynamics"]["CL_elev"]["CL_elev_0"]            # none
+        self.CL_elev    = DB["Aerodynamics"]["CL_elev"]["CL_elev"]              # none/deg
+        self.CD_elev_0  = DB["Aerodynamics"]["CL_elev"]["CD_elev_0"]            # none
+        self.CD_elev    = DB["Aerodynamics"]["CL_elev"]["CD_elev"]              # none/deg
+        self.Cm_elev_0  = DB["Aerodynamics"]["CL_elev"]["Cm_elev_0"]            # none
+        self.Cm_elev    = DB["Aerodynamics"]["CL_elev"]["Cm_elev"]              # none/deg
         
-        self.m          = DB["WnB"]["m"]                                        # kg
-        self.Iyy        = DB["WnB"]["Iyy"]                                      # kg*m^2
-        self.g          = DB["WnB"]["g"]                                        # kg/m^2
+        self.m          = DB["Aerodynamics"]["WnB"]["m"]                        # kg
+        self.Iyy        = DB["Aerodynamics"]["WnB"]["Iyy"]                      # kg*m^2
+        self.g          = DB["Aerodynamics"]["WnB"]["g"]                        # kg/m^2
         
     def set_init_state(self):
         self.state = [0, 0, 0, 0, 0, 0, 0]

@@ -25,12 +25,12 @@ class Trainer:
         return filename
     
     def loadModel(self, modelName):
-        self.model = SAC.load(f'./model/{modelName}', env = self.env, device=self.device)
+        self.model = SAC.load(f'./src/model/{modelName}', env = self.env, device=self.device)
 
     def startTraining(self, maximum_eps=1000, maximum_timestep=10000):
         best_reward = 0
 
-        with open(f'./results/{self.filename}.txt', 'w') as file:
+        with open(f'./src/results/{self.filename}.txt', 'w') as file:
             for eps in range(maximum_eps):
                 obs = self.env.reset()
                 self.model.learn(total_timesteps=maximum_timestep, log_interval=100)
@@ -56,4 +56,4 @@ class Trainer:
                 # 이번 학습 결과가 기존 학습 결과보다 좋다면 저장
                 if reward > best_reward:
                     best_reward = reward
-                    self.model.save(f'./model/{self.filename}')
+                    self.model.save(f'./src/model/{self.filename}')
