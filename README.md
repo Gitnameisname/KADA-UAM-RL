@@ -11,6 +11,10 @@ Ex. 최철균 과장은 현재 develop 브랜치에서 분기한 personal/ckchoi
 1. 학습과 테스트 모두 동작 안하는것 수정
   - 수정 후 develop 브랜치에 병합
 
+2. 테스트 결과 파일 저장
+  - Json 파일로 데이터 저장 | 위치: ./src/results
+  - png 파일로 그래프 저장 | 위치: ./src/plots
+
 ## 23.12.03
 1. 소스코드 구조화
   - 핵심 시뮬레이션 코드는 src(source code) 폴더로 이동
