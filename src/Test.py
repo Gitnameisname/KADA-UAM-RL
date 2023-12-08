@@ -8,6 +8,7 @@ class Tester:
         self.loadModel(modelName=modelName)
         self.waitingTime = 5 # seconds
         self.flightData = self.initData()
+        self.actionData = self.initActionData()
     
     def loadModel(self, modelName):
         self.model = SAC.load(f'./src/model/{modelName}')
@@ -21,6 +22,8 @@ class Tester:
 
         for k in range(maximum_timestep):
             action, _states = self.model.predict(obs, deterministic=True)
+
+            self.addActionData(action)
 
             obs, reward, done, info = self.env.step(action)
             self.addFlightData(info['data'])
@@ -46,6 +49,15 @@ class Tester:
         }
         return data
     
+    def initActionData(self):
+        actionData = {
+            "action_0": [],
+            "action_1": [],
+            "action_2": [],
+            "action_3": []
+        }
+        return actionData
+
     def addFlightData(self, data):
         self.flightData["time"].append(data["time"])
         self.flightData["CL"].append(data["CL"])
@@ -60,5 +72,11 @@ class Tester:
         self.flightData["Lift"].append(data["Lift"])
         self.flightData["L/W"].append(data["L/W"])
         self.flightData["(L+T)/W"].append(data["(L+T)/W"])
+
+    def addActionData(self, action):
+        self.actionData["action_0"].append(action[0])
+        self.actionData["action_1"].append(action[1])
+        self.actionData["action_2"].append(action[2])
+        self.actionData["action_3"].append(action[3])
 
     

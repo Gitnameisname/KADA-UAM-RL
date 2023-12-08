@@ -41,3 +41,63 @@ def plotFlightData(agent):
     # Display the plots
     plt.show()
     
+def saveActionData(agent):
+    # Define the actionData dictionary
+    actionData = {
+        "action_0": list(map(str, agent.actionData["action_0"])),
+        "action_1": list(map(str, agent.actionData["action_1"])),
+        "action_2": list(map(str, agent.actionData["action_2"])),
+        "action_3": list(map(str, agent.actionData["action_3"]))
+    }
+
+    # Save the actionData to a JSON file
+    with open('./src/results/actionData.json', 'w') as file:
+        json.dump(actionData, file)
+
+def plotActionData(agent):
+    # Convert the action data to lists
+    action_0 = agent.actionData["action_0"]
+    action_1 = agent.actionData["action_1"]
+    action_2 = agent.actionData["action_2"]
+    action_3 = agent.actionData["action_3"]
+
+    # Create the time values
+    time = [i * 0.05 for i in range(len(action_0))]
+
+    # Create subplots for each action
+    fig, axs = plt.subplots(4, 1, figsize=(8, 10))
+
+    # Plot action 0
+    axs[0].plot(time, action_0)
+    axs[0].set_ylabel('Action 0')
+    axs[0].grid(True)  # Add grid
+
+    # Plot action 1
+    axs[1].plot(time, action_1)
+    axs[1].set_ylabel('Action 1')
+    axs[1].grid(True)  # Add grid
+
+    # Plot action 2
+    axs[2].plot(time, action_2)
+    axs[2].set_ylabel('Action 2')
+    axs[2].grid(True)  # Add grid
+
+    # Plot action 3
+    axs[3].plot(time, action_3)
+    axs[3].set_ylabel('Action 3')
+    axs[3].grid(True)  # Add grid
+
+    # Add x-axis label to the last subplot
+    axs[3].set_xlabel('Time')
+
+    # Adjust the spacing between subplots
+    plt.tight_layout()
+
+    # Save the plots to the directory
+    save_directory = './src/plots/'
+    if not os.path.exists(save_directory):
+        os.makedirs(save_directory)
+    plt.savefig(save_directory + 'actiondata_plot.png')
+
+    # Display the plots
+    plt.show()
