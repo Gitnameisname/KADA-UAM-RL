@@ -16,7 +16,7 @@ class TiltrotorTransitionSimulator(gym.Env):
         
         self.set_DB("aero.json")
         
-        self.observation_space = spaces.Box(np.finfo(np.float32).min, np.finfo(np.float32).max, shape=(11,), dtype=np.float32)
+        self.observation_space = spaces.Box(np.finfo(np.float32).min, np.finfo(np.float32).max, shape=(12,), dtype=np.float32)
         
         # Continous Action
         self.action_space = spaces.Box(low=-1.0, high=1.0, shape=(4,), dtype=np.float32)         
@@ -124,9 +124,9 @@ class TiltrotorTransitionSimulator(gym.Env):
         self.g          = DB["Aerodynamics"]["WnB"]["g"]                        # kg/m^2
         
     def set_init_state(self):
-        self.state = [0, 0, 0, 0, 0, 0, 0]
-                   # [X, Z, theta, U, W, q, time]
-                   # [0, 1,     2, 3, 4, 5,    6]
+        self.state = [0, 0,     0, 0, 0, 0,    0,            0]
+                   # [X, Z, theta, U, W, q, time, acceleration]
+                   # [0, 1,     2, 3, 4, 5, 6,               7]
         # self.action = [self.m*self.g/(4*self.K_T*self.rpm_max**2),       0.5,           1.0]
         #             # [                             Throttle_cmd, Pitch_cmd,      Tilt_cmd]
         self.f_rpm = round(math.sqrt(self.m*self.g/(4*self.K_T))/self.rpm_max, 3)
@@ -164,19 +164,17 @@ class TiltrotorTransitionSimulator(gym.Env):
         return [seed]
     #################### __init__ ####################
           
-    
-    
+
     #################### reset ####################
     def reset(self):
         self.set_init_state()
         self.current_score = 0
         # observation = np.hstack((self.state, self.f_rpm, self.r_rpm, self.elev, self.tilt))  
-        observation = np.hstack((self.state[0],self.state[1],self.state[2],self.state[3],self.state[4],self.state[5],self.state[6], self.f_rpm, self.r_rpm, self.elev, self.tilt))
+        observation = np.hstack((self.state[0],self.state[1],self.state[2],self.state[3],
+                                 self.state[4],self.state[5],self.state[6],self.state[7],
+                                 self.f_rpm,   self.r_rpm,   self.elev,    self.tilt     ))
         return observation
-    #################### reset ####################
-    
-    
-    
+    #################### reset ####################    
     
     
     #################### step ####################
@@ -203,8 +201,6 @@ class TiltrotorTransitionSimulator(gym.Env):
         
         # Reward 계산 | Reward Calculation | 보상 계산
         pitch_state = abs(self.state[2])*180/math.pi # degree
-        # print(f"pitch state: {pitch_state}")
-        # print(f"pitch state: {pitch_state}")
         alt_state = self.state[1]
 
         # 조건 1: tilt각 차이 | self.tilt 초기값: 90 deg | 작을수록 좋음 | 0~90
@@ -245,15 +241,24 @@ class TiltrotorTransitionSimulator(gym.Env):
         # 조건 7: 이동 거리
         reward_7 = self.state[0]
 
+        # 조건 8: 가속도
+        # 가속도가 0.3g 미만일 경우, 0.3g 이상일 경우, 0g 이하일 경우 가중치를 다르게 배정
+        if self.acceleration < 0.3:
+            reward_8 = 1
+        elif self.acceleration < 0:
+            reward_8 = -1
+        else:
+            reward_8 = -1
+
         # 비행 속도가 20 미만일 경우와 20 이상일 경우 가중치를 다르게 배정
-        # [틸트각, 피치, 비행 시간, 비행 속도, 순항 고도, 프로펠러 rpm, 이동 거리]
+        # [틸트각, 피치, 비행 시간, 비행 속도, 순항 고도, 프로펠러 rpm, 이동 거리, 가속도]
         # 8/19: 분기점을 10m/s로 조정
         if self.state[3] < 10:
-            weight = [500, 100, 20, 100, 100, 100, 2]
+            weight = [500, 100, 20, 100, 100, 100, 2, 10]
         else:
-            weight = [500, 100, 1, 200, 200, 50, 1]
+            weight = [500, 100,  1, 200, 200,  50, 1, 10]
 
-        rewards_list = [reward_1, reward_2, reward_3, reward_4, reward_5, reward_6, reward_7]
+        rewards_list = [reward_1, reward_2, reward_3, reward_4, reward_5, reward_6, reward_7, reward_8]
         reward = np.dot(weight, rewards_list)
         
         # Sharp reward(editing)
@@ -273,8 +278,10 @@ class TiltrotorTransitionSimulator(gym.Env):
         if self.state[3] > Vcruise_limit:
             done = True
              
-        observation = np.hstack((self.state[0],self.state[1],self.state[2],self.state[3],self.state[4],self.state[5],self.state[6], self.f_rpm, self.r_rpm, self.elev, self.tilt))
-        reward_detail = [reward_1, reward_2, reward_3, reward_4, reward_5, reward_6, reward_7]
+        observation = np.hstack((self.state[0],self.state[1],self.state[2],self.state[3],
+                                 self.state[4],self.state[5],self.state[6],self.state[7],
+                                 self.f_rpm, self.r_rpm, self.elev, self.tilt))
+        reward_detail = [reward_1, reward_2, reward_3, reward_4, reward_5, reward_6, reward_7, reward_8]
         step_data = self.dataCollection()
         info = {
             'Time': self.state[6],
@@ -317,13 +324,14 @@ class TiltrotorTransitionSimulator(gym.Env):
     
     # Simulation
     def Simulation(self):
-        self.x = self.state[0]
-        self.z = self.state[1]
-        self.the = self.state[2]
-        self.u = self.state[3]
-        self.w = self.state[4]
-        self.q = self.state[5]
-        t = self.state[6]
+        self.x            = self.state[0]
+        self.z            = self.state[1]
+        self.the          = self.state[2]
+        self.u            = self.state[3]
+        self.w            = self.state[4]
+        self.q            = self.state[5]
+        t                 = self.state[6]
+        self.acceleration = self.state[7]
         
         # =============== Vehicle Model (Calculate Force&Moments) ===============
         self.T_f = 2*self.K_T*(self.f_rpm*self.rpm_max)**2
@@ -334,8 +342,6 @@ class TiltrotorTransitionSimulator(gym.Env):
             self.al = self.state[2]
         else:
             self.al = math.atan(self.w/self.u)
-        
-        
         
         self.vel = math.sqrt(self.w**2 + self.u**2)
         
@@ -420,7 +426,6 @@ class TiltrotorTransitionSimulator(gym.Env):
             self.L = 0.5 * 1.225 * (self.vel**2) * self.S * (CL_clean + CL_CS)
             self.D = 0.5 * 1.225 * (self.vel**2) * self.S * (CD_clean + CD_CS)
             self.Mp = 0.5 * 1.225 * (self.vel**2) * self.S * self.cbar * (Cm_clean + Cm_CS)
-            # print(f"Lift: {self.L} | Velocity: {self.vel} | Wing Area: {self.S} | Cl:{(CL_clean)} | pitch: {self.al} vs {self.state[2]}")
         else:
             self.L = 0
             self.D = 0
@@ -495,7 +500,11 @@ class TiltrotorTransitionSimulator(gym.Env):
 
         self.Sim_time = t + self.sim_time_dt
 
-        self.state = [self.x, self.z, self.the, self.u, self.w, self.q, self.Sim_time]
+        # ckchoi: 가속도 계산 - 중력가속도 대비 비행기가 받는 가속도
+        self.acceleration = math.sqrt(self.ax**2 + self.az**2)/self.g
+        
+        # State Update
+        self.state = [self.x, self.z, self.the, self.u, self.w, self.q, self.Sim_time, self.acceleration]
         # =============== Flight Dynamics with RK-4 (Calculate Next Status) ===============
     #################### step ####################
     
@@ -536,8 +545,8 @@ class TiltrotorTransitionSimulator(gym.Env):
         text_Tf = self.font.render("Front Thrust(N) : "+str(round(self.T_f,8)),True,(28,0,0))
         text_Tr = self.font.render("Rear Thrust(N) : "+str(round(self.T_r,8)),True,(28,0,0))
         text_W = self.font.render("Weight(N) : "+str(round(self.m*self.g,8)),True,(28,0,0))
-        # ckchoi(8.24): 원본 코드에서 양력에 100을 곱했는데 제거함
-        # original: text_L = self.font.render("Lift(N) : "+str(round(self.L*100,8)),True,(28,0,0))
+        text_W = self.font.render("G(N) : "+str(round(self.acceleration,8)),True,(28,0,0))
+
         text_L = self.font.render("Lift(N) : "+str(round(self.L,8)),True,(28,0,0))
         text_D = self.font.render("Drag(N) : "+str(round(self.D,8)),True,(28,0,0))
         text_LperD = self.font.render(f"Lift/Weight: {str(round(self.L/(self.m*self.g),8))}", True, (28,0,0))
