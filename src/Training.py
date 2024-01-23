@@ -41,13 +41,14 @@ class Trainer:
                     if done:
                         log = f"episode: {eps}\nepisode was finished at timestep: {k}\nreward: {reward}\n========================================\n" + \
                         f"reward details\n" + \
-                        f"reward_1: {info['reward_detail'][0]}\n" + \
-                        f"reward_2: {info['reward_detail'][1]}\n" + \
-                        f"reward_3: {info['reward_detail'][2]}\n" + \
-                        f"reward_4: {info['reward_detail'][3]}\n" + \
-                        f"reward_5: {info['reward_detail'][4]}\n" + \
-                        f"reward_6: {info['reward_detail'][5]}\n" + \
-                        f"reward_7: {info['reward_detail'][6]}\n" + \
+                        f"tilt     : {info['reward_detail'][0]}\n" + \
+                        f"Pitch    : {info['reward_detail'][1]}\n" + \
+                        f"Time     : {info['reward_detail'][2]}\n" + \
+                        f"V_cruise : {info['reward_detail'][3]}\n" + \
+                        f"Altitude : {info['reward_detail'][4]}\n" + \
+                        f"Rotor RPM: {info['reward_detail'][5]}\n" + \
+                        f"Distance : {info['reward_detail'][6]}\n" + \
+                        f"X-axis G : {info['reward_detail'][7]}\n" + \
                         "========================================\n"
                         print(log)
                         file.write(f'{log}\n')
