@@ -243,12 +243,23 @@ class TiltrotorTransitionSimulator(gym.Env):
 
         # 조건 8: 가속도
         # 가속도가 0.3g 미만일 경우, 0.3g 이상일 경우, 0g 이하일 경우 가중치를 다르게 배정
-        if self.acceleration < 0.3:
-            reward_8 = 1
-        elif self.acceleration < 0:
-            reward_8 = -1
+        if 0 < Vcruise_target <=Vcruise_limit:
+            if self.acceleration < 0.3:
+                reward_8 = 1
+            elif self.acceleration < 0:
+                reward_8 = -1
+            else:
+                reward_8 = -1
+        elif Vcruise_target > Vcruise_limit:
+            if -0.1 < self.acceleration < 0.1:
+                reward_8 = 1
+            else:
+                reward_8 = -1
         else:
-            reward_8 = -1
+            if self.acceleration > 0:
+                reward_8 = 1
+            else:
+                reward_8 = -1
 
         # 비행 속도가 20 미만일 경우와 20 이상일 경우 가중치를 다르게 배정
         # [틸트각, 피치, 비행 시간, 비행 속도, 순항 고도, 프로펠러 rpm, 이동 거리, 가속도]
@@ -256,7 +267,7 @@ class TiltrotorTransitionSimulator(gym.Env):
         if self.state[3] < 10:
             weight = [500, 100, 20, 100, 100, 100, 2, 10]
         else:
-            weight = [500, 100,  1, 200, 200,  50, 1, 10]
+            weight = [500, 100,  1, 200, 200,  50, 1, 1]
 
         rewards_list = [reward_1, reward_2, reward_3, reward_4, reward_5, reward_6, reward_7, reward_8]
         reward = np.dot(weight, rewards_list)
