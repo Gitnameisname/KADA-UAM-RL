@@ -1,9 +1,12 @@
 import time
-from src.Simulator import TiltrotorTransitionSimulator
 from stable_baselines3 import SAC
 
 class Tester:
-    def __init__(self, modelName):
+    def __init__(self, modelName, simulator_name="Simulator"):
+        if simulator_name == "Simulator":
+            from src.Simulator import TiltrotorTransitionSimulator
+        elif simulator_name == "Simulator_7act":
+            from src.Simulator_7act import TiltrotorTransitionSimulator
         self.env = TiltrotorTransitionSimulator()
         self.loadModel(modelName=modelName)
         self.waitingTime = 5 # seconds
