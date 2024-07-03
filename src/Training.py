@@ -62,18 +62,19 @@ class Trainer:
                     total_reward += rewards[0]  # 총 보상 업데이트 (다중 환경에서 첫 번째 환경의 보상만 사용)
 
                     if dones[0]:  # 에피소드 종료 시 처리 (다중 환경에서 첫 번째 환경만 확인)
-                        log = (f"Episode: {eps}\nEpisode finished at timestep: {k}\nTotal reward: {total_reward}\n"
-                               "========================================\n"
-                               "Reward details\n"
-                               f"Tilt     : {infos[0]['reward_detail'][0]}\n"
-                               f"Pitch    : {infos[0]['reward_detail'][1]}\n"
-                               f"Time     : {infos[0]['reward_detail'][2]}\n"
-                               f"V_cruise : {infos[0]['reward_detail'][3]}\n"
-                               f"Altitude : {infos[0]['reward_detail'][4]}\n"
-                               f"Rotor RPM: {infos[0]['reward_detail'][5]}\n"
-                               f"Distance : {infos[0]['reward_detail'][6]}\n"
-                               f"X-axis G : {infos[0]['reward_detail'][7]}\n"
-                               "========================================\n")
+                        log = (f"Episode: {eps}\nEpisode finished at timestep: {k}\nTotal reward: {total_reward:.2f}\n"
+                            "========================================\n"
+                            "Reward details\n"
+                            f"Tilt       : {infos[0]['reward_detail'][0]:.2f}\t| {infos[0]['value_detail'][0]:.2}\n"
+                            f"Pitch      : {infos[0]['reward_detail'][1]:.2f}\t| {infos[0]['value_detail'][1]:.2}\n"
+                            f"Time       : {infos[0]['reward_detail'][2]:.2f}\t| {infos[0]['value_detail'][2]:.2}\n"
+                            f"V_cruise   : {infos[0]['reward_detail'][3]:.2f}\t| {infos[0]['value_detail'][3]:.2}\n"
+                            f"Altitude   : {infos[0]['reward_detail'][4]:.2f}\t| {infos[0]['value_detail'][4]:.2}\n"
+                            f"Rotor RPM  : front - {infos[0]['reward_detail'][5][0]:.2f}\t| rear - {infos[0]['value_detail'][5][1]:.2}\n"
+                            f"Distance   : {infos[0]['reward_detail'][6]:.2f}\t| {infos[0]['value_detail'][6]:.2}\n"
+                            f"G-Force    : {infos[0]['reward_detail'][7]:.2f}\t| {infos[0]['value_detail'][7]:.2}\n"
+                            f"Tilt Delta : {infos[0]['reward_detail'][8]:.2f}\t| {infos[0]['value_detail'][8]:.2}\n"
+                            "========================================\n")
                         print(log)
                         try:
                             file.write(f'{log}\n')

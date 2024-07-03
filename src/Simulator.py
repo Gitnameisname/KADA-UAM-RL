@@ -1,10 +1,10 @@
-import gym
+import gymnasium as gym
 import math
 import pygame
 import os
 import numpy as np
-from gym import spaces
-from gym.utils import seeding
+from gymnasium import spaces
+from gymnasium.utils import seeding
 
 from src.loadDB import dataLoader
 from src.Functions import linearInterpolation
@@ -219,8 +219,13 @@ class TiltrotorTransitionSimulator(gym.Env):
         rewards_list = [reward_tilt, reward_pitch, reward_time,
                         reward_speed, reward_altitude, reward_rpm,
                         reward_distance, reward_gForce, reward_tilt_delta]
+
+        value_list = [self.tilt_deg, pitch_deg, self.state["time"],
+                        speed, self.state["z"], [self.frontThrottle, self.rearThrottle],
+                        self.state["x"], self.gForce, self.tilt_delta]
         reward = np.dot(weight, rewards_list)
-        return reward, rewards_list
+
+        return reward, rewards_list, value_list
     
     def set_init_state(self):
         self.state = {
@@ -308,7 +313,7 @@ class TiltrotorTransitionSimulator(gym.Env):
         
         self.Simulation()
         
-        reward, rewards_list = self.calcuateReward()
+        reward, rewards_list, value_list = self.calcuateReward()
         
         done = False
         # 고도가 altitudeDelta 이상이거나 이하일 경우, 피치가 pitchMin 이상 pitchMax 이하일 경우, 비행 속도가 VcruiseMax 이상일 경우 종료
@@ -326,6 +331,7 @@ class TiltrotorTransitionSimulator(gym.Env):
             'z_pos': self.state["z"],
             'pitch': self.state["theta"],
             'reward_detail': rewards_list,
+            'value_detail': value_list,
             'data': step_data
         }
         return observation, reward, done, info
