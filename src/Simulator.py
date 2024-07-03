@@ -43,12 +43,18 @@ class TiltrotorTransitionSimulator(gym.Env):
         })
         
         # 동작 공간 정의
-        self.action_space = spaces.Dict({
-            "frontThrottle": spaces.Box(low=0.0, high=1.0, shape=(1,), dtype=np.float32),
-            "rearThrottle": spaces.Box(low=0.0, high=1.0, shape=(1,), dtype=np.float32),
-            "elev_deg": spaces.Box(low=-self.elevMaxDeg, high=self.elevMaxDeg, shape=(1,), dtype=np.float32),
-            "tilt_deg": spaces.Box(low=self.tilt_min, high=self.tilt_max, shape=(1,), dtype=np.float32)
-        })
+        self.action_space = spaces.Box(low=-1.0, high=1.0, shape=(4,), dtype=np.float32)
+        # self.action_space = spaces.Box(
+        #     low=np.array([0.0, 0.0, -self.elevMaxDeg, self.tilt_min]),
+        #     high=np.array([1.0, 1.0, self.elevMaxDeg, self.tilt_max]),
+        #     dtype=np.float32
+        # )  
+        # self.action_space = spaces.Dict({
+        #     "frontThrottle": spaces.Box(low=0.0, high=1.0, shape=(1,), dtype=np.float32),
+        #     "rearThrottle": spaces.Box(low=0.0, high=1.0, shape=(1,), dtype=np.float32),
+        #     "elev_deg": spaces.Box(low=-self.elevMaxDeg, high=self.elevMaxDeg, shape=(1,), dtype=np.float32),
+        #     "tilt_deg": spaces.Box(low=self.tilt_min, high=self.tilt_max, shape=(1,), dtype=np.float32)
+        # })
         self.set_init_state()
         self.seed()       
         
@@ -65,7 +71,7 @@ class TiltrotorTransitionSimulator(gym.Env):
         self.rearProp_x      = SIMDB["Configurations"]["rearProp_x"]                    # m
         self.rearProp_z      = SIMDB["Configurations"]["rearProp_z"]                    # m
         self.aeroCenter_x    = SIMDB["Configurations"]["aeroCenter_x"]                  # m
-        self.aerorp_z        = SIMDB["Configurations"]["aerorp_z"]                      # m
+        self.aeroCenter_z        = SIMDB["Configurations"]["aeroCenter_z"]                  # m
         self.S               = SIMDB["Configurations"]["S"]                             # m^2
         self.cbar            = SIMDB["Configurations"]["cbar"]                          # m
         self.elevMaxDeg      = SIMDB["Configurations"]["elev_max"]                      # deg
@@ -76,20 +82,20 @@ class TiltrotorTransitionSimulator(gym.Env):
         self.cg2RearProp_x   = self.cg_x - self.rearProp_x                              # m
         self.cg2RearProp_z   = self.cg_z - self.rearProp_z                              # m
         self.cg2AeroCenter_x = self.cg_x - self.aeroCenter_x                            # m
-        self.cg2AeroCenter_z = self.cg_z - self.aerorp_z                                # m
+        self.cg2AeroCenter_z = self.cg_z - self.aeroCenter_z                                # m
         
         self.K_T             = SIMDB["Propulsion"]["K_T"]                               # none
         self.rpm_max         = SIMDB["Propulsion"]["rpm_max"]                           # rpm
         self.tilt_min        = SIMDB["Propulsion"]["tilt_min"]                          # rad
         self.tilt_max        = SIMDB["Propulsion"]["tilt_max"]                          # rad
         
-        self.CL = {}
-        self.CD = {}
-        self.Cm = {}
+        self.CL_table = {}
+        self.CD_table = {}
+        self.Cm_table = {}
         for aoa in range(-20, 31, 5):
-            self.CL[aoa] = SIMDB["Aerodynamics"]["CL"][str(aoa)]
-            self.CD[aoa] = SIMDB["Aerodynamics"]["CD"][str(aoa)]
-            self.Cm[aoa] = SIMDB["Aerodynamics"]["Cm"][str(aoa)]
+            self.CL_table[str(aoa)] = SIMDB["Aerodynamics"]["CL"][str(aoa)]
+            self.CD_table[str(aoa)] = SIMDB["Aerodynamics"]["CD"][str(aoa)]
+            self.Cm_table[str(aoa)] = SIMDB["Aerodynamics"]["Cm"][str(aoa)]
         
         self.elev_CL_0    = SIMDB["Aerodynamics"]["elev"]["elev_CL_0"]                # none
         self.elev_CL_slop = SIMDB["Aerodynamics"]["elev"]["elev_CL_slop"]             # none/deg
@@ -263,12 +269,20 @@ class TiltrotorTransitionSimulator(gym.Env):
     #################### __init__ ####################
     
     def set_observation(self):
-        observation = np.array([
-            self.state["x"], self.state["z"], self.state["theta"], self.state["U"],
-            self.state["W"], self.state["q"], self.state["time"], self.state["g-force"],
-            self.frontThrottle, self.rearThrottle, self.elev_deg, self.tilt_deg
-        ])
-        return observation
+        return {
+            "x": self.state["x"],
+            "z": self.state["z"],
+            "theta": self.state["theta"],
+            "U": self.state["U"],
+            "W": self.state["W"],
+            "q": self.state["q"],
+            "time": self.state["time"],
+            "g-force": self.state["g-force"],
+            "frontThrottle": self.frontThrottle,
+            "rearThrottle": self.rearThrottle,
+            "elev_deg": self.elev_deg,
+            "tilt_deg": self.tilt_deg
+        }
 
     #################### reset ####################
     def reset(self):
@@ -280,10 +294,7 @@ class TiltrotorTransitionSimulator(gym.Env):
     
     #################### step ####################
     def step(self, action):
-        self.frontThrottle_delta = action["frontThrottle"]
-        self.rearThrottle_delta  = action["rearThrottle"]
-        self.elev_delta          = action["elev_deg"]
-        self.tilt_delta          = action["tilt_deg"]
+        (self.frontThrottle_delta, self.rearThrottle_delta, self.elev_delta, self.tilt_delta) = action
         
         self.frontThrottle += self.frontThrottle_delta * self.rpm_rate
         self.rearThrottle  += self.rearThrottle_delta * self.rpm_rate
@@ -360,28 +371,28 @@ class TiltrotorTransitionSimulator(gym.Env):
         self.vel = math.sqrt(self.w**2 + self.u**2)
         
         aoa_deg = math.degrees(self.aoa)
-        if aoa_deg <= -15:
-            CL_clean = linearInterpolation(-20, self.CL[-20], -15, self.CL[-15], aoa_deg)
-            CD_clean = linearInterpolation(-20, self.CD[-20], -15, self.CD[-15], aoa_deg)
-            Cm_clean = linearInterpolation(-20, self.Cm[-20], -15, self.Cm[-15], aoa_deg)
+        if aoa_deg < -15:
+            CL_clean = linearInterpolation(-20, self.CL_table['-20'], -15, self.CL_table['-15'], aoa_deg)
+            CD_clean = linearInterpolation(-20, self.CD_table['-20'], -15, self.CD_table['-15'], aoa_deg)
+            Cm_clean = linearInterpolation(-20, self.Cm_table['-20'], -15, self.Cm_table['-15'], aoa_deg)
             
         elif aoa_deg <= 30:
-            for i in range(-15, 30, 5):
+            for i in range(-15, 35, 5):
                 if aoa_deg <= i:
-                    CL_clean = linearInterpolation(i-5, self.CL[i-5], i, self.CL[i], aoa_deg)
-                    CD_clean = linearInterpolation(i-5, self.CD[i-5], i, self.CD[i], aoa_deg)
-                    Cm_clean = linearInterpolation(i-5, self.Cm[i-5], i, self.Cm[i], aoa_deg)
+                    CL_clean = linearInterpolation(i-5, self.CL_table[str(i-5)], i, self.CL_table[str(i)], aoa_deg)
+                    CD_clean = linearInterpolation(i-5, self.CD_table[str(i-5)], i, self.CD_table[str(i)], aoa_deg)
+                    Cm_clean = linearInterpolation(i-5, self.Cm_table[str(i-5)], i, self.Cm_table[str(i)], aoa_deg)
                     break
         else:
-            CL_clean = linearInterpolation(25, self.CL[25], 30, self.CL[30], aoa_deg)
-            CD_clean = linearInterpolation(25, self.CD[25], 30, self.CD[30], aoa_deg)
-            Cm_clean = linearInterpolation(25, self.Cm[25], 30, self.Cm[30], aoa_deg)
+            CL_clean = linearInterpolation(25, self.CL_table['25'], 30, self.CL_table['30'], aoa_deg)
+            CD_clean = linearInterpolation(25, self.CD_table['25'], 30, self.CD_table['30'], aoa_deg)
+            Cm_clean = linearInterpolation(25, self.Cm_table['25'], 30, self.Cm_table['30'], aoa_deg)
 
         CL_elev = self.elev_CL_0 + self.elev_CL_slop * self.elev_deg
         CD_elev = self.elev_CD_0 + self.elev_CD_slop * self.elev_deg
         Cm_elev = self.elev_Cm_0 + self.elev_Cm_slop * self.elev_deg
         
-        if math.radians(-20) <= self.aoa <= math.radians(30):
+        if -20 <= aoa_deg <= 30:
             self.CL = CL_clean + CL_elev  # 항공기 전체 양력 계수입니다.
             self.CD = CD_clean + CD_elev  # 항공기 전체 항력 계수입니다.
             self.Cm = Cm_clean + Cm_elev  # 항공기 전체 피치 모멘트 계수입니다.
@@ -404,13 +415,13 @@ class TiltrotorTransitionSimulator(gym.Env):
         self.q += self.time_delta * self.fqdot()
         self.u += self.time_delta * self.fudot()
         self.w += self.time_delta * self.fwdot()
-        self.theta += self.time_delta * self.fthedot()
+        self.theta += self.time_delta * self.fthetadot()
         self.x += self.time_delta * self.fxdot()
         self.z += self.time_delta * self.fzdot()
         # =============== Flight Dynamics with RK-4 (Calculate Next Status) ===============
 
         # 가속도 계산
-        self.acceleration = math.sqrt(self.fudot**2 + self.fwdot**2)
+        self.acceleration = math.sqrt(self.fudot()**2 + self.fwdot()**2)
         self.gForce = self.acceleration / self.g
 
         # 시간 증가
