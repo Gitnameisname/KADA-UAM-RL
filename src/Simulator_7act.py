@@ -1,10 +1,10 @@
-import gym
+import gymnasium
 import math
 import pygame
 import os
 import numpy as np
-from gym import spaces
-from gym.utils import seeding
+from gymnasium import spaces
+from gymnasium.utils import seeding
 
 from src.loadDB import dataLoader
 
