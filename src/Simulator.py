@@ -340,10 +340,10 @@ class TiltrotorTransitionSimulator(gym.Env):
         return self.Myb/self.Iyy
     
     def fudot(self):
-        return self.Fxb/self.m
+        return self.Fxb/self.m + self.q*self.w
     
     def fwdot(self):
-        return self.Fzb/self.m
+        return self.Fzb/self.m + self.q*self.u
     
     def fthetadot(self):
         return self.q
