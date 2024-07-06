@@ -17,20 +17,7 @@ class TiltrotorTransitionSimulator(gym.Env):
         self.setSimulationData("aero.json")
 
         # Observation Space 설정
-        self.observation_space = spaces.Dict({
-            "x": spaces.Box(low=-np.inf, high=np.inf, shape=(1,), dtype=np.float32),
-            "z": spaces.Box(low=-np.inf, high=np.inf, shape=(1,), dtype=np.float32),
-            "theta": spaces.Box(low=-np.inf, high=np.inf, shape=(1,), dtype=np.float32),
-            "U": spaces.Box(low=-np.inf, high=np.inf, shape=(1,), dtype=np.float32),
-            "W": spaces.Box(low=-np.inf, high=np.inf, shape=(1,), dtype=np.float32),
-            "q": spaces.Box(low=-np.inf, high=np.inf, shape=(1,), dtype=np.float32),
-            "time": spaces.Box(low=-np.inf, high=np.inf, shape=(1,), dtype=np.float32),
-            "g-force": spaces.Box(low=-np.inf, high=np.inf, shape=(1,), dtype=np.float32),
-            "frontThrottle": spaces.Box(low=-np.inf, high=np.inf, shape=(1,), dtype=np.float32),
-            "rearThrottle": spaces.Box(low=-np.inf, high=np.inf, shape=(1,), dtype=np.float32),
-            "elev_deg": spaces.Box(low=-np.inf, high=np.inf, shape=(1,), dtype=np.float32),
-            "tilt_deg": spaces.Box(low=-np.inf, high=np.inf, shape=(1,), dtype=np.float32)
-        })
+        self.observation_space = spaces.Box(low=np.finfo(np.float32).min, high=np.finfo(np.float32).max, shape=(12,), dtype=np.float32)
         
         # 동작 공간 정의
         self.action_space = spaces.Box(low=-1.0, high=1.0, shape=(4,), dtype=np.float32)
@@ -107,7 +94,7 @@ class TiltrotorTransitionSimulator(gym.Env):
         reward_tilt = (self.tilt_max - self.tilt_deg) / self.tilt_max
 
         # 조건 2: 피치 값 차이 | 피치가 pitchTarget일 경우 최대(1) | pitch가 pitchTarget에 가까울 수록 좋음
-        pitch_deg = math.degrees(self.state["theta"])
+        pitch_deg = math.degrees(self.theta)
         pitch_width = self.pitchMax - self.pitchMin
         if self.pitchMin <= pitch_deg <= self.pitchTarget:
             slop = 2 * pitch_width / (self.pitchTarget - self.pitchMin)
@@ -120,11 +107,11 @@ class TiltrotorTransitionSimulator(gym.Env):
         
         # 조건 3: 비행 시간 | 클수록 좋음 | 0 ~ inf, 1 timestep = 0.05 sec, 30,000 timestep = 1,500 sec = 25 min
         # 조건 3은 클수록 좋게 설정하였음(positive)
-        reward_time = self.state["time"]
+        reward_time = self.time
         
         # 조건 4: 크루즈 속도 차이 | speed가 VcruiseTarget일 경우 최대(1) | speed가 VcruiseTarget에 가까울 수록 좋음
         # 속도는 U와 W의 제곱근으로 계산
-        speed = np.sqrt(self.state["U"]**2 + self.state["W"]**2)
+        speed = np.sqrt(self.u**2 + self.w**2)
         speed_width = self.VcruiseMax - self.VcruiseTarget
         if 0 <= speed <= self.VcruiseTarget:
             slop = 2 * speed_width / self.VcruiseTarget
@@ -136,14 +123,14 @@ class TiltrotorTransitionSimulator(gym.Env):
             reward_speed = -1
 
         # 조건 5: 순항 고도 | 고도가 0일 경우 최대(1) | 고도가 0에 가까울 수록 좋음
-        reward_altitude = (self.altitudeDelta - np.abs(self.state["z"])) / self.altitudeDelta
+        reward_altitude = (self.altitudeDelta - np.abs(self.z)) / self.altitudeDelta
 
         # 조건 6: 프로펠러 rpm 최소화 | 0이 될 수록 좋음 | 0 ~ 1
         # 조건 6: 프로펠러 rpm 최소화 | 0이 될 수록 좋음 | 0 ~ 1
         reward_rpm = (1 - self.rearThrottle) + (1 - self.frontThrottle)
 
         # 조건 7: 이동 거리
-        reward_distance = self.state["x"]
+        reward_distance = self.x
 
         # 조건 8: 가속도
         # 속도가 0 이상, VcruiseTarget 이하일 경우
@@ -200,24 +187,23 @@ class TiltrotorTransitionSimulator(gym.Env):
                         reward_speed, reward_altitude, reward_rpm,
                         reward_distance, reward_gForce, reward_tilt_delta]
 
-        value_list = [self.tilt_deg, pitch_deg, self.state["time"],
-                        speed, self.state["z"], [self.frontThrottle, self.rearThrottle],
-                        self.state["x"], self.gForce, self.tilt_delta]
+        value_list = [self.tilt_deg, pitch_deg, self.time,
+                        speed, self.z, [self.frontThrottle, self.rearThrottle],
+                        self.x, self.gForce, self.tilt_delta]
         reward = np.dot(weight, rewards_list)
 
         return reward, rewards_list, value_list
     
     def set_init_state(self):
-        self.state = {
-            "x": 0,       # m
-            "z": 0,       # m
-            "theta": 0,   # rad
-            "U": 0,       # m/s
-            "W": 0,       # m/s
-            "q": 0,       # rad/s
-            "time": 0,    # sec
-            "g-force": 0  # g
-        }
+        self.state = [0] * 12
+
+        self.x = 0
+        self.z = 0
+        self.theta = 0
+        self.u = 0
+        self.w = 0
+        self.q = 0
+        self.time = 0
                 
         # Actor의 Action 값들
         # 초기 네 개의 로터 스로틀은 호버링 상태로 설정
@@ -256,20 +242,12 @@ class TiltrotorTransitionSimulator(gym.Env):
     #################### __init__ ####################
     
     def set_observation(self):
-        return {
-            "x": self.state["x"],
-            "z": self.state["z"],
-            "theta": self.state["theta"],
-            "U": self.state["U"],
-            "W": self.state["W"],
-            "q": self.state["q"],
-            "time": self.state["time"],
-            "g-force": self.state["g-force"],
-            "frontThrottle": self.frontThrottle,
-            "rearThrottle": self.rearThrottle,
-            "elev_deg": self.elev_deg,
-            "tilt_deg": self.tilt_deg
-        }
+        observation = np.hstack([self.x, self.z, self.theta,
+                                self.u, self.w, self.q,
+                                self.time, self.gForce,
+                                self.frontThrottle, self.rearThrottle, self.elev_deg, self.tilt_deg])
+
+        return observation
 
     #################### reset ####################
     def reset(self):
@@ -304,19 +282,19 @@ class TiltrotorTransitionSimulator(gym.Env):
         
         done = False
         # 고도가 altitudeDelta 이상이거나 이하일 경우, 피치가 pitchMin 이상 pitchMax 이하일 경우, 비행 속도가 VcruiseMax 이상일 경우 종료
-        if np.abs(self.state["z"]) >= self.altitudeDelta or \
-           not (self.pitchMin <= self.state["theta"] <= self.pitchMax) or \
+        if np.abs(self.z) >= self.altitudeDelta or \
+           not (self.pitchMin <= self.theta <= self.pitchMax) or \
            not (self.tilt_min <= self.tilt_deg <= self.tilt_max) or \
-           self.state["U"] > self.VcruiseMax:
+           self.u > self.VcruiseMax:
             done = True
              
         observation = self.set_observation()
         step_data = self.dataCollection()
         info = {
-            'Time' : self.state["time"],
-            'x_pos': self.state["x"],
-            'z_pos': self.state["z"],
-            'pitch': self.state["theta"],
+            'Time' : self.time,
+            'x_pos': self.x,
+            'z_pos': self.z,
+            'pitch': self.theta,
             'reward_detail': rewards_list,
             'value_detail': value_list,
             'data': step_data
@@ -336,28 +314,28 @@ class TiltrotorTransitionSimulator(gym.Env):
         return self.q
     
     def fxdot(self):
-        return self.u*math.cos(self.state["theta"]) + self.w*math.sin(self.state["theta"])
+        return self.u*math.cos(self.theta) + self.w*math.sin(self.theta)
     
     def fzdot(self):
-        return -self.u*math.sin(self.state["theta"]) + self.w*math.cos(self.state["theta"])
+        return -self.u*math.sin(self.theta) + self.w*math.cos(self.theta)
     
     # Simulation
     def Simulation(self):
-        self.x            = self.state["x"]
-        self.z            = self.state["z"]
-        self.theta        = self.state["theta"]
-        self.u            = self.state["U"]
-        self.w            = self.state["W"]
-        self.q            = self.state["q"]
-        self.time         = self.state["time"]
-        self.gForce       = self.state["g-force"]
+        self.x            = self.state[0]
+        self.z            = self.state[1]
+        self.theta        = self.state[2]
+        self.u            = self.state[3]
+        self.w            = self.state[4]
+        self.q            = self.state[5]
+        self.time         = self.state[6]
+        self.gForce       = self.state[7]
         
         # =============== Vehicle Model (Calculate Force&Moments) ===============
         self.frontThrust = 2 * self.K_T * (self.frontThrottle * self.rpm_max)**2
         self.rearThrust  = 2 * self.K_T * (self.rearThrottle  * self.rpm_max)**2
         
-        if self.state["theta"] == 0:
-            self.aoa = self.state["theta"]
+        if self.theta == 0:
+            self.aoa = self.theta
         else:
             self.aoa = math.atan(self.w/self.u)
         
@@ -421,16 +399,7 @@ class TiltrotorTransitionSimulator(gym.Env):
         self.time += self.time_delta
         
         # State Update
-        self.state = {
-            "x": self.x,
-            "z": self.z,
-            "theta": self.theta,
-            "U": self.u,
-            "W": self.w,
-            "q": self.q,
-            "time": self.time,
-            "g-force": self.gForce
-        }
+        self.state = [self.x, self.z, self.theta, self.u, self.w, self.q, self.time, self.gForce, self.frontThrottle, self.rearThrottle, self.elev_deg, self.tilt_deg]
     #################### step ####################
     
     #################### data collection ####################
@@ -439,8 +408,8 @@ class TiltrotorTransitionSimulator(gym.Env):
             "time": self.time,
             "CL": self.CL,
             "CD": self.CD,
-            "X": self.state["x"],
-            "Z": self.state["z"],
+            "X": self.x,
+            "Z": self.z,
             "theta": self.theta,
             "frontThrottle": self.frontThrottle,
             "rearThrottle": self.rearThrottle,
@@ -474,24 +443,15 @@ class TiltrotorTransitionSimulator(gym.Env):
         self.font = pygame.font.SysFont('arial',20, True, True)  #폰트 설정
         
     def render(self, mode='human'):
-        # SCREEN_COLOR = (255, 255, 255)
-        # if self.viewer is None:
-        #     pygame.init()
-        #     pygame.display.set_caption("Transition-Training")
-        #     self.screen = pygame.display.set_mode(self.window_size)
-        #     self.clock = pygame.time.Clock()
-        #     self.viewer = True
-        # self.screen.fill(SCREEN_COLOR)
-
-        self.drawVehicle(self.state["x"], self.state["z"], self.state["theta"], self.tilt_deg)
+        self.drawVehicle(self.x, self.z, self.theta, self.tilt_deg)
 
         state_texts = {
-            "Distance(m)": round(self.state["x"], 8),
-            "Altitude(m)": round(self.state["z"], 8),
-            "Pitch(deg)": round(self.state["theta"]*180.0/math.pi, 8),
-            "U(m/s)": round(self.state["U"], 8),
-            "W(m/s)": round(self.state["W"], 8),
-            "Time(sec)": round(self.state["time"], 8),
+            "Distance(m)": round(self.x, 8),
+            "Altitude(m)": round(self.z, 8),
+            "Pitch(deg)": round(math.degrees(self.theta), 8),
+            "U(m/s)": round(self.u, 8),
+            "W(m/s)": round(self.w, 8),
+            "Time(sec)": round(self.time, 8),
             "Front_RPM(%)": round(self.frontThrottle*100, 8),
             "Rear_RPM(%)": round(self.rearThrottle*100, 8),
             "Elevator(deg)": round(self.elev_deg, 8),
