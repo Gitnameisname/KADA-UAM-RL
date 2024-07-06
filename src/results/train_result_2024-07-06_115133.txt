@@ -1,0 +1,16 @@
+Episode: 0
+Episode finished at timestep: 23
+Total reward: 12667.74
+========================================
+Reward details
+Tilt       : 0.75	| 2.3e+01
+Pitch      : -1.00	| -1.3e+02
+Time       : 3.40	| 3.4
+V_cruise   : -1.00	| 5.6e+01
+Altitude   : -0.10	| -1.6e+01
+Rotor RPM  : 1.96	| front - 0.042	| rear - 0.0
+Distance   : -29.68	| -3e+01
+G-Force    : -1.00	| 6.5
+Tilt Delta : 1.00	| -0.99
+========================================
+

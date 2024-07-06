@@ -12,18 +12,9 @@ from src.Functions import linearInterpolation
 class TiltrotorTransitionSimulator(gym.Env):
     metadata = {'render.modes': ['human']}
     ################### __init__ ####################
-    def __init__(self, render_mode='human'):
+    def __init__(self):
         self.setRender(window_size=[1000, 500])
         self.setSimulationData("aero.json")
-
-        # 상태 초기화
-        self.x = 0
-        self.z = 0
-        self.theta = 0
-        self.u = 0
-        self.w = 0
-        self.q = 0
-        self.time = 0
 
         # Observation Space 설정
         self.observation_space = spaces.Dict({
@@ -43,11 +34,6 @@ class TiltrotorTransitionSimulator(gym.Env):
         
         # 동작 공간 정의
         self.action_space = spaces.Box(low=-1.0, high=1.0, shape=(4,), dtype=np.float32)
-
-        assert render_mode is None or render_mode in self.metadata['render.modes'], f"render_mode should be one of {self.metadata['render.modes']}"
-        self.render_mode = render_mode
-        self.viewer = None
-        self.clock = None
 
         self.set_init_state()
         self.seed()       
@@ -244,12 +230,9 @@ class TiltrotorTransitionSimulator(gym.Env):
         self.rpm_rate = 0.01             # ratio (rpm/rpm_max)
         self.elev_rate = 1               # deg
         self.tilt_rate = 1               # deg
+
         self.current_score = 0
-        self.current_score = 0
-        
-        self.frontThrust = 0
-        self.rearThrust = 0
-        self.current_score = 0        
+        self.viewer = None       
         
         self.frontThrust = 0
         self.rearThrust = 0
@@ -258,6 +241,14 @@ class TiltrotorTransitionSimulator(gym.Env):
         self.Mp = 0
         self.aoa = 0
         self.gForce = 0
+
+        SCREEN_COLOR = (255, 255, 255)
+        if self.viewer == None:
+            pygame.init()
+            pygame.display.set_caption("Transition-Training")
+            self.screen = pygame.display.set_mode(self.window_size)
+            self.clock = pygame.time.Clock()
+        self.screen.fill(SCREEN_COLOR)
                 
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
@@ -282,14 +273,17 @@ class TiltrotorTransitionSimulator(gym.Env):
 
     #################### reset ####################
     def reset(self):
-        # super(TiltrotorTransitionSimulator, self).reset()
-
         self.set_init_state()
         self.current_score = 0
 
         return self.set_observation()
     #################### reset ####################    
     
+    def close(self):
+        if self.viewer is not None:
+            pygame.quit()
+            self.viewer = None
+
     #################### step ####################
     def step(self, action):
         (self.frontThrottle_delta, self.rearThrottle_delta, self.elev_delta, self.tilt_delta) = action
@@ -462,7 +456,7 @@ class TiltrotorTransitionSimulator(gym.Env):
     #################### render ####################
     def setRender(self, window_size):
         self.window_size = window_size
-        img_path = "./src/image"
+        img_path = "src/image"
 
         self.background = pygame.image.load(os.path.join(f"{img_path}/Background.png"))
         self.vehicle = pygame.image.load(os.path.join(f"{img_path}/vehicle.png"))
@@ -480,14 +474,14 @@ class TiltrotorTransitionSimulator(gym.Env):
         self.font = pygame.font.SysFont('arial',20, True, True)  #폰트 설정
         
     def render(self, mode='human'):
-        SCREEN_COLOR = (255, 255, 255)
-        if self.viewer is None:
-            pygame.init()
-            pygame.display.set_caption("Transition-Training")
-            self.screen = pygame.display.set_mode(self.window_size)
-            self.clock = pygame.time.Clock()
-            self.viewer = True
-        self.screen.fill(SCREEN_COLOR)
+        # SCREEN_COLOR = (255, 255, 255)
+        # if self.viewer is None:
+        #     pygame.init()
+        #     pygame.display.set_caption("Transition-Training")
+        #     self.screen = pygame.display.set_mode(self.window_size)
+        #     self.clock = pygame.time.Clock()
+        #     self.viewer = True
+        # self.screen.fill(SCREEN_COLOR)
 
         self.drawVehicle(self.state["x"], self.state["z"], self.state["theta"], self.tilt_deg)
 
@@ -518,13 +512,8 @@ class TiltrotorTransitionSimulator(gym.Env):
             text = self.font.render(f"{k}: {v}", True, (28, 0, 0))
             self.screen.blit(text, (700, 10 + 20*i))
         
-        pygame.display.flip()
         self.clock.tick(120)
-
-    def close(self):
-        if self.viewer is not None:
-            pygame.display.quit()
-            pygame.quit()
+        pygame.display.flip()
     
     def drawVehicle(self, x, z, theta, tilt):
         theta = math.radians(theta)

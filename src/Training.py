@@ -40,8 +40,8 @@ class Trainer:
 
     def startTraining(self, maximum_eps=1000, maximum_timestep=10000):
         best_reward = -float('inf')  # 최상의 보상을 추적하기 위한 초기화
-        result_dir = './src/results'
-        model_dir = './src/model'
+        result_dir = 'src/results'
+        model_dir = 'src/model'
         os.makedirs(result_dir, exist_ok=True)
         os.makedirs(model_dir, exist_ok=True)
 
@@ -50,15 +50,12 @@ class Trainer:
                 obs = self.env.reset()  # 환경 초기화
                 total_reward = 0  # 에피소드의 총 보상 초기화
 
-                try:
-                    self.model.learn(total_timesteps=maximum_timestep, log_interval=100)
-                except Exception as e:
-                    print(f"Error during learning: {e}")
+                self.model.learn(total_timesteps=maximum_timestep, log_interval=100)
 
                 for k in range(maximum_timestep):
                     action, _states = self.model.predict(obs, deterministic=True)  # 액션 예측
                     obs, rewards, dones, infos = self.env.step(action)  # 환경 스텝 실행
-                    # self.env.render()  # 필요 시 활성화
+                    self.env.render()  # 필요 시 활성화
                     total_reward += rewards[0]  # 총 보상 업데이트 (다중 환경에서 첫 번째 환경의 보상만 사용)
 
                     if dones[0]:  # 에피소드 종료 시 처리 (다중 환경에서 첫 번째 환경만 확인)
