@@ -70,7 +70,7 @@ class Trainer:
                             f"Time       : {infos[0]['reward_detail'][2]:.2f}\t| {infos[0]['value_detail'][2]:.2}\n"
                             f"V_cruise   : {infos[0]['reward_detail'][3]:.2f}\t| {infos[0]['value_detail'][3]:.2}\n"
                             f"Altitude   : {infos[0]['reward_detail'][4]:.2f}\t| {infos[0]['value_detail'][4]:.2}\n"
-                            f"Rotor RPM  : front - {infos[0]['reward_detail'][5][0]:.2f}\t| rear - {infos[0]['value_detail'][5][1]:.2}\n"
+                            f"Rotor RPM  : {infos[0]['reward_detail'][5]:.2f}\t| front - {infos[0]['value_detail'][5][0]:.2}\t| rear - {infos[0]['value_detail'][5][1]:.2}\n"
                             f"Distance   : {infos[0]['reward_detail'][6]:.2f}\t| {infos[0]['value_detail'][6]:.2}\n"
                             f"G-Force    : {infos[0]['reward_detail'][7]:.2f}\t| {infos[0]['value_detail'][7]:.2}\n"
                             f"Tilt Delta : {infos[0]['reward_detail'][8]:.2f}\t| {infos[0]['value_detail'][8]:.2}\n"
