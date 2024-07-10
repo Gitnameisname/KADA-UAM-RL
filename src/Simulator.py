@@ -7,14 +7,15 @@ from gym import spaces
 from gym.utils import seeding
 
 from src.loadDB import dataLoader
+from src.Functions import linearInterpolation
 
 class TiltrotorTransitionSimulator(gym.Env):
     metadata = {'render.modes': ['human']}
     ################### __init__ ####################
     def __init__(self):
-        self.set_render([1000,500])
+        self.set_render(window_size=[1000,500])
         
-        self.set_DB("aero.json")
+        self.setSimulationData("aero.json")
         
         self.observation_space = spaces.Box(np.finfo(np.float32).min, np.finfo(np.float32).max, shape=(12,), dtype=np.float32)
         
@@ -48,21 +49,22 @@ class TiltrotorTransitionSimulator(gym.Env):
         pygame.font.init()
         self.font = pygame.font.SysFont('arial',20, True, True)  #폰트 설정
         
-    def set_DB(self, DBname):
+    def setSimulationData(self, AeroDBname='aero.json', constrainDBname='constrains.json'):
 
-        DB = dataLoader('aero.json')
+        SIMDB = dataLoader(AeroDBname)
+        CONSTDB = dataLoader(constrainDBname)
         
-        self.cg_x       = DB["Configurations"]["cg_x"]                          # m
-        self.cg_z       = DB["Configurations"]["cg_z"]                          # m
-        self.f_p_x      = DB["Configurations"]["f_p_x"]                         # m
-        self.f_p_z      = DB["Configurations"]["f_p_z"]                         # m
-        self.r_p_x      = DB["Configurations"]["r_p_x"]                         # m
-        self.r_p_z      = DB["Configurations"]["r_p_z"]                         # m
-        self.aerorp_x   = DB["Configurations"]["aerorp_x"]                      # m
-        self.aerorp_z   = DB["Configurations"]["aerorp_z"]                      # m
-        self.S          = DB["Configurations"]["S"]                             # m^2
-        self.cbar       = DB["Configurations"]["cbar"]                          # m
-        self.elev_max   = DB["Configurations"]["elev_max"]                      # deg
+        self.cg_x       = SIMDB["Configurations"]["cg_x"]                          # m
+        self.cg_z       = SIMDB["Configurations"]["cg_z"]                          # m
+        self.f_p_x      = SIMDB["Configurations"]["frontProp_x"]                   # m
+        self.f_p_z      = SIMDB["Configurations"]["frontProp_z"]                   # m
+        self.r_p_x      = SIMDB["Configurations"]["rearProp_x"]                    # m
+        self.r_p_z      = SIMDB["Configurations"]["rearProp_z"]                    # m
+        self.aerorp_x   = SIMDB["Configurations"]["aeroCenter_x"]                  # m
+        self.aerorp_z   = SIMDB["Configurations"]["aeroCenter_z"]                  # m
+        self.S          = SIMDB["Configurations"]["S"]                             # m^2
+        self.cbar       = SIMDB["Configurations"]["cbar"]                          # m
+        self.elev_max   = SIMDB["Configurations"]["elev_max"]                      # deg
         
         self.D_X_prop_f = self.cg_x - self.f_p_x                                # m
         self.D_Z_prop_f = self.cg_z - self.f_p_z                                # m
@@ -71,57 +73,29 @@ class TiltrotorTransitionSimulator(gym.Env):
         self.D_X_aero   = self.cg_x - self.aerorp_x                             # m
         self.D_Z_aero   = self.cg_z - self.aerorp_z                             # m
         
-        self.K_T        = DB["Propulsion"]["K_T"]                               # none
-        self.rpm_max    = DB["Propulsion"]["rpm_max"]                           # rpm
-        self.tilt_min   = DB["Propulsion"]["tilt_min"]                          # rad
-        self.tilt_max   = math.pi/2                                             # rad
+        self.K_T        = SIMDB["Propulsion"]["K_T"]                               # none
+        self.rpm_max    = SIMDB["Propulsion"]["rpm_max"]                           # rpm
+        self.tilt_min   = SIMDB["Propulsion"]["tilt_min"]                          # rad
+        self.tilt_max   = SIMDB["Propulsion"]["tilt_max"]                          # rad
         
-        self.CL_a_20    = DB["Aerodynamics"]["CL"]["CL_a_20"]                   # none
-        self.CL_a_15    = DB["Aerodynamics"]["CL"]["CL_a_15"]                   # none
-        self.CL_a_10    = DB["Aerodynamics"]["CL"]["CL_a_10"]                   # none
-        self.CL_a_5     = DB["Aerodynamics"]["CL"]["CL_a_5"]                    # none
-        self.CL_a0      = DB["Aerodynamics"]["CL"]["CL_a0"]                     # none
-        self.CL_a5      = DB["Aerodynamics"]["CL"]["CL_a5"]                     # none
-        self.CL_a10     = DB["Aerodynamics"]["CL"]["CL_a10"]                    # none
-        self.CL_a15     = DB["Aerodynamics"]["CL"]["CL_a15"]                    # none
-        self.CL_a20     = DB["Aerodynamics"]["CL"]["CL_a20"]                    # none
-        self.CL_a25     = DB["Aerodynamics"]["CL"]["CL_a25"]                    # none
-        self.CL_a30     = DB["Aerodynamics"]["CL"]["CL_a30"]                    # none
+        self.CL_table = {}
+        self.CD_table = {}
+        self.Cm_table = {}
+        for aoa in range(-20, 31, 5):
+            self.CL_table[str(aoa)] = SIMDB["Aerodynamics"]["CL"][str(aoa)]
+            self.CD_table[str(aoa)] = SIMDB["Aerodynamics"]["CD"][str(aoa)]
+            self.Cm_table[str(aoa)] = SIMDB["Aerodynamics"]["Cm"][str(aoa)]
         
-        self.CD_a_20    = DB["Aerodynamics"]["CD"]["CD_a_20"]                   # none
-        self.CD_a_15    = DB["Aerodynamics"]["CD"]["CD_a_15"]                   # none
-        self.CD_a_10    = DB["Aerodynamics"]["CD"]["CD_a_10"]                   # none
-        self.CD_a_5     = DB["Aerodynamics"]["CD"]["CD_a_5"]                    # none
-        self.CD_a0      = DB["Aerodynamics"]["CD"]["CD_a0"]                     # none
-        self.CD_a5      = DB["Aerodynamics"]["CD"]["CD_a5"]                     # none
-        self.CD_a10     = DB["Aerodynamics"]["CD"]["CD_a10"]                    # none
-        self.CD_a15     = DB["Aerodynamics"]["CD"]["CD_a15"]                    # none
-        self.CD_a20     = DB["Aerodynamics"]["CD"]["CD_a20"]                    # none
-        self.CD_a25     = DB["Aerodynamics"]["CD"]["CD_a25"]                    # none
-        self.CD_a30     = DB["Aerodynamics"]["CD"]["CD_a30"]                    # none
+        self.CL_elev_0  = SIMDB["Aerodynamics"]["elev"]["elev_CL_0"]                # none
+        self.CL_elev    = SIMDB["Aerodynamics"]["elev"]["elev_CL_slop"]             # none/deg
+        self.CD_elev_0  = SIMDB["Aerodynamics"]["elev"]["elev_CD_0"]                # none
+        self.CD_elev    = SIMDB["Aerodynamics"]["elev"]["elev_CD_slop"]             # none/deg
+        self.Cm_elev_0  = SIMDB["Aerodynamics"]["elev"]["elev_Cm_0"]                # none
+        self.Cm_elev    = SIMDB["Aerodynamics"]["elev"]["elev_Cm_slop"]             # none/deg
         
-        self.Cm_a_20    = DB["Aerodynamics"]["Cm"]["Cm_a_20"]                   # none
-        self.Cm_a_15    = DB["Aerodynamics"]["Cm"]["Cm_a_15"]                   # none
-        self.Cm_a_10    = DB["Aerodynamics"]["Cm"]["Cm_a_10"]                   # none
-        self.Cm_a_5     = DB["Aerodynamics"]["Cm"]["Cm_a_5"]                    # none
-        self.Cm_a0      = DB["Aerodynamics"]["Cm"]["Cm_a0"]                     # none
-        self.Cm_a5      = DB["Aerodynamics"]["Cm"]["Cm_a5"]                     # none
-        self.Cm_a10     = DB["Aerodynamics"]["Cm"]["Cm_a10"]                    # none
-        self.Cm_a15     = DB["Aerodynamics"]["Cm"]["Cm_a15"]                    # none
-        self.Cm_a20     = DB["Aerodynamics"]["Cm"]["Cm_a20"]                    # none
-        self.Cm_a25     = DB["Aerodynamics"]["Cm"]["Cm_a25"]                    # none
-        self.Cm_a30     = DB["Aerodynamics"]["Cm"]["Cm_a30"]                    # none
-        
-        self.CL_elev_0  = DB["Aerodynamics"]["CL_elev"]["CL_elev_0"]            # none
-        self.CL_elev    = DB["Aerodynamics"]["CL_elev"]["CL_elev"]              # none/deg
-        self.CD_elev_0  = DB["Aerodynamics"]["CL_elev"]["CD_elev_0"]            # none
-        self.CD_elev    = DB["Aerodynamics"]["CL_elev"]["CD_elev"]              # none/deg
-        self.Cm_elev_0  = DB["Aerodynamics"]["CL_elev"]["Cm_elev_0"]            # none
-        self.Cm_elev    = DB["Aerodynamics"]["CL_elev"]["Cm_elev"]              # none/deg
-        
-        self.m          = DB["Aerodynamics"]["WnB"]["m"]                        # kg
-        self.Iyy        = DB["Aerodynamics"]["WnB"]["Iyy"]                      # kg*m^2
-        self.g          = DB["Aerodynamics"]["WnB"]["g"]                        # kg/m^2
+        self.m          = SIMDB["WeightAndBalance"]["m"]                        # kg
+        self.Iyy        = SIMDB["WeightAndBalance"]["Iyy"]                      # kg*m^2
+        self.g          = SIMDB["WeightAndBalance"]["g"]                        # kg/m^2
         
     def set_init_state(self):
         self.state = [0, 0,     0, 0, 0, 0,    0,            0]
@@ -305,24 +279,14 @@ class TiltrotorTransitionSimulator(gym.Env):
         }
         return observation, reward, done, info
     
-    # Flight Dynamics Equations
-    # def fqdot(self, q):
-    #     return ((-self.f_Lz*math.cos(self.tilt * math.pi/180) + self.f_Lx*math.sin(self.tilt * math.pi/180))*self.T_f - self.r_Lx*self.T_r + self.Mp)/self.Iyy
-    
-    # def fudot(self, u):
-    #     return -self.g*math.sin(self.state[2]) - self.state[5]*self.state[4] + (self.T_f*math.cos(self.tilt * math.pi/180) - self.D*math.cos(self.al) - self.L*math.sin(self.al))/self.m
-    
-    # def fwdot(self, w):
-    #     return self.g*math.cos(self.state[2]) + self.state[5]*self.state[3] + (- self.T_f*math.sin(self.tilt * math.pi/180) - self.T_r + self.D*math.sin(self.al) - self.L*math.cos(self.al))/self.m
-    
     def fqdot(self, q):
         return self.Myb/self.Iyy
     
     def fudot(self, u):
-        return self.Fxb/self.m
+        return self.Fxb/self.m - self.state[5]*self.state[4]
     
     def fwdot(self, w):
-        return self.Fzb/self.m
+        return self.Fzb/self.m + self.state[5]*self.state[3]
     
     def fthedot(self, the):
         return self.q
@@ -358,74 +322,97 @@ class TiltrotorTransitionSimulator(gym.Env):
         
         # ckchoi: 추정식 잘못되어서 수정
         # guess_value = ((d-b)/(c-a))*(x-a)+b
-        if (self.al <= -15*math.pi/180):
-            CL_clean = self.CL_a_20 + (self.al*180/math.pi + 20)*(self.CL_a_15 - self.CL_a_20)/5
-            CD_clean = self.CD_a_20 + (self.al*180/math.pi + 20)*(self.CD_a_15 - self.CD_a_20)/5
-            Cm_clean = self.Cm_a_20 + (self.al*180/math.pi + 20)*(self.Cm_a_15 - self.Cm_a_20)/5
-            CL_clean = self.CL_a_20 + (self.al*180/math.pi + 20)*(self.CL_a_15 - self.CL_a_20)/5
-            CD_clean = self.CD_a_20 + (self.al*180/math.pi + 20)*(self.CD_a_15 - self.CD_a_20)/5
-            Cm_clean = self.Cm_a_20 + (self.al*180/math.pi + 20)*(self.Cm_a_15 - self.Cm_a_20)/5
-        elif (self.al <= -10*math.pi/180):
-            CL_clean = self.CL_a_15 + (self.al*180/math.pi + 15)*(self.CL_a_10 - self.CL_a_15)/5
-            CD_clean = self.CD_a_15 + (self.al*180/math.pi + 15)*(self.CD_a_10 - self.CD_a_15)/5
-            Cm_clean = self.Cm_a_15 + (self.al*180/math.pi + 15)*(self.Cm_a_10 - self.Cm_a_15)/5
-            CL_clean = self.CL_a_15 + (self.al*180/math.pi + 15)*(self.CL_a_10 - self.CL_a_15)/5
-            CD_clean = self.CD_a_15 + (self.al*180/math.pi + 15)*(self.CD_a_10 - self.CD_a_15)/5
-            Cm_clean = self.Cm_a_15 + (self.al*180/math.pi + 15)*(self.Cm_a_10 - self.Cm_a_15)/5
-        elif (self.al <= -5*math.pi/180):
-            CL_clean = self.CL_a_10 + (self.al*180/math.pi + 10)*(self.CL_a_5 - self.CL_a_10)/5
-            CD_clean = self.CD_a_10 + (self.al*180/math.pi + 10)*(self.CD_a_5 - self.CD_a_10)/5
-            Cm_clean = self.Cm_a_10 + (self.al*180/math.pi + 10)*(self.Cm_a_5 - self.Cm_a_10)/5
-            CL_clean = self.CL_a_10 + (self.al*180/math.pi + 10)*(self.CL_a_5 - self.CL_a_10)/5
-            CD_clean = self.CD_a_10 + (self.al*180/math.pi + 10)*(self.CD_a_5 - self.CD_a_10)/5
-            Cm_clean = self.Cm_a_10 + (self.al*180/math.pi + 10)*(self.Cm_a_5 - self.Cm_a_10)/5
-        elif (self.al <= 0*math.pi/180):
-            CL_clean = self.CL_a_5 + (self.al*180/math.pi + 5)*(self.CL_a0 - self.CL_a_5)/5
-            CD_clean = self.CD_a_5 + (self.al*180/math.pi + 5)*(self.CD_a0 - self.CD_a_5)/5
-            Cm_clean = self.Cm_a_5 + (self.al*180/math.pi + 5)*(self.Cm_a0 - self.Cm_a_5)/5
-            CL_clean = self.CL_a_5 + (self.al*180/math.pi + 5)*(self.CL_a0 - self.CL_a_5)/5
-            CD_clean = self.CD_a_5 + (self.al*180/math.pi + 5)*(self.CD_a0 - self.CD_a_5)/5
-            Cm_clean = self.Cm_a_5 + (self.al*180/math.pi + 5)*(self.Cm_a0 - self.Cm_a_5)/5
-        elif (self.al <= 5*math.pi/180):
-            CL_clean = self.CL_a0 + (self.al*180/math.pi - 0)*(self.CL_a5 - self.CL_a0)/5
-            CD_clean = self.CD_a0 + (self.al*180/math.pi - 0)*(self.CD_a5 - self.CD_a0)/5
-            Cm_clean = self.Cm_a0 + (self.al*180/math.pi - 0)*(self.Cm_a5 - self.Cm_a0)/5
-            CL_clean = self.CL_a0 + (self.al*180/math.pi - 0)*(self.CL_a5 - self.CL_a0)/5
-            CD_clean = self.CD_a0 + (self.al*180/math.pi - 0)*(self.CD_a5 - self.CD_a0)/5
-            Cm_clean = self.Cm_a0 + (self.al*180/math.pi - 0)*(self.Cm_a5 - self.Cm_a0)/5
-        elif (self.al <= 10*math.pi/180):
-            CL_clean = self.CL_a5 + (self.al*180/math.pi - 5)*(self.CL_a10 - self.CL_a5)/5
-            CD_clean = self.CD_a5 + (self.al*180/math.pi - 5)*(self.CD_a10 - self.CD_a5)/5
-            Cm_clean = self.Cm_a5 + (self.al*180/math.pi - 5)*(self.Cm_a10 - self.Cm_a5)/5
-            CL_clean = self.CL_a5 + (self.al*180/math.pi - 5)*(self.CL_a10 - self.CL_a5)/5
-            CD_clean = self.CD_a5 + (self.al*180/math.pi - 5)*(self.CD_a10 - self.CD_a5)/5
-            Cm_clean = self.Cm_a5 + (self.al*180/math.pi - 5)*(self.Cm_a10 - self.Cm_a5)/5
-        elif (self.al <= 15*math.pi/180):
-            CL_clean = self.CL_a10 + (self.al*180/math.pi - 10)*(self.CL_a15 - self.CL_a10)/5
-            CD_clean = self.CD_a10 + (self.al*180/math.pi - 10)*(self.CD_a15 - self.CD_a10)/5
-            Cm_clean = self.Cm_a10 + (self.al*180/math.pi - 10)*(self.Cm_a15 - self.Cm_a10)/5
-            CL_clean = self.CL_a10 + (self.al*180/math.pi - 10)*(self.CL_a15 - self.CL_a10)/5
-            CD_clean = self.CD_a10 + (self.al*180/math.pi - 10)*(self.CD_a15 - self.CD_a10)/5
-            Cm_clean = self.Cm_a10 + (self.al*180/math.pi - 10)*(self.Cm_a15 - self.Cm_a10)/5
-        elif (self.al <= 20*math.pi/180):
-            CL_clean = self.CL_a15 + (self.al*180/math.pi - 15)*(self.CL_a20 - self.CL_a15)/5
-            CD_clean = self.CD_a15 + (self.al*180/math.pi - 15)*(self.CD_a20 - self.CD_a15)/5
-            Cm_clean = self.Cm_a15 + (self.al*180/math.pi - 15)*(self.Cm_a20 - self.Cm_a15)/5
-            CL_clean = self.CL_a15 + (self.al*180/math.pi - 15)*(self.CL_a20 - self.CL_a15)/5
-            CD_clean = self.CD_a15 + (self.al*180/math.pi - 15)*(self.CD_a20 - self.CD_a15)/5
-            Cm_clean = self.Cm_a15 + (self.al*180/math.pi - 15)*(self.Cm_a20 - self.Cm_a15)/5
-        elif (self.al <= 25*math.pi/180):
-            CL_clean = self.CL_a20 + (self.al*180/math.pi - 20)*(self.CL_a25 - self.CL_a20)/5
-            CD_clean = self.CD_a20 + (self.al*180/math.pi - 20)*(self.CD_a25 - self.CD_a20)/5
-            Cm_clean = self.Cm_a20 + (self.al*180/math.pi - 20)*(self.Cm_a25 - self.Cm_a20)/5
-            CL_clean = self.CL_a20 + (self.al*180/math.pi - 20)*(self.CL_a25 - self.CL_a20)/5
-            CD_clean = self.CD_a20 + (self.al*180/math.pi - 20)*(self.CD_a25 - self.CD_a20)/5
-            Cm_clean = self.Cm_a20 + (self.al*180/math.pi - 20)*(self.Cm_a25 - self.Cm_a20)/5
+        # if (self.al <= -15*math.pi/180):
+        #     CL_clean = self.CL_a_20 + (self.al*180/math.pi + 20)*(self.CL_a_15 - self.CL_a_20)/5
+        #     CD_clean = self.CD_a_20 + (self.al*180/math.pi + 20)*(self.CD_a_15 - self.CD_a_20)/5
+        #     Cm_clean = self.Cm_a_20 + (self.al*180/math.pi + 20)*(self.Cm_a_15 - self.Cm_a_20)/5
+        #     CL_clean = self.CL_a_20 + (self.al*180/math.pi + 20)*(self.CL_a_15 - self.CL_a_20)/5
+        #     CD_clean = self.CD_a_20 + (self.al*180/math.pi + 20)*(self.CD_a_15 - self.CD_a_20)/5
+        #     Cm_clean = self.Cm_a_20 + (self.al*180/math.pi + 20)*(self.Cm_a_15 - self.Cm_a_20)/5
+        # elif (self.al <= -10*math.pi/180):
+        #     CL_clean = self.CL_a_15 + (self.al*180/math.pi + 15)*(self.CL_a_10 - self.CL_a_15)/5
+        #     CD_clean = self.CD_a_15 + (self.al*180/math.pi + 15)*(self.CD_a_10 - self.CD_a_15)/5
+        #     Cm_clean = self.Cm_a_15 + (self.al*180/math.pi + 15)*(self.Cm_a_10 - self.Cm_a_15)/5
+        #     CL_clean = self.CL_a_15 + (self.al*180/math.pi + 15)*(self.CL_a_10 - self.CL_a_15)/5
+        #     CD_clean = self.CD_a_15 + (self.al*180/math.pi + 15)*(self.CD_a_10 - self.CD_a_15)/5
+        #     Cm_clean = self.Cm_a_15 + (self.al*180/math.pi + 15)*(self.Cm_a_10 - self.Cm_a_15)/5
+        # elif (self.al <= -5*math.pi/180):
+        #     CL_clean = self.CL_a_10 + (self.al*180/math.pi + 10)*(self.CL_a_5 - self.CL_a_10)/5
+        #     CD_clean = self.CD_a_10 + (self.al*180/math.pi + 10)*(self.CD_a_5 - self.CD_a_10)/5
+        #     Cm_clean = self.Cm_a_10 + (self.al*180/math.pi + 10)*(self.Cm_a_5 - self.Cm_a_10)/5
+        #     CL_clean = self.CL_a_10 + (self.al*180/math.pi + 10)*(self.CL_a_5 - self.CL_a_10)/5
+        #     CD_clean = self.CD_a_10 + (self.al*180/math.pi + 10)*(self.CD_a_5 - self.CD_a_10)/5
+        #     Cm_clean = self.Cm_a_10 + (self.al*180/math.pi + 10)*(self.Cm_a_5 - self.Cm_a_10)/5
+        # elif (self.al <= 0*math.pi/180):
+        #     CL_clean = self.CL_a_5 + (self.al*180/math.pi + 5)*(self.CL_a0 - self.CL_a_5)/5
+        #     CD_clean = self.CD_a_5 + (self.al*180/math.pi + 5)*(self.CD_a0 - self.CD_a_5)/5
+        #     Cm_clean = self.Cm_a_5 + (self.al*180/math.pi + 5)*(self.Cm_a0 - self.Cm_a_5)/5
+        #     CL_clean = self.CL_a_5 + (self.al*180/math.pi + 5)*(self.CL_a0 - self.CL_a_5)/5
+        #     CD_clean = self.CD_a_5 + (self.al*180/math.pi + 5)*(self.CD_a0 - self.CD_a_5)/5
+        #     Cm_clean = self.Cm_a_5 + (self.al*180/math.pi + 5)*(self.Cm_a0 - self.Cm_a_5)/5
+        # elif (self.al <= 5*math.pi/180):
+        #     CL_clean = self.CL_a0 + (self.al*180/math.pi - 0)*(self.CL_a5 - self.CL_a0)/5
+        #     CD_clean = self.CD_a0 + (self.al*180/math.pi - 0)*(self.CD_a5 - self.CD_a0)/5
+        #     Cm_clean = self.Cm_a0 + (self.al*180/math.pi - 0)*(self.Cm_a5 - self.Cm_a0)/5
+        #     CL_clean = self.CL_a0 + (self.al*180/math.pi - 0)*(self.CL_a5 - self.CL_a0)/5
+        #     CD_clean = self.CD_a0 + (self.al*180/math.pi - 0)*(self.CD_a5 - self.CD_a0)/5
+        #     Cm_clean = self.Cm_a0 + (self.al*180/math.pi - 0)*(self.Cm_a5 - self.Cm_a0)/5
+        # elif (self.al <= 10*math.pi/180):
+        #     CL_clean = self.CL_a5 + (self.al*180/math.pi - 5)*(self.CL_a10 - self.CL_a5)/5
+        #     CD_clean = self.CD_a5 + (self.al*180/math.pi - 5)*(self.CD_a10 - self.CD_a5)/5
+        #     Cm_clean = self.Cm_a5 + (self.al*180/math.pi - 5)*(self.Cm_a10 - self.Cm_a5)/5
+        #     CL_clean = self.CL_a5 + (self.al*180/math.pi - 5)*(self.CL_a10 - self.CL_a5)/5
+        #     CD_clean = self.CD_a5 + (self.al*180/math.pi - 5)*(self.CD_a10 - self.CD_a5)/5
+        #     Cm_clean = self.Cm_a5 + (self.al*180/math.pi - 5)*(self.Cm_a10 - self.Cm_a5)/5
+        # elif (self.al <= 15*math.pi/180):
+        #     CL_clean = self.CL_a10 + (self.al*180/math.pi - 10)*(self.CL_a15 - self.CL_a10)/5
+        #     CD_clean = self.CD_a10 + (self.al*180/math.pi - 10)*(self.CD_a15 - self.CD_a10)/5
+        #     Cm_clean = self.Cm_a10 + (self.al*180/math.pi - 10)*(self.Cm_a15 - self.Cm_a10)/5
+        #     CL_clean = self.CL_a10 + (self.al*180/math.pi - 10)*(self.CL_a15 - self.CL_a10)/5
+        #     CD_clean = self.CD_a10 + (self.al*180/math.pi - 10)*(self.CD_a15 - self.CD_a10)/5
+        #     Cm_clean = self.Cm_a10 + (self.al*180/math.pi - 10)*(self.Cm_a15 - self.Cm_a10)/5
+        # elif (self.al <= 20*math.pi/180):
+        #     CL_clean = self.CL_a15 + (self.al*180/math.pi - 15)*(self.CL_a20 - self.CL_a15)/5
+        #     CD_clean = self.CD_a15 + (self.al*180/math.pi - 15)*(self.CD_a20 - self.CD_a15)/5
+        #     Cm_clean = self.Cm_a15 + (self.al*180/math.pi - 15)*(self.Cm_a20 - self.Cm_a15)/5
+        #     CL_clean = self.CL_a15 + (self.al*180/math.pi - 15)*(self.CL_a20 - self.CL_a15)/5
+        #     CD_clean = self.CD_a15 + (self.al*180/math.pi - 15)*(self.CD_a20 - self.CD_a15)/5
+        #     Cm_clean = self.Cm_a15 + (self.al*180/math.pi - 15)*(self.Cm_a20 - self.Cm_a15)/5
+        # elif (self.al <= 25*math.pi/180):
+        #     CL_clean = self.CL_a20 + (self.al*180/math.pi - 20)*(self.CL_a25 - self.CL_a20)/5
+        #     CD_clean = self.CD_a20 + (self.al*180/math.pi - 20)*(self.CD_a25 - self.CD_a20)/5
+        #     Cm_clean = self.Cm_a20 + (self.al*180/math.pi - 20)*(self.Cm_a25 - self.Cm_a20)/5
+        #     CL_clean = self.CL_a20 + (self.al*180/math.pi - 20)*(self.CL_a25 - self.CL_a20)/5
+        #     CD_clean = self.CD_a20 + (self.al*180/math.pi - 20)*(self.CD_a25 - self.CD_a20)/5
+        #     Cm_clean = self.Cm_a20 + (self.al*180/math.pi - 20)*(self.Cm_a25 - self.Cm_a20)/5
+        # else:
+        #     CL_clean = self.CL_a25 + (self.al*180/math.pi - 25)*(self.CL_a30 - self.CL_a25)/5
+        #     CD_clean = self.CD_a25 + (self.al*180/math.pi - 25)*(self.CD_a30 - self.CD_a25)/5
+        #     Cm_clean = self.Cm_a25 + (self.al*180/math.pi - 25)*(self.Cm_a30 - self.Cm_a25)/5
+
+        if self.the == 0:
+            self.aoa = self.the
         else:
-            CL_clean = self.CL_a25 + (self.al*180/math.pi - 25)*(self.CL_a30 - self.CL_a25)/5
-            CD_clean = self.CD_a25 + (self.al*180/math.pi - 25)*(self.CD_a30 - self.CD_a25)/5
-            Cm_clean = self.Cm_a25 + (self.al*180/math.pi - 25)*(self.Cm_a30 - self.Cm_a25)/5
+            self.aoa = math.atan(self.w/self.u)
         
+        aoa_deg = math.degrees(self.aoa)
+        if aoa_deg < -15:
+            CL_clean = linearInterpolation(-20, self.CL_table['-20'], -15, self.CL_table['-15'], aoa_deg)
+            CD_clean = linearInterpolation(-20, self.CD_table['-20'], -15, self.CD_table['-15'], aoa_deg)
+            Cm_clean = linearInterpolation(-20, self.Cm_table['-20'], -15, self.Cm_table['-15'], aoa_deg)
+            
+        elif aoa_deg <= 30:
+            for i in range(-15, 35, 5):
+                if aoa_deg <= i:
+                    CL_clean = linearInterpolation(i-5, self.CL_table[str(i-5)], i, self.CL_table[str(i)], aoa_deg)
+                    CD_clean = linearInterpolation(i-5, self.CD_table[str(i-5)], i, self.CD_table[str(i)], aoa_deg)
+                    Cm_clean = linearInterpolation(i-5, self.Cm_table[str(i-5)], i, self.Cm_table[str(i)], aoa_deg)
+                    break
+        else:
+            CL_clean = linearInterpolation(25, self.CL_table['25'], 30, self.CL_table['30'], aoa_deg)
+            CD_clean = linearInterpolation(25, self.CD_table['25'], 30, self.CD_table['30'], aoa_deg)
+            Cm_clean = linearInterpolation(25, self.Cm_table['25'], 30, self.Cm_table['30'], aoa_deg)
+
         CL_CS = self.CL_elev_0 + self.CL_elev*self.elev
         CD_CS = self.CD_elev_0 + self.CD_elev*self.elev
         Cm_CS = self.Cm_elev_0 + self.Cm_elev*self.elev
