@@ -54,30 +54,31 @@ class TiltrotorTransitionSimulator(gym.Env):
         SIMDB = dataLoader(AeroDBname)
         CONSTDB = dataLoader(constrainDBname)
         
-        self.cg_x       = SIMDB["Configurations"]["cg_x"]                          # m
-        self.cg_z       = SIMDB["Configurations"]["cg_z"]                          # m
-        self.f_p_x      = SIMDB["Configurations"]["frontProp_x"]                   # m
-        self.f_p_z      = SIMDB["Configurations"]["frontProp_z"]                   # m
-        self.r_p_x      = SIMDB["Configurations"]["rearProp_x"]                    # m
-        self.r_p_z      = SIMDB["Configurations"]["rearProp_z"]                    # m
-        self.aerorp_x   = SIMDB["Configurations"]["aeroCenter_x"]                  # m
-        self.aerorp_z   = SIMDB["Configurations"]["aeroCenter_z"]                  # m
-        self.S          = SIMDB["Configurations"]["S"]                             # m^2
-        self.cbar       = SIMDB["Configurations"]["cbar"]                          # m
-        self.elev_max   = SIMDB["Configurations"]["elev_max"]                      # deg
-        
-        self.D_X_prop_f = self.cg_x - self.f_p_x                                # m
-        self.D_Z_prop_f = self.cg_z - self.f_p_z                                # m
-        self.D_X_prop_r = self.cg_x - self.r_p_x                                # m
-        self.D_Z_prop_r = self.cg_z - self.r_p_z                                # m
-        self.D_X_aero   = self.cg_x - self.aerorp_x                             # m
-        self.D_Z_aero   = self.cg_z - self.aerorp_z                             # m
-        
-        self.K_T        = SIMDB["Propulsion"]["K_T"]                               # none
-        self.rpm_max    = SIMDB["Propulsion"]["rpm_max"]                           # rpm
-        self.tilt_min   = SIMDB["Propulsion"]["tilt_min"]                          # rad
-        self.tilt_max   = SIMDB["Propulsion"]["tilt_max"]                          # rad
-        
+        self.cg_x            = SIMDB["Configurations"]["cg_x"]                 # m
+        self.cg_z            = SIMDB["Configurations"]["cg_z"]                 # m
+        self.frontProp_x     = SIMDB["Configurations"]["frontProp_x"]          # m
+        self.frontProp_z     = SIMDB["Configurations"]["frontProp_z"]          # m
+        self.rearProp_x      = SIMDB["Configurations"]["rearProp_x"]           # m
+        self.rearProp_z      = SIMDB["Configurations"]["rearProp_z"]           # m
+        self.aeroCenter_x    = SIMDB["Configurations"]["aeroCenter_x"]         # m
+        self.aeroCenter_z    = SIMDB["Configurations"]["aeroCenter_z"]         # m
+        self.S               = SIMDB["Configurations"]["S"]                    # m^2
+        self.cbar            = SIMDB["Configurations"]["cbar"]                 # m
+        self.elevMaxDeg      = SIMDB["Configurations"]["elev_max"]             # deg
+        self.stallSpeed      = SIMDB["Configurations"]["stall_speed"]          # m/s
+
+        self.cg2FrontProp_x  = self.cg_x - self.frontProp_x                    # m
+        self.cg2FrontProp_z  = self.cg_z - self.frontProp_z                    # m
+        self.cg2RearProp_x   = self.cg_x - self.rearProp_x                     # m
+        self.cg2RearProp_z   = self.cg_z - self.rearProp_z                     # m
+        self.cg2AeroCenter_x = self.cg_x - self.aeroCenter_x                   # m
+        self.cg2AeroCenter_z = self.cg_z - self.aeroCenter_z                   # m
+
+        self.K_T             = SIMDB["Propulsion"]["K_T"]                      # none
+        self.rpm_max         = SIMDB["Propulsion"]["rpm_max"]                  # rpm
+        self.tilt_min        = SIMDB["Propulsion"]["tilt_min"]                 # rad
+        self.tilt_max        = SIMDB["Propulsion"]["tilt_max"]                 # rad
+
         self.CL_table = {}
         self.CD_table = {}
         self.Cm_table = {}
@@ -86,45 +87,54 @@ class TiltrotorTransitionSimulator(gym.Env):
             self.CD_table[str(aoa)] = SIMDB["Aerodynamics"]["CD"][str(aoa)]
             self.Cm_table[str(aoa)] = SIMDB["Aerodynamics"]["Cm"][str(aoa)]
         
-        self.CL_elev_0  = SIMDB["Aerodynamics"]["elev"]["elev_CL_0"]                # none
-        self.CL_elev    = SIMDB["Aerodynamics"]["elev"]["elev_CL_slop"]             # none/deg
-        self.CD_elev_0  = SIMDB["Aerodynamics"]["elev"]["elev_CD_0"]                # none
-        self.CD_elev    = SIMDB["Aerodynamics"]["elev"]["elev_CD_slop"]             # none/deg
-        self.Cm_elev_0  = SIMDB["Aerodynamics"]["elev"]["elev_Cm_0"]                # none
-        self.Cm_elev    = SIMDB["Aerodynamics"]["elev"]["elev_Cm_slop"]             # none/deg
+        self.elev_CL_0       = SIMDB["Aerodynamics"]["elev"]["elev_CL_0"]      # none
+        self.elev_CL_slop    = SIMDB["Aerodynamics"]["elev"]["elev_CL_slop"]   # none/deg
+        self.elev_CD_0       = SIMDB["Aerodynamics"]["elev"]["elev_CD_0"]      # none
+        self.elev_CD_slop    = SIMDB["Aerodynamics"]["elev"]["elev_CD_slop"]   # none/deg
+        self.elev_Cm_0       = SIMDB["Aerodynamics"]["elev"]["elev_Cm_0"]      # none
+        self.elev_Cm_slop    = SIMDB["Aerodynamics"]["elev"]["elev_Cm_slop"]   # none/deg
         
-        self.m          = SIMDB["WeightAndBalance"]["m"]                        # kg
-        self.Iyy        = SIMDB["WeightAndBalance"]["Iyy"]                      # kg*m^2
-        self.g          = SIMDB["WeightAndBalance"]["g"]                        # kg/m^2
+        self.m               = SIMDB["WeightAndBalance"]["m"]                  # kg
+        self.Iyy             = SIMDB["WeightAndBalance"]["Iyy"]                # kg*m^2
+        self.g               = SIMDB["WeightAndBalance"]["g"]                  # kg/m^2
+
+        ## Constrains Data
+        self.altitudeDelta   = CONSTDB["Constrains"]["altitudeDelta"]          # m
+        self.VcruiseMax      = CONSTDB["Constrains"]["VcruiseMax"]             # m/s
+        self.pitchMin        = CONSTDB["Constrains"]["pitchMin"]               # deg
+        self.pitchMax        = CONSTDB["Constrains"]["pitchMax"]               # deg
+        self.gForceMax       = CONSTDB["Constrains"]["g-forceMax"]             # g
+
+        ## Target Data
+        self.VcruiseTarget   = CONSTDB["Target"]["Vcruise"]                    # m/s
+        self.pitchTarget     = CONSTDB["Target"]["pitch"]                      # deg
+        self.gForceTarget    = CONSTDB["Target"]["g-force"]                    # g
         
     def set_init_state(self):
-        self.state = [0, 0,     0, 0, 0, 0,    0,            0]
-                   # [X, Z, theta, U, W, q, time, acceleration]
-                   # [0, 1,     2, 3, 4, 5, 6,               7]
-        # self.action = [self.m*self.g/(4*self.K_T*self.rpm_max**2),       0.5,           1.0]
-        #             # [                             Throttle_cmd, Pitch_cmd,      Tilt_cmd]
-        self.f_rpm = round(math.sqrt(self.m*self.g/(4*self.K_T))/self.rpm_max, 3)
-        self.r_rpm = round(math.sqrt(self.m*self.g/(4*self.K_T))/self.rpm_max, 3)
-        self.elev = 0
-        self.tilt = 90
-        self.sim_time_dt = 0.05   
+        self.state = [0] * 8
+                   # [0: x, 1: z, 2: theta, 3: U, 4: W, 5: q, 6: time, 7: gForce]
+        
+        self.frontRPM = round(math.sqrt(self.m*self.g/(4*self.K_T))/self.rpm_max, 3)
+        self.rearRPM = round(math.sqrt(self.m*self.g/(4*self.K_T))/self.rpm_max, 3)
+        self.elev_deg = 0
+        self.tilt_deg = 90
+
+        self.time_delta = 0.05   
         self.rpm_rate = 0.01             # ratio (rpm/rpm_max)
         self.elev_rate = 1               # deg
         self.tilt_rate = 1               # deg
-        # self.action = [self.f_rpm, self.r_rpm, self.elev, self.tilt]
-                     # [ Front_rpm, Rear_rpm, Elevator, Tilt_angle]
+        
         self.viewer = None
         self.current_score = 0
         
-        self.T_f = 0
-        self.T_r = 0
+        self.frontThrust = 0
+        self.rearThrust = 0
         self.L = 0
         self.D = 0
         self.Mp = 0
-        self.al = 0
-        # print(self.f_rpm)
-        # print(self.r_rpm)
-        
+        self.aoa = 0
+        self.gForce = 0
+                
         SCREEN_COLOR = (255, 255, 255)
         if self.viewer == None:
             pygame.init()
@@ -138,38 +148,27 @@ class TiltrotorTransitionSimulator(gym.Env):
         return [seed]
     #################### __init__ ####################
           
-
     #################### reset ####################
     def reset(self):
         self.set_init_state()
         self.current_score = 0
-        # observation = np.hstack((self.state, self.f_rpm, self.r_rpm, self.elev, self.tilt))  
+        
         observation = np.hstack((self.state[0],self.state[1],self.state[2],self.state[3],
                                  self.state[4],self.state[5],self.state[6],self.state[7],
-                                 self.f_rpm,   self.r_rpm,   self.elev,    self.tilt     ))
+                                 self.frontRPM,   self.rearRPM,   self.elev_deg,    self.tilt_deg))
         return observation
     #################### reset ####################    
     
-    
     #################### step ####################
     def step(self, action):
-        
-        # action_in = int(action)
-        # action_in = int(27)
-        # print(action_in)
-        # print(self.current_score)
-        # print(reward)
-        (x1, x2, x3, x4) = action
-        self.f_rpm   +=   x1*self.rpm_rate
-        self.r_rpm   +=   x2*self.rpm_rate
-        self.elev    +=   x3*self.elev_rate
-        self.tilt    +=   x4*self.tilt_rate
+        (self.frontRPM_delta, self.rearRPM_delta, self.elev_deg_delta, self.tilt_deg_delta) = action
+        self.frontRPM +=   self.frontRPM_delta * self.rpm_rate
+        self.rearRPM  +=   self.rearRPM_delta  * self.rpm_rate
+        self.elev_deg +=   self.elev_deg_delta * self.elev_rate
+        self.tilt_deg +=   self.tilt_deg_delta * self.tilt_rate
 
-        self.f_rpm = np.max([0.0, self.f_rpm])
-        self.f_rpm = np.min([1.0, self.f_rpm])
-
-        self.r_rpm = np.max([0.0, self.r_rpm])
-        self.r_rpm = np.min([1.0, self.r_rpm])      
+        self.frontRPM = np.clip(self.frontRPM, 0.0, 1.0)
+        self.rearRPM  = np.clip(self.rearRPM, 0.0, 1.0)
         
         self.Simulation()
         
@@ -180,7 +179,7 @@ class TiltrotorTransitionSimulator(gym.Env):
         # 조건 1: tilt각 차이 | self.tilt 초기값: 90 deg | 작을수록 좋음 | 0~90
         # 90으로부터 멀어지면 좋음
         # reward 1은 클수록 좋게 설정하였음(positive)
-        reward_1 = (90 - self.tilt) / 90
+        reward_1 = (90 - self.tilt_deg) / 90
 
         # 조건 2: 피치 값 차이 | 작을 수록 좋음 | 0~90
         # reward 2는 클수록 좋게 설정하였음(positive)
@@ -210,7 +209,7 @@ class TiltrotorTransitionSimulator(gym.Env):
         # 조건 6: 프로펠러 rpm 최소화 | 작을수록 좋음 | 0 ~ 1
         # 조건 6: 프로펠러 rpm 최소화 | 작을수록 좋음 | 0 ~ 1
         # 조건 6은 클수록 좋게 설정하였음(Positive)
-        reward_6 = (1 - self.r_rpm) + (1 - self.f_rpm)
+        reward_6 = (1 - self.rearRPM) + (1 - self.frontRPM)
 
         # 조건 7: 이동 거리
         reward_7 = self.state[0]
@@ -218,19 +217,19 @@ class TiltrotorTransitionSimulator(gym.Env):
         # 조건 8: 가속도
         # 가속도가 0.3g 미만일 경우, 0.3g 이상일 경우, 0g 이하일 경우 가중치를 다르게 배정
         if 0 < Vcruise_target <=Vcruise_limit:
-            if self.acceleration < 0.3:
+            if self.gForce < 0.3:
                 reward_8 = 1
-            elif self.acceleration < 0:
+            elif self.gForce < 0:
                 reward_8 = -1
             else:
                 reward_8 = -1
         elif Vcruise_target > Vcruise_limit:
-            if -0.1 < self.acceleration < 0.1:
+            if -0.1 < self.gForce < 0.1:
                 reward_8 = 1
             else:
                 reward_8 = -1
         else:
-            if self.acceleration > 0:
+            if self.gForce > 0:
                 reward_8 = 1
             else:
                 reward_8 = -1
@@ -257,7 +256,7 @@ class TiltrotorTransitionSimulator(gym.Env):
         if (np.abs(pitch_state)  >= pitch_constrain):
             done = True
         
-        if (self.tilt < 0 or self.tilt > 90):
+        if (self.tilt_deg < 0 or self.tilt_deg > 90):
             done = True
 
         if self.state[3] > Vcruise_limit:
@@ -265,7 +264,7 @@ class TiltrotorTransitionSimulator(gym.Env):
              
         observation = np.hstack((self.state[0],self.state[1],self.state[2],self.state[3],
                                  self.state[4],self.state[5],self.state[6],self.state[7],
-                                 self.f_rpm, self.r_rpm, self.elev, self.tilt))
+                                 self.frontRPM, self.rearRPM, self.elev_deg, self.tilt_deg))
         reward_detail = [reward_1, reward_2, reward_3, reward_4, reward_5, reward_6, reward_7, reward_8]
         step_data = self.dataCollection()
         info = {
@@ -273,125 +272,55 @@ class TiltrotorTransitionSimulator(gym.Env):
             'x_pos': self.state[0],
             'z_pos': self.state[1],
             'pitch': self.state[2],
-           # 'Tilt': self.action[2]
+           # 'tilt_deg': self.action[2]
             'reward_detail': reward_detail,
             'data': step_data
         }
         return observation, reward, done, info
     
-    def fqdot(self, q):
+    def fqdot(self):
         return self.Myb/self.Iyy
     
-    def fudot(self, u):
+    def fudot(self):
         return self.Fxb/self.m - self.state[5]*self.state[4]
     
-    def fwdot(self, w):
+    def fwdot(self):
         return self.Fzb/self.m + self.state[5]*self.state[3]
     
-    def fthedot(self, the):
-        return self.q
+    def fthetadot(self):
+        return self.state[5]
     
-    def fxdot(self, x):
+    def fxdot(self):
         return self.u*math.cos(self.state[2]) + self.w*math.sin(self.state[2])
     
-    def fzdot(self, z):
+    def fzdot(self):
         return -self.u*math.sin(self.state[2]) + self.w*math.cos(self.state[2])
     
     # Simulation
     def Simulation(self):
         self.x            = self.state[0]
         self.z            = self.state[1]
-        self.the          = self.state[2]
+        self.theta        = self.state[2]
         self.u            = self.state[3]
         self.w            = self.state[4]
         self.q            = self.state[5]
-        t                 = self.state[6]
-        self.acceleration = self.state[7]
+        self.Sim_time     = self.state[6]
+        self.gForce       = self.state[7]
         
         # =============== Vehicle Model (Calculate Force&Moments) ===============
-        self.T_f = 2*self.K_T*(self.f_rpm*self.rpm_max)**2
-        self.T_r = 2*self.K_T*(self.r_rpm*self.rpm_max)**2
+        self.frontThrust  = 2*self.K_T * (self.frontRPM * self.rpm_max)**2
+        self.rearThrust   = 2*self.K_T * (self.rearRPM  * self.rpm_max)**2
         
         
         if self.state[3] == 0:
-            self.al = self.state[2]
+            self.aoa = self.state[2]
         else:
-            self.al = math.atan(self.w/self.u)
+            self.aoa = math.atan(self.w/self.u)
         
         self.vel = math.sqrt(self.w**2 + self.u**2)
         
-        # ckchoi: 추정식 잘못되어서 수정
-        # guess_value = ((d-b)/(c-a))*(x-a)+b
-        # if (self.al <= -15*math.pi/180):
-        #     CL_clean = self.CL_a_20 + (self.al*180/math.pi + 20)*(self.CL_a_15 - self.CL_a_20)/5
-        #     CD_clean = self.CD_a_20 + (self.al*180/math.pi + 20)*(self.CD_a_15 - self.CD_a_20)/5
-        #     Cm_clean = self.Cm_a_20 + (self.al*180/math.pi + 20)*(self.Cm_a_15 - self.Cm_a_20)/5
-        #     CL_clean = self.CL_a_20 + (self.al*180/math.pi + 20)*(self.CL_a_15 - self.CL_a_20)/5
-        #     CD_clean = self.CD_a_20 + (self.al*180/math.pi + 20)*(self.CD_a_15 - self.CD_a_20)/5
-        #     Cm_clean = self.Cm_a_20 + (self.al*180/math.pi + 20)*(self.Cm_a_15 - self.Cm_a_20)/5
-        # elif (self.al <= -10*math.pi/180):
-        #     CL_clean = self.CL_a_15 + (self.al*180/math.pi + 15)*(self.CL_a_10 - self.CL_a_15)/5
-        #     CD_clean = self.CD_a_15 + (self.al*180/math.pi + 15)*(self.CD_a_10 - self.CD_a_15)/5
-        #     Cm_clean = self.Cm_a_15 + (self.al*180/math.pi + 15)*(self.Cm_a_10 - self.Cm_a_15)/5
-        #     CL_clean = self.CL_a_15 + (self.al*180/math.pi + 15)*(self.CL_a_10 - self.CL_a_15)/5
-        #     CD_clean = self.CD_a_15 + (self.al*180/math.pi + 15)*(self.CD_a_10 - self.CD_a_15)/5
-        #     Cm_clean = self.Cm_a_15 + (self.al*180/math.pi + 15)*(self.Cm_a_10 - self.Cm_a_15)/5
-        # elif (self.al <= -5*math.pi/180):
-        #     CL_clean = self.CL_a_10 + (self.al*180/math.pi + 10)*(self.CL_a_5 - self.CL_a_10)/5
-        #     CD_clean = self.CD_a_10 + (self.al*180/math.pi + 10)*(self.CD_a_5 - self.CD_a_10)/5
-        #     Cm_clean = self.Cm_a_10 + (self.al*180/math.pi + 10)*(self.Cm_a_5 - self.Cm_a_10)/5
-        #     CL_clean = self.CL_a_10 + (self.al*180/math.pi + 10)*(self.CL_a_5 - self.CL_a_10)/5
-        #     CD_clean = self.CD_a_10 + (self.al*180/math.pi + 10)*(self.CD_a_5 - self.CD_a_10)/5
-        #     Cm_clean = self.Cm_a_10 + (self.al*180/math.pi + 10)*(self.Cm_a_5 - self.Cm_a_10)/5
-        # elif (self.al <= 0*math.pi/180):
-        #     CL_clean = self.CL_a_5 + (self.al*180/math.pi + 5)*(self.CL_a0 - self.CL_a_5)/5
-        #     CD_clean = self.CD_a_5 + (self.al*180/math.pi + 5)*(self.CD_a0 - self.CD_a_5)/5
-        #     Cm_clean = self.Cm_a_5 + (self.al*180/math.pi + 5)*(self.Cm_a0 - self.Cm_a_5)/5
-        #     CL_clean = self.CL_a_5 + (self.al*180/math.pi + 5)*(self.CL_a0 - self.CL_a_5)/5
-        #     CD_clean = self.CD_a_5 + (self.al*180/math.pi + 5)*(self.CD_a0 - self.CD_a_5)/5
-        #     Cm_clean = self.Cm_a_5 + (self.al*180/math.pi + 5)*(self.Cm_a0 - self.Cm_a_5)/5
-        # elif (self.al <= 5*math.pi/180):
-        #     CL_clean = self.CL_a0 + (self.al*180/math.pi - 0)*(self.CL_a5 - self.CL_a0)/5
-        #     CD_clean = self.CD_a0 + (self.al*180/math.pi - 0)*(self.CD_a5 - self.CD_a0)/5
-        #     Cm_clean = self.Cm_a0 + (self.al*180/math.pi - 0)*(self.Cm_a5 - self.Cm_a0)/5
-        #     CL_clean = self.CL_a0 + (self.al*180/math.pi - 0)*(self.CL_a5 - self.CL_a0)/5
-        #     CD_clean = self.CD_a0 + (self.al*180/math.pi - 0)*(self.CD_a5 - self.CD_a0)/5
-        #     Cm_clean = self.Cm_a0 + (self.al*180/math.pi - 0)*(self.Cm_a5 - self.Cm_a0)/5
-        # elif (self.al <= 10*math.pi/180):
-        #     CL_clean = self.CL_a5 + (self.al*180/math.pi - 5)*(self.CL_a10 - self.CL_a5)/5
-        #     CD_clean = self.CD_a5 + (self.al*180/math.pi - 5)*(self.CD_a10 - self.CD_a5)/5
-        #     Cm_clean = self.Cm_a5 + (self.al*180/math.pi - 5)*(self.Cm_a10 - self.Cm_a5)/5
-        #     CL_clean = self.CL_a5 + (self.al*180/math.pi - 5)*(self.CL_a10 - self.CL_a5)/5
-        #     CD_clean = self.CD_a5 + (self.al*180/math.pi - 5)*(self.CD_a10 - self.CD_a5)/5
-        #     Cm_clean = self.Cm_a5 + (self.al*180/math.pi - 5)*(self.Cm_a10 - self.Cm_a5)/5
-        # elif (self.al <= 15*math.pi/180):
-        #     CL_clean = self.CL_a10 + (self.al*180/math.pi - 10)*(self.CL_a15 - self.CL_a10)/5
-        #     CD_clean = self.CD_a10 + (self.al*180/math.pi - 10)*(self.CD_a15 - self.CD_a10)/5
-        #     Cm_clean = self.Cm_a10 + (self.al*180/math.pi - 10)*(self.Cm_a15 - self.Cm_a10)/5
-        #     CL_clean = self.CL_a10 + (self.al*180/math.pi - 10)*(self.CL_a15 - self.CL_a10)/5
-        #     CD_clean = self.CD_a10 + (self.al*180/math.pi - 10)*(self.CD_a15 - self.CD_a10)/5
-        #     Cm_clean = self.Cm_a10 + (self.al*180/math.pi - 10)*(self.Cm_a15 - self.Cm_a10)/5
-        # elif (self.al <= 20*math.pi/180):
-        #     CL_clean = self.CL_a15 + (self.al*180/math.pi - 15)*(self.CL_a20 - self.CL_a15)/5
-        #     CD_clean = self.CD_a15 + (self.al*180/math.pi - 15)*(self.CD_a20 - self.CD_a15)/5
-        #     Cm_clean = self.Cm_a15 + (self.al*180/math.pi - 15)*(self.Cm_a20 - self.Cm_a15)/5
-        #     CL_clean = self.CL_a15 + (self.al*180/math.pi - 15)*(self.CL_a20 - self.CL_a15)/5
-        #     CD_clean = self.CD_a15 + (self.al*180/math.pi - 15)*(self.CD_a20 - self.CD_a15)/5
-        #     Cm_clean = self.Cm_a15 + (self.al*180/math.pi - 15)*(self.Cm_a20 - self.Cm_a15)/5
-        # elif (self.al <= 25*math.pi/180):
-        #     CL_clean = self.CL_a20 + (self.al*180/math.pi - 20)*(self.CL_a25 - self.CL_a20)/5
-        #     CD_clean = self.CD_a20 + (self.al*180/math.pi - 20)*(self.CD_a25 - self.CD_a20)/5
-        #     Cm_clean = self.Cm_a20 + (self.al*180/math.pi - 20)*(self.Cm_a25 - self.Cm_a20)/5
-        #     CL_clean = self.CL_a20 + (self.al*180/math.pi - 20)*(self.CL_a25 - self.CL_a20)/5
-        #     CD_clean = self.CD_a20 + (self.al*180/math.pi - 20)*(self.CD_a25 - self.CD_a20)/5
-        #     Cm_clean = self.Cm_a20 + (self.al*180/math.pi - 20)*(self.Cm_a25 - self.Cm_a20)/5
-        # else:
-        #     CL_clean = self.CL_a25 + (self.al*180/math.pi - 25)*(self.CL_a30 - self.CL_a25)/5
-        #     CD_clean = self.CD_a25 + (self.al*180/math.pi - 25)*(self.CD_a30 - self.CD_a25)/5
-        #     Cm_clean = self.Cm_a25 + (self.al*180/math.pi - 25)*(self.Cm_a30 - self.Cm_a25)/5
-
-        if self.the == 0:
-            self.aoa = self.the
+        if self.theta == 0:
+            self.aoa = self.theta
         else:
             self.aoa = math.atan(self.w/self.u)
         
@@ -413,144 +342,104 @@ class TiltrotorTransitionSimulator(gym.Env):
             CD_clean = linearInterpolation(25, self.CD_table['25'], 30, self.CD_table['30'], aoa_deg)
             Cm_clean = linearInterpolation(25, self.Cm_table['25'], 30, self.Cm_table['30'], aoa_deg)
 
-        CL_CS = self.CL_elev_0 + self.CL_elev*self.elev
-        CD_CS = self.CD_elev_0 + self.CD_elev*self.elev
-        Cm_CS = self.Cm_elev_0 + self.Cm_elev*self.elev
+        CL_elev = self.elev_CL_0 + self.elev_CL_slop*self.elev_deg
+        CD_elev = self.elev_CD_0 + self.elev_CD_slop*self.elev_deg
+        Cm_elev = self.elev_Cm_0 + self.elev_Cm_slop*self.elev_deg
         
-        if (self.al >= (-20*math.pi/180)) and (self.al <= (30*math.pi/180)):
-            self.CL = (CL_clean + CL_CS) # 항공기 전체 양력 계수입니다.
-            self.CD = (CD_clean + CD_CS) # 항공기 전체 항력 계수입니다.
+        if (self.aoa >= (-20*math.pi/180)) and (self.aoa <= (30*math.pi/180)):
+            self.CL = (CL_clean + CL_elev) # 항공기 전체 양력 계수입니다.
+            self.CD = (CD_clean + CD_elev) # 항공기 전체 항력 계수입니다.
 
-            self.L = 0.5 * 1.225 * (self.vel**2) * self.S * (CL_clean + CL_CS)
-            self.D = 0.5 * 1.225 * (self.vel**2) * self.S * (CD_clean + CD_CS)
-            self.Mp = 0.5 * 1.225 * (self.vel**2) * self.S * self.cbar * (Cm_clean + Cm_CS)
+            self.L  = 0.5 * 1.225 * (self.vel**2) * self.S * (CL_clean + CL_elev)
+            self.D  = 0.5 * 1.225 * (self.vel**2) * self.S * (CD_clean + CD_elev)
+            self.Mp = 0.5 * 1.225 * (self.vel**2) * self.S * self.cbar * (Cm_clean + Cm_elev)
         else:
-            self.L = 0
-            self.D = 0
+            self.L  = 0
+            self.D  = 0
             self.Mp = 0
         
-        self.Myb = self.D_Z_prop_f*self.T_f*math.cos(math.radians(self.tilt)) + self.D_X_prop_f*self.T_f*math.sin(math.radians(self.tilt)) + self.D_X_prop_r*self.T_r - self.D_Z_aero*(self.D*math.cos(math.radians(self.al)) + self.L*math.sin(math.radians(self.al))) - self.D_X_aero*(self.D*math.sin(math.radians(self.al)) - self.L*math.cos(math.radians(self.al))) + self.Mp
-        self.Fxb = self.T_f*math.cos(math.radians(self.tilt)) - self.D*math.cos(math.radians(self.al)) - self.L*math.sin(math.radians(self.al)) + self.m*self.g*math.sin(math.radians(self.al))
-        self.Fzb = -self.T_r - self.T_f*math.sin(math.radians(self.tilt)) + self.D*math.sin(math.radians(self.al)) - self.L*math.cos(math.radians(self.al)) + self.m*self.g*math.cos(math.radians(self.al))
+        self.Myb = self.cg2FrontProp_z*self.frontThrust*math.cos(math.radians(self.tilt_deg)) + self.cg2FrontProp_x*self.frontThrust*math.sin(math.radians(self.tilt_deg)) + self.cg2RearProp_x*self.rearThrust - self.cg2AeroCenter_z*(self.D*math.cos(math.radians(self.aoa)) + self.L*math.sin(math.radians(self.aoa))) - self.cg2AeroCenter_x*(self.D*math.sin(math.radians(self.aoa)) - self.L*math.cos(math.radians(self.aoa))) + self.Mp
+        self.Fxb = self.frontThrust*math.cos(math.radians(self.tilt_deg)) - self.D*math.cos(math.radians(self.aoa)) - self.L*math.sin(math.radians(self.aoa)) + self.m*self.g*math.sin(math.radians(self.aoa))
+        self.Fzb = -self.rearThrust - self.frontThrust*math.sin(math.radians(self.tilt_deg)) + self.D*math.sin(math.radians(self.aoa)) - self.L*math.cos(math.radians(self.aoa)) + self.m*self.g*math.cos(math.radians(self.aoa))
         # =============== Vehicle Model (Calculate Force&Moments) ===============
         
         # =============== Flight Dynamics with RK-4 (Calculate Next Status) ===============
 
         # q
-        k1 = self.sim_time_dt * (self.fqdot(self.q))
-        k2 = self.sim_time_dt * (self.fqdot(self.q + k1/2))
-        k3 = self.sim_time_dt * (self.fqdot(self.q + k2/2))
-        k4 = self.sim_time_dt * (self.fqdot(self.q + k3))
-        k = (k1 + 2*k2 + 2*k3 + k4)/6
-        qn = self.q + k
-        
-        self.q = qn
+        self.q += self.fqdot()
         
         # u & ax
-        k1 = self.sim_time_dt * (self.fudot(self.u))
-        k2 = self.sim_time_dt * (self.fudot((self.u + k1/2)))
-        k3 = self.sim_time_dt * (self.fudot((self.u + k2/2)))
-        k4 = self.sim_time_dt * (self.fudot((self.u + k3)))
-        k = (k1 + 2*k2 + 2*k3 + k4)/6
-        un = self.u + k
-        self.ax = k/self.sim_time_dt
+        self.u += self.fudot()
+        self.acceleration_x = self.fudot() / self.time_delta
         
         # w & az
-        k1 = self.sim_time_dt * (self.fwdot(self.w))
-        k2 = self.sim_time_dt * (self.fwdot((self.w + k1/2)))
-        k3 = self.sim_time_dt * (self.fwdot((self.w + k2/2)))
-        k4 = self.sim_time_dt * (self.fwdot((self.w + k3)))
-        k = (k1+2*k2+2*k3+k4)/6
-        wn = self.w + k
-        self.az = k/self.sim_time_dt
-        
-        self.u = un
-        self.w = wn
+        self.w += self.fwdot()
+        self.acceleration_z = self.fwdot() / self.time_delta
         
         # the
-        k1 = self.sim_time_dt * (self.fthedot(self.the))
-        k2 = self.sim_time_dt * (self.fthedot((self.the + k1/2)))
-        k3 = self.sim_time_dt * (self.fthedot((self.the + k2/2)))
-        k4 = self.sim_time_dt * (self.fthedot((self.the + k3)))
-        k = (k1 + 2*k2 + 2*k3 + k4)/6
-        then = self.the + k
-        
-        self.the = then
+        self.theta += self.fthetadot()
         
         # x
-        k1 = self.sim_time_dt * (self.fxdot(self.x))
-        k2 = self.sim_time_dt * (self.fxdot((self.x + k1/2)))
-        k3 = self.sim_time_dt * (self.fxdot((self.x + k2/2)))
-        k4 = self.sim_time_dt * (self.fxdot((self.x + k3)))
-        k = (k1 + 2*k2 + 2*k3 + k4)/6
-        xn = self.x + k
+        self.x += self.fxdot()
         
         # z
-        k1 = self.sim_time_dt * (self.fzdot(self.z))
-        k2 = self.sim_time_dt * (self.fzdot((self.z + k1/2)))
-        k3 = self.sim_time_dt * (self.fzdot((self.z + k2/2)))
-        k4 = self.sim_time_dt * (self.fzdot((self.z + k3)))
-        k = (k1 + 2*k2 + 2*k3 + k4)/6
-        zn = self.z + k
-        
-        self.x = xn
-        self.z = zn
+        self.z += self.fxdot()
 
-        self.Sim_time = t + self.sim_time_dt
+        self.Sim_time += self.time_delta
 
         # ckchoi: 가속도 계산 - 중력가속도 대비 비행기가 받는 가속도
-        self.acceleration = math.sqrt(self.ax**2 + self.az**2)/self.g
+        self.gForce = math.sqrt(self.acceleration_x**2 + self.acceleration_z**2)/self.g
         
         # State Update
-        self.state = [self.x, self.z, self.the, self.u, self.w, self.q, self.Sim_time, self.acceleration]
+        self.state = [self.x, self.z, self.theta, self.u, self.w, self.q, self.Sim_time, self.gForce]
         # =============== Flight Dynamics with RK-4 (Calculate Next Status) ===============
     #################### step ####################
     
     #################### data collection ####################
     def dataCollection(self):
         data = {
-            "time": self.Sim_time,
-            "CL": self.CL,
-            "CD": self.CD,
-            "X": self.state[0],
-            "Z": self.state[1],
-            "theta": self.the,
-            "f_rpm": self.f_rpm,
-            "r_rpm": self.r_rpm,
-            "U": self.u,
-            "tilt": self.tilt,
-            "Lift": self.L,
-            "L/W": round(self.L/(self.m*self.g), 8),
-            "(L+T)/W": round((self.L + self.T_f + self.T_r)/(self.m*self.g), 8)
+            "time"     : self.Sim_time,
+            "CL"       : self.CL,
+            "CD"       : self.CD,
+            "X"        : self.state[0],
+            "Z"        : self.state[1],
+            "theta"    : self.theta,
+            "frontRPM" : self.frontRPM,
+            "rearRPM"  : self.rearRPM,
+            "U"        : self.u,
+            "tilt_deg" : self.tilt_deg,
+            "Lift"     : self.L,
+            "L/W"      : round(self.L/(self.m*self.g), 8),
+            "(L+T)/W"  : round((self.L + self.frontThrust + self.rearThrust)/(self.m*self.g), 8)
         }
         return data
     #################### data collection ####################
 
     #################### render ####################
     def render(self, mode='human'):
-        self.draw_vehicle(self.state[0], self.state[1], self.state[2], self.tilt*math.pi/180)
+        self.draw_vehicle(self.state[0], self.state[1], self.state[2], self.tilt_deg*math.pi/180)
         
-        text_x = self.font.render("Distance(m): "+str(round(self.state[0],8)),True,(28,0,0))
-        text_z = self.font.render("Altitude(m): "+str(round(-self.state[1],8)),True,(28,0,0))
-        text_pitch = self.font.render("Pitch(deg): "+str(round(self.state[2]*180.0/math.pi,8)),True,(28,0,0))
-        text_u = self.font.render("U(m/s): "+str(round(self.state[3],8)),True,(28,0,0))
-        text_w = self.font.render("W(m/s): "+str(round(-self.state[4],8)),True,(28,0,0))
-        text_time = self.font.render("Time(sec) : "+str(round(self.state[6],8)),True,(28,0,0))
-        text_f_rpm = self.font.render("Front_RPM(%) : "+str(round(self.f_rpm*100,8)),True,(28,0,0))
-        text_r_rpm = self.font.render("Rear_RPM(%) : "+str(round(self.r_rpm*100,8)),True,(28,0,0))
-        text_elev = self.font.render("Elevator(deg) : "+str(round(self.elev,8)),True,(28,0,0))
-        text_tilt = self.font.render("Tilt_Angle(deg) : "+str(round(self.tilt,8)),True,(28,0,0))
-        text_Tf = self.font.render("Front Thrust(N) : "+str(round(self.T_f,8)),True,(28,0,0))
-        text_Tr = self.font.render("Rear Thrust(N) : "+str(round(self.T_r,8)),True,(28,0,0))
-        text_W = self.font.render("Weight(N) : "+str(round(self.m*self.g,8)),True,(28,0,0))
-        text_W = self.font.render("G(N) : "+str(round(self.acceleration,8)),True,(28,0,0))
+        text_x        = self.font.render("Distance(m): "+str(round(self.state[0],8)),True,(28,0,0))
+        text_z        = self.font.render("Altitude(m): "+str(round(-self.state[1],8)),True,(28,0,0))
+        text_pitch    = self.font.render("Pitch(deg): "+str(round(math.degrees(self.state[2]),8)),True,(28,0,0))
+        text_u        = self.font.render("U(m/s): "+str(round(self.state[3],8)),True,(28,0,0))
+        text_w        = self.font.render("W(m/s): "+str(round(-self.state[4],8)),True,(28,0,0))
+        text_time     = self.font.render("Time(sec) : "+str(round(self.state[6],8)),True,(28,0,0))
+        text_frontRPM = self.font.render("Front RPM(%) : "+str(round(self.frontRPM*100,8)),True,(28,0,0))
+        text_rearRPM  = self.font.render("Rear RPM(%) : "+str(round(self.rearRPM*100,8)),True,(28,0,0))
+        text_elev_deg = self.font.render("Elevator(deg) : "+str(round(self.elev_deg,8)),True,(28,0,0))
+        text_tilt_deg = self.font.render("Tilt_Angle(deg) : "+str(round(self.tilt_deg,8)),True,(28,0,0))
+        text_Tf       = self.font.render("Front Thrust(N) : "+str(round(self.frontThrust,8)),True,(28,0,0))
+        text_Tr       = self.font.render("Rear Thrust(N) : "+str(round(self.rearThrust,8)),True,(28,0,0))
+        text_W        = self.font.render("Weight(N) : "+str(round(self.m*self.g,8)),True,(28,0,0))
+        text_W        = self.font.render("G(N) : "+str(round(self.gForce,8)),True,(28,0,0))
 
-        text_L = self.font.render("Lift(N) : "+str(round(self.L,8)),True,(28,0,0))
-        text_D = self.font.render("Drag(N) : "+str(round(self.D,8)),True,(28,0,0))
-        text_LperD = self.font.render(f"Lift/Weight: {str(round(self.L/(self.m*self.g),8))}", True, (28,0,0))
-        text_LTperD = self.font.render(f"Lift+Thrust/Weight: {str(round((self.L + self.T_f + self.T_r)/(self.m*self.g),8))}", True, (28,0,0))
-        text_M = self.font.render("Pithching(N) : "+str(round(self.Mp,8)),True,(28,0,0))
-        text_alpha = self.font.render("AoA(deg) : "+str(round(self.al,1)),True,(28,0,0))
+        text_L        = self.font.render("Lift(N) : "+str(round(self.L,8)),True,(28,0,0))
+        text_D        = self.font.render("Drag(N) : "+str(round(self.D,8)),True,(28,0,0))
+        text_LperD    = self.font.render(f"Lift/Weight: {str(round(self.L/(self.m*self.g),8))}", True, (28,0,0))
+        text_LTperD   = self.font.render(f"Lift+Thrust/Weight: {str(round((self.L + self.frontThrust + self.rearThrust)/(self.m*self.g),8))}", True, (28,0,0))
+        text_M        = self.font.render("Pithching(N) : "+str(round(self.Mp,8)),True,(28,0,0))
+        text_alpha    = self.font.render("AoA(deg) : "+str(round(self.aoa,1)),True,(28,0,0))
         
         self.screen.blit(self.Textboard, (700, 10))
         self.screen.blit(text_x, (700,10))
@@ -559,10 +448,10 @@ class TiltrotorTransitionSimulator(gym.Env):
         self.screen.blit(text_u, (700,70))
         self.screen.blit(text_w, (700,90))
         self.screen.blit(text_time, (700,110))
-        self.screen.blit(text_f_rpm, (700,130))
-        self.screen.blit(text_r_rpm, (700,150))
-        self.screen.blit(text_elev, (700,170))
-        self.screen.blit(text_tilt, (700,190))
+        self.screen.blit(text_frontRPM, (700,130))
+        self.screen.blit(text_rearRPM, (700,150))
+        self.screen.blit(text_elev_deg, (700,170))
+        self.screen.blit(text_tilt_deg, (700,190))
         self.screen.blit(text_Tf, (700,210))
         self.screen.blit(text_Tr, (700,230))
         self.screen.blit(text_W, (700,250))
@@ -577,9 +466,9 @@ class TiltrotorTransitionSimulator(gym.Env):
         pygame.display.flip() 
     
     
-    def draw_vehicle(self, x, z, the, tilt):
+    def draw_vehicle(self, x, z, the, tilt_deg):
         rotated_image_vehicle = pygame.transform.rotate(self.vehicle,((the)*180/math.pi))
-        rotated_image_Tilt_Prop = pygame.transform.rotate(self.Tilt_Prop, ((the + tilt - math.pi/2)*180/math.pi))   
+        rotated_image_Tilt_Prop = pygame.transform.rotate(self.Tilt_Prop, ((the + tilt_deg - math.pi/2)*180/math.pi))   
     
         f_tilt_rotate_pos_x = (270 - self.vehicle_width/2)
         f_tilt_rotate_pos_z = (self.vehicle_height/2 - 153)
@@ -605,9 +494,9 @@ class TiltrotorTransitionSimulator(gym.Env):
             
             self.screen.blit(rotated_image_Tilt_Prop, (200 + x + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + the) \
                                                        
-                                             + (self.Tilt_Prop_height/2)*math.cos(vehicle_f_tilt_angle + the + tilt) - rotated_image_Tilt_Prop.get_width()/2,\
+                                             + (self.Tilt_Prop_height/2)*math.cos(vehicle_f_tilt_angle + the + tilt_deg) - rotated_image_Tilt_Prop.get_width()/2,\
                                                  
-                                             self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + the) - (self.Tilt_Prop_height/2)*math.sin(vehicle_f_tilt_angle + the + tilt)\
+                                             self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + the) - (self.Tilt_Prop_height/2)*math.sin(vehicle_f_tilt_angle + the + tilt_deg)\
                                                  
                                              - rotated_image_Tilt_Prop.get_height()/2))
             
@@ -615,13 +504,13 @@ class TiltrotorTransitionSimulator(gym.Env):
                              
                              (200 + x + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + the), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + the)),\
                              
-                             (200 + x + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + the) + 50*math.cos(the + tilt), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + the) - 50*math.sin(the + tilt)), 4)
+                             (200 + x + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + the) + 50*math.cos(the + tilt_deg), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + the) - 50*math.sin(the + tilt_deg)), 4)
             
             pygame.draw.line(self.screen, (255,0,0),\
                              
                              (200 + x + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + the), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + the)),\
                              
-                             (200 + x + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + the) + self.f_rpm*50*math.cos(the + tilt), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + the) - self.f_rpm*50*math.sin(the + tilt)), 4)
+                             (200 + x + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + the) + self.frontRPM*50*math.cos(the + tilt_deg), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + the) - self.frontRPM*50*math.sin(the + tilt_deg)), 4)
             
             pygame.draw.line(self.screen, (179,179,179),\
                              
@@ -633,7 +522,7 @@ class TiltrotorTransitionSimulator(gym.Env):
                              
                              (200 + x - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + the), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + the)),\
                              
-                             (200 + x - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + the) + self.r_rpm*50*math.cos(the + math.pi/2), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + the) - self.r_rpm*50*math.sin(the + math.pi/2)), 4)
+                             (200 + x - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + the) + self.rearRPM*50*math.cos(the + math.pi/2), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + the) - self.rearRPM*50*math.sin(the + math.pi/2)), 4)
                 
             
         else:   
@@ -641,9 +530,9 @@ class TiltrotorTransitionSimulator(gym.Env):
             
             self.screen.blit(rotated_image_Tilt_Prop, (400 + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + the)\
                                                        
-                                             + (self.Tilt_Prop_height/2)*math.cos(vehicle_f_tilt_angle + the + tilt) - rotated_image_Tilt_Prop.get_width()/2,\
+                                             + (self.Tilt_Prop_height/2)*math.cos(vehicle_f_tilt_angle + the + tilt_deg) - rotated_image_Tilt_Prop.get_width()/2,\
                                                  
-                                             self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + the) - (self.Tilt_Prop_height/2)*math.sin(vehicle_f_tilt_angle + the + tilt)\
+                                             self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + the) - (self.Tilt_Prop_height/2)*math.sin(vehicle_f_tilt_angle + the + tilt_deg)\
                                                  
                                              - rotated_image_Tilt_Prop.get_height()/2))
             
@@ -651,13 +540,13 @@ class TiltrotorTransitionSimulator(gym.Env):
                              
                              (400 + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + the), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + the)),\
                              
-                             (400 + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + the) + 50*math.cos(the + tilt), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + the) - 50*math.sin(the + tilt)), 4)
+                             (400 + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + the) + 50*math.cos(the + tilt_deg), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + the) - 50*math.sin(the + tilt_deg)), 4)
             
             pygame.draw.line(self.screen, (255,0,0),\
                              
                              (400 + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + the), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + the)),\
                              
-                             (400 + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + the) + self.f_rpm*50*math.cos(the + tilt), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + the) - self.f_rpm*50*math.sin(the + tilt)), 4)
+                             (400 + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + the) + self.frontRPM*50*math.cos(the + tilt_deg), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + the) - self.frontRPM*50*math.sin(the + tilt_deg)), 4)
             
             pygame.draw.line(self.screen, (179,179,179),\
                              
@@ -669,7 +558,7 @@ class TiltrotorTransitionSimulator(gym.Env):
                              
                              (400 - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + the), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + the)),\
                              
-                             (400 - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + the) + self.r_rpm*50*math.cos(the + math.pi/2), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + the) - self.r_rpm*50*math.sin(the + math.pi/2)), 4)
+                             (400 - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + the) + self.rearRPM*50*math.cos(the + math.pi/2), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + the) - self.rearRPM*50*math.sin(the + math.pi/2)), 4)
                 
     #################### render ####################
 
