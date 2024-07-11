@@ -1,22 +1,42 @@
 import time
-from src.Simulator import TiltrotorTransitionSimulator
+from stable_baselines3.common.vec_env import DummyVecEnv, VecMonitor, VecExtractDictObs
 from stable_baselines3 import SAC
 
 class Tester:
-    def __init__(self, modelName):
-        self.env = TiltrotorTransitionSimulator()
+    def __init__(self, modelName, simulator_name="Simulator", num_envs=1):
+        self.simulator_name = simulator_name
+        self.num_envs = num_envs
+        self.env = self.create_vec_envs()
         self.loadModel(modelName=modelName)
         self.waitingTime = 5 # seconds
         self.flightData = self.initData()
         self.actionData = self.initActionData()
     
+    def create_vec_envs(self):
+        def make_env():
+            def _init():
+                if self.simulator_name == "Simulator":
+                    from src.Simulator import TiltrotorTransitionSimulator
+                    return TiltrotorTransitionSimulator()
+                elif self.simulator_name == "Simulator_7act":
+                    from src.Simulator_7act import TiltrotorTransitionSimulator
+                    return TiltrotorTransitionSimulator()
+            return _init
+
+        envs = [make_env() for _ in range(self.num_envs)]
+        env = DummyVecEnv(envs)
+        env = VecMonitor(env)
+        # env = VecExtractDictObs(env, "observation")
+        return env
+
+
     def loadModel(self, modelName):
         self.model = SAC.load(f'./src/model/{modelName}')
 
     def setWatingTime(self, second):
         self.waitingTime = second
 
-    def runTest(self, maximum_timestep=3000):
+    def runTest(self, maximum_timestep=100):
         time.sleep(self.waitingTime)
         obs = self.env.reset()
 
@@ -26,7 +46,7 @@ class Tester:
             self.addActionData(action)
 
             obs, reward, done, info = self.env.step(action)
-            self.addFlightData(info['data'])
+            # self.addFlightData(info['data'])
             self.env.render()
             if done:
                 obs = self.env.reset()
@@ -74,9 +94,10 @@ class Tester:
         self.flightData["(L+T)/W"].append(data["(L+T)/W"])
 
     def addActionData(self, action):
-        self.actionData["action_0"].append(action[0])
-        self.actionData["action_1"].append(action[1])
-        self.actionData["action_2"].append(action[2])
-        self.actionData["action_3"].append(action[3])
+        print(f'action: {action}')
+        self.actionData["action_0"].append(action[0][0])
+        self.actionData["action_1"].append(action[0][1])
+        self.actionData["action_2"].append(action[0][2])
+        self.actionData["action_3"].append(action[0][3])
 
     

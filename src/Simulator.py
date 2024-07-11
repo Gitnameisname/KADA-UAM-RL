@@ -24,24 +24,67 @@ class TiltrotorTransitionSimulator(gym.Env):
         self.set_init_state()
         self.seed()       
         
-    def set_render(self, window_size):
-        self.window_size = window_size
-        img_path = "./src/image"
+    def setSimulationData(self, DBname='aero.json'):
 
-        self.background = pygame.image.load(os.path.join(f"{img_path}/Background.png"))
+        SIMDB = dataLoader(DBname)
+        CONSTDB = dataLoader("constrains.json")
+        
+        ## Simulation Data
+        self.cg_x            = SIMDB["Configurations"]["cg_x"]                          # m
+        self.cg_z            = SIMDB["Configurations"]["cg_z"]                          # m
+        self.frontProp_x     = SIMDB["Configurations"]["frontProp_x"]                   # m
+        self.frontProp_z     = SIMDB["Configurations"]["frontProp_z"]                   # m
+        self.rearProp_x      = SIMDB["Configurations"]["rearProp_x"]                    # m
+        self.rearProp_z      = SIMDB["Configurations"]["rearProp_z"]                    # m
+        self.aeroCenter_x    = SIMDB["Configurations"]["aeroCenter_x"]                  # m
+        self.aeroCenter_z        = SIMDB["Configurations"]["aeroCenter_z"]                  # m
+        self.S               = SIMDB["Configurations"]["S"]                             # m^2
+        self.cbar            = SIMDB["Configurations"]["cbar"]                          # m
+        self.elevMaxDeg      = SIMDB["Configurations"]["elev_max"]                      # deg
+        self.stallSpeed      = SIMDB["Configurations"]["stall_speed"]                    # m/s
+        
+        self.cg2FrontProp_x  = self.cg_x - self.frontProp_x                             # m
+        self.cg2FrontProp_z  = self.cg_z - self.frontProp_z                             # m
+        self.cg2RearProp_x   = self.cg_x - self.rearProp_x                              # m
+        self.cg2RearProp_z   = self.cg_z - self.rearProp_z                              # m
+        self.cg2AeroCenter_x = self.cg_x - self.aeroCenter_x                            # m
+        self.cg2AeroCenter_z = self.cg_z - self.aeroCenter_z                                # m
+        
+        self.K_T             = SIMDB["Propulsion"]["K_T"]                               # none
+        self.rpm_max         = SIMDB["Propulsion"]["rpm_max"]                           # rpm
+        self.tilt_min        = SIMDB["Propulsion"]["tilt_min"]                          # rad
+        self.tilt_max        = SIMDB["Propulsion"]["tilt_max"]                          # rad
+        
+        self.CL_table = {}
+        self.CD_table = {}
+        self.Cm_table = {}
+        for aoa in range(-20, 31, 5):
+            self.CL_table[str(aoa)] = SIMDB["Aerodynamics"]["CL"][str(aoa)]
+            self.CD_table[str(aoa)] = SIMDB["Aerodynamics"]["CD"][str(aoa)]
+            self.Cm_table[str(aoa)] = SIMDB["Aerodynamics"]["Cm"][str(aoa)]
+        
+        self.elev_CL_0    = SIMDB["Aerodynamics"]["elev"]["elev_CL_0"]                # none
+        self.elev_CL_slop = SIMDB["Aerodynamics"]["elev"]["elev_CL_slop"]             # none/deg
+        self.elev_CD_0    = SIMDB["Aerodynamics"]["elev"]["elev_CD_0"]                # none
+        self.elev_CD_slop = SIMDB["Aerodynamics"]["elev"]["elev_CD_slop"]             # none/deg
+        self.elev_Cm_0    = SIMDB["Aerodynamics"]["elev"]["elev_Cm_0"]                # none
+        self.elev_Cm_slop = SIMDB["Aerodynamics"]["elev"]["elev_Cm_slop"]             # none/deg
+        
+        self.m          = SIMDB["WeightAndBalance"]["m"]                        # kg
+        self.Iyy        = SIMDB["WeightAndBalance"]["Iyy"]                      # kg*m^2
+        self.g          = SIMDB["WeightAndBalance"]["g"]                        # kg/m^2
 
-        # self.background = pygame.image.load(os.path.join("C:/Users/ds040/OneDrive - konkuk.ac.kr/Teams/RL/Transition-Train/images/Background.png"))
-        self.vehicle = pygame.image.load(os.path.join(f"{img_path}/vehicle.png"))
-        # self.vehicle = pygame.image.load(os.path.join("C:/Users/ds040/OneDrive - konkuk.ac.kr/Teams/RL/Transition-Train/images/vehicle.png"))
-        vehicle_size = self.vehicle.get_rect().size
-        self.vehicle_width = vehicle_size[0]
-        self.vehicle_height = vehicle_size[1]
+        ## Constrains Data
+        self.altitudeDelta = CONSTDB["Constrains"]["altitudeDelta"]                   # m
+        self.VcruiseMax = CONSTDB["Constrains"]["VcruiseMax"]                         # m/s
+        self.pitchMin   = CONSTDB["Constrains"]["pitchMin"]                           # deg
+        self.pitchMax   = CONSTDB["Constrains"]["pitchMax"]                           # deg
+        self.gForceMax  = CONSTDB["Constrains"]["g-forceMax"]                          # g
 
-        self.Tilt_Prop = pygame.image.load(os.path.join(f"{img_path}/Tiltprop.png"))
-        # self.Tilt_Prop = pygame.image.load(os.path.join("C:/Users/ds040/OneDrive - konkuk.ac.kr/Teams/RL/Transition-Train/images/Tiltprop.png"))
-        Tilt_Prop_size = self.Tilt_Prop.get_rect().size
-        self.Tilt_Prop_width = Tilt_Prop_size[0]
-        self.Tilt_Prop_height = Tilt_Prop_size[1]
+        ## Target Data
+        self.VcruiseTarget = CONSTDB["Target"]["Vcruise"]                      # m/s
+        self.pitchTarget   = CONSTDB["Target"]["pitch"]                        # deg
+        self.gForceTarget = CONSTDB["Target"]["g-force"]                       # g
         
         self.Textboard = pygame.image.load(os.path.join(f"{img_path}/textboard(300x200).png"))
         # self.Textboard = pygame.image.load(os.path.join("C:/Users/ds040/OneDrive - konkuk.ac.kr/Teams/RL/Transition-Train/images/textboard.png"))
@@ -109,7 +152,7 @@ class TiltrotorTransitionSimulator(gym.Env):
         self.VcruiseTarget   = CONSTDB["Target"]["Vcruise"]                    # m/s
         self.pitchTarget     = CONSTDB["Target"]["pitch"]                      # deg
         self.gForceTarget    = CONSTDB["Target"]["g-force"]                    # g
-        
+    
     def set_init_state(self):
         self.state = [0] * 8
                    # [0: x, 1: z, 2: theta, 3: U, 4: W, 5: q, 6: time, 7: gForce]
@@ -389,6 +432,13 @@ class TiltrotorTransitionSimulator(gym.Env):
         # =============== Vehicle Model (Calculate Force&Moments) ===============
         
         # =============== Flight Dynamics with RK-4 (Calculate Next Status) ===============
+        self.q += self.time_delta * self.fqdot()
+        self.u += self.time_delta * self.fudot()
+        self.w += self.time_delta * self.fwdot()
+        self.theta += self.time_delta * self.fthetadot()
+        self.x += self.time_delta * self.fxdot()
+        self.z += self.time_delta * self.fzdot()
+        # =============== Flight Dynamics with RK-4 (Calculate Next Status) ===============
 
         # q
         self.q += self.fqdot()
@@ -502,7 +552,7 @@ class TiltrotorTransitionSimulator(gym.Env):
         if x <= 200:
             self.screen.blit(rotated_image_vehicle, ((200 + x - rotated_image_vehicle.get_width()/2), (self.window_size[1]/2 + z - rotated_image_vehicle.get_height()/2)))
             
-            self.screen.blit(rotated_image_Tilt_Prop, (200 + x + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + the) \
+            self.screen.blit(rotated_image_Tilt_Prop, (200 + x + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + theta) \
                                                        
                                              + (self.Tilt_Prop_height/2)*math.cos(vehicle_f_tilt_angle + the + tilt_deg) - rotated_image_Tilt_Prop.get_width()/2,\
                                                  
@@ -512,33 +562,32 @@ class TiltrotorTransitionSimulator(gym.Env):
             
             pygame.draw.line(self.screen, (179,179,179),\
                              
-                             (200 + x + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + the), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + the)),\
+                             (200 + x + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + theta), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + theta)),\
                              
                              (200 + x + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + the) + 50*math.cos(the + tilt_deg), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + the) - 50*math.sin(the + tilt_deg)), 4)
             
             pygame.draw.line(self.screen, (255,0,0),\
                              
-                             (200 + x + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + the), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + the)),\
+                             (200 + x + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + theta), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + theta)),\
                              
                              (200 + x + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + the) + self.frontRPM*50*math.cos(the + tilt_deg), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + the) - self.frontRPM*50*math.sin(the + tilt_deg)), 4)
             
             pygame.draw.line(self.screen, (179,179,179),\
                              
-                             (200 + x - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + the), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + the)),\
+                             (200 + x - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + theta), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + theta)),\
                              
-                             (200 + x - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + the) + 50*math.cos(the + math.pi/2), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + the) - 50*math.sin(the + math.pi/2)), 4)
+                             (200 + x - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + theta) + 50*math.cos(theta + radians_90), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + theta) - 50*math.sin(theta + radians_90)), 4)
             
             pygame.draw.line(self.screen, (255,0,0),\
                              
-                             (200 + x - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + the), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + the)),\
+                             (200 + x - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + theta), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + theta)),\
                              
                              (200 + x - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + the) + self.rearRPM*50*math.cos(the + math.pi/2), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + the) - self.rearRPM*50*math.sin(the + math.pi/2)), 4)
                 
-            
         else:   
             self.screen.blit(rotated_image_vehicle, ((400 - rotated_image_vehicle.get_width()/2), (self.window_size[1]/2 + z - rotated_image_vehicle.get_height()/2)))
             
-            self.screen.blit(rotated_image_Tilt_Prop, (400 + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + the)\
+            self.screen.blit(rotated_image_Tilt_Prop, (400 + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + theta)\
                                                        
                                              + (self.Tilt_Prop_height/2)*math.cos(vehicle_f_tilt_angle + the + tilt_deg) - rotated_image_Tilt_Prop.get_width()/2,\
                                                  
@@ -548,25 +597,25 @@ class TiltrotorTransitionSimulator(gym.Env):
             
             pygame.draw.line(self.screen, (179,179,179),\
                              
-                             (400 + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + the), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + the)),\
+                             (400 + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + theta), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + theta)),\
                              
                              (400 + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + the) + 50*math.cos(the + tilt_deg), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + the) - 50*math.sin(the + tilt_deg)), 4)
             
             pygame.draw.line(self.screen, (255,0,0),\
                              
-                             (400 + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + the), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + the)),\
+                             (400 + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + theta), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + theta)),\
                              
                              (400 + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + the) + self.frontRPM*50*math.cos(the + tilt_deg), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + the) - self.frontRPM*50*math.sin(the + tilt_deg)), 4)
             
             pygame.draw.line(self.screen, (179,179,179),\
                              
-                             (400 - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + the), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + the)),\
+                             (400 - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + theta), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + theta)),\
                              
-                             (400 - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + the) + 50*math.cos(the + math.pi/2), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + the) - 50*math.sin(the + math.pi/2)), 4)
+                             (400 - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + theta) + 50*math.cos(theta + radians_90), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + theta) - 50*math.sin(theta + radians_90)), 4)
             
             pygame.draw.line(self.screen, (255,0,0),\
                              
-                             (400 - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + the), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + the)),\
+                             (400 - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + theta), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + theta)),\
                              
                              (400 - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + the) + self.rearRPM*50*math.cos(the + math.pi/2), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + the) - self.rearRPM*50*math.sin(the + math.pi/2)), 4)
                 
