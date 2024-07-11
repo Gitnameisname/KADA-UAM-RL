@@ -159,6 +159,107 @@ class TiltrotorTransitionSimulator(gym.Env):
         return observation
     #################### reset ####################    
     
+    def calculateReward(self):
+        # 조건 1: tilt각 차이 | tilt_deg가 0일 경우 최대(1) | tilt_deg가 작을 수록 좋음
+        reward_tilt = (self.tilt_max - self.tilt_deg) / self.tilt_max
+
+        # 조건 2: 피치 값 차이 | 피치가 pitchTarget일 경우 최대(1) | pitch가 pitchTarget에 가까울 수록 좋음
+        pitch_deg = math.degrees(self.state[2])
+        pitch_bandwidth = self.pitchMax - self.pitchMin
+        if self.pitchMin <= pitch_deg <= self.pitchTarget:
+            slop = 2 * pitch_bandwidth / (self.pitchTarget - self.pitchMin)
+            reward_pitch = (pitch_bandwidth - slop * abs(pitch_deg - self.pitchTarget)) / pitch_bandwidth
+        elif self.pitchTarget < pitch_deg <= self.pitchMax:
+            slop = 2 * pitch_bandwidth / (self.pitchMax - self.pitchTarget)
+            reward_pitch = (pitch_bandwidth - slop * abs(pitch_deg - self.pitchTarget)) / pitch_bandwidth
+        else:
+            reward_pitch = -1
+
+        # 조건 3: 비행 시간 | 클수록 좋음 | 0 ~ inf, 1 timestep = 0.05 sec, 30,000 timestep = 1,500 sec = 25 min
+        reward_time = self.state[6]
+
+        # 조건 4: 크루즈 속도 차이 | speed가 VcruiseTarget일 경우 최대(1) | speed가 VcruiseTarget에 가까울 수록 좋음
+        speed_bandwidth = self.VcruiseMax - self.VcruiseTarget
+        if 0 <= self.state[3] <= self.VcruiseTarget:
+            slop = 2 * speed_bandwidth / self.VcruiseTarget
+            reward_speed = (speed_bandwidth - slop * abs(self.state[3] - self.VcruiseTarget)) / speed_bandwidth
+        elif self.VcruiseTarget < self.state[3] <= self.VcruiseMax:
+            slop = 2 * speed_bandwidth / (self.VcruiseMax - self.VcruiseTarget)
+            reward_speed = (speed_bandwidth - slop * abs(self.state[3] - self.VcruiseTarget)) / speed_bandwidth
+        else:
+            reward_speed = -1
+        
+        # 조건 5: 순항 고도 | 초기 고도: 0m > 15m나 0m나 대기 조건 차이 크지 않음 | 작을 수록 좋음 | -15 ~ +15
+        reward_altitude = (self.altitudeDelta - abs(self.state[1])) / self.altitudeDelta
+
+        # 조건 6: 프로펠러 rpm 최소화 | 작을수록 좋음 | 0 ~ 1
+        reward_rpm = (1 - self.rearRPM) + (1 - self.frontRPM)
+
+        # 조건 7: 이동 거리
+        reward_distance = self.state[0]
+
+        # 조건 8: 가속도
+        # 속도가 0 이상, VcruiseTarget 이하일 경우
+        if 0 <= self.state[3] <= self.VcruiseTarget:
+            # gForce가 0 ~ gForceTarget 사이일 경우
+            if 0<= self.gForce <= self.gForceTarget:
+                reward_gForce = 1
+            else:
+                reward_gForce = -1
+        
+        # 속도가 VcruiseTarget 이상, VcruiseMax 이하일 경우
+        elif self.VcruiseTarget < self.state[3] <= self.VcruiseMax:
+            # gForce가 -0.1 ~ 0.1 사이일 경우
+            if -0.1 <= self.gForce <= 0.1:
+                reward_gForce = 1
+            else:
+                reward_gForce = -1
+
+        # 속도가 VcruiseMax 이상일 경우
+        elif self.state[3] > self.VcruiseMax:
+            # gForce가 0 미만일 경우
+            if self.gForce < 0:
+                reward_gForce = 1
+            else:
+                reward_gForce = -1
+
+        # 속도가 음수일 경우 속도를 높여야 함
+        else:
+            # gForce가 0 이하일 경우 가속도 상승
+            if self.gForce > 0:
+                reward_gForce = 1
+            else:
+                reward_gForce = -1
+
+        # 조건 9: tilt 각 변화량
+        # tilt 각이 0도로 변하면, tilt 각 변화량이 0이 되도록 유도
+        if self.tilt_deg == 0:
+            reward_tilt_delta = 1
+        else:
+            # tilt 각 변화량이 양수일 경우를 방지
+            if self.tilt_deg_delta > 0:
+                reward_tilt_delta = -1
+            else:
+                reward_tilt_delta = 1
+
+        # 항공기 속도가 stallSpeed 이하일 경우와 이상일 경우, 가중치를 다르게 배정
+        if self.state[3] < self.stallSpeed:
+            weight = [500, 100, 20, 100, 100, 100, 2, 10, 1]
+        else:
+            weight = [500, 100,  1, 200, 200,  50, 1, 1, 10]
+
+        rewards_list = [reward_tilt,     reward_pitch,    reward_time,
+                        reward_speed,    reward_altitude, reward_rpm,
+                        reward_distance, reward_gForce,   reward_tilt_delta]
+        
+        value_list = [self.tilt_deg, pitch_deg,     self.state[6],
+                      self.state[3], self.state[1], [self.frontRPM, self.rearRPM],
+                      self.state[0], self.gForce,   self.tilt_deg_delta]
+        
+        reward = np.dot(weight, rewards_list)
+
+        return reward, rewards_list, value_list
+
     #################### step ####################
     def step(self, action):
         (self.frontRPM_delta, self.rearRPM_delta, self.elev_deg_delta, self.tilt_deg_delta) = action
@@ -172,78 +273,7 @@ class TiltrotorTransitionSimulator(gym.Env):
         
         self.Simulation()
         
-        # Reward 계산 | Reward Calculation | 보상 계산
-        pitch_state = abs(self.state[2])*180/math.pi # degree
-        alt_state = self.state[1]
-
-        # 조건 1: tilt각 차이 | self.tilt 초기값: 90 deg | 작을수록 좋음 | 0~90
-        # 90으로부터 멀어지면 좋음
-        # reward 1은 클수록 좋게 설정하였음(positive)
-        reward_1 = (90 - self.tilt_deg) / 90
-
-        # 조건 2: 피치 값 차이 | 작을 수록 좋음 | 0~90
-        # reward 2는 클수록 좋게 설정하였음(positive)
-        pitch_target = 0.0
-        if 0 <= pitch_state<= 8:
-            reward_2 = (10 - np.abs(pitch_state - pitch_target)) / 10
-        else:
-            reward_2 = -1
-        
-        # 조건 3: 비행 시간 | 클수록 좋음 | 0 ~ inf, 1 timestep = 0.05 sec, 30,000 timestep = 1,500 sec = 25 min
-        # 조건 3은 클수록 좋게 설정하였음(positive)
-        reward_3 = self.state[6]
-        
-        # 조건 4: 크루즈 속도 차이 | 작을 수록 좋음 | 0~20
-        # 조건 4는 클수록 좋게 설정하였음(positive)
-        Vcruise_target = 30
-        Vcruise_limit = 50
-        if Vcruise_target <=Vcruise_limit:
-            reward_4 = (Vcruise_target - np.abs(self.state[3] - Vcruise_target)) / Vcruise_target
-        else:
-            reward_4 = -1
-
-        # 조건 5: 순항 고도 | 초기 고도: 0m > 15m나 0m나 대기 조건 차이 크지 않음 | 작을 수록 좋음 | -15 ~ +15
-        # 조건 5는 클수록 좋게 설정하였음(positive)
-        reward_5 = (15 - np.abs(self.state[1])) / 15
-
-        # 조건 6: 프로펠러 rpm 최소화 | 작을수록 좋음 | 0 ~ 1
-        # 조건 6: 프로펠러 rpm 최소화 | 작을수록 좋음 | 0 ~ 1
-        # 조건 6은 클수록 좋게 설정하였음(Positive)
-        reward_6 = (1 - self.rearRPM) + (1 - self.frontRPM)
-
-        # 조건 7: 이동 거리
-        reward_7 = self.state[0]
-
-        # 조건 8: 가속도
-        # 가속도가 0.3g 미만일 경우, 0.3g 이상일 경우, 0g 이하일 경우 가중치를 다르게 배정
-        if 0 < Vcruise_target <=Vcruise_limit:
-            if self.gForce < 0.3:
-                reward_8 = 1
-            elif self.gForce < 0:
-                reward_8 = -1
-            else:
-                reward_8 = -1
-        elif Vcruise_target > Vcruise_limit:
-            if -0.1 < self.gForce < 0.1:
-                reward_8 = 1
-            else:
-                reward_8 = -1
-        else:
-            if self.gForce > 0:
-                reward_8 = 1
-            else:
-                reward_8 = -1
-
-        # 비행 속도가 20 미만일 경우와 20 이상일 경우 가중치를 다르게 배정
-        # [틸트각, 피치, 비행 시간, 비행 속도, 순항 고도, 프로펠러 rpm, 이동 거리, 가속도]
-        # 8/19: 분기점을 10m/s로 조정
-        if self.state[3] < 10:
-            weight = [500, 100, 20, 100, 100, 100, 2, 10]
-        else:
-            weight = [500, 100,  1, 200, 200,  50, 1, 1]
-
-        rewards_list = [reward_1, reward_2, reward_3, reward_4, reward_5, reward_6, reward_7, reward_8]
-        reward = np.dot(weight, rewards_list)
+        reward, reward_detail, step_data = self.calculateReward()
         
         # Sharp reward(editing)
         done = False
@@ -251,21 +281,16 @@ class TiltrotorTransitionSimulator(gym.Env):
         alt_constrain = 15
         pitch_constrain = 15
         
-        if (np.abs(alt_state)  >= alt_constrain):
-            done = True
-        if (np.abs(pitch_state)  >= pitch_constrain):
-            done = True
-        
-        if (self.tilt_deg < 0 or self.tilt_deg > 90):
-            done = True
-
-        if self.state[3] > Vcruise_limit:
+        if (np.abs(self.state[1])  >= alt_constrain) or \
+           (np.abs(self.state[2])  >= pitch_constrain) or \
+           (self.tilt_deg < 0 or self.tilt_deg > 90) or \
+           (self.state[3] > self.VcruiseMax):
             done = True
              
         observation = np.hstack((self.state[0],self.state[1],self.state[2],self.state[3],
                                  self.state[4],self.state[5],self.state[6],self.state[7],
                                  self.frontRPM, self.rearRPM, self.elev_deg, self.tilt_deg))
-        reward_detail = [reward_1, reward_2, reward_3, reward_4, reward_5, reward_6, reward_7, reward_8]
+
         step_data = self.dataCollection()
         info = {
             'Time': self.state[6],
