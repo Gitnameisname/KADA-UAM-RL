@@ -419,49 +419,34 @@ class TiltrotorTransitionSimulator(gym.Env):
     def render(self, mode='human'):
         self.draw_vehicle(self.state[0], self.state[1], self.state[2], self.tilt_deg*math.pi/180)
         
-        text_x        = self.font.render("Distance(m): "+str(round(self.state[0],8)),True,(28,0,0))
-        text_z        = self.font.render("Altitude(m): "+str(round(-self.state[1],8)),True,(28,0,0))
-        text_pitch    = self.font.render("Pitch(deg): "+str(round(math.degrees(self.state[2]),8)),True,(28,0,0))
-        text_u        = self.font.render("U(m/s): "+str(round(self.state[3],8)),True,(28,0,0))
-        text_w        = self.font.render("W(m/s): "+str(round(-self.state[4],8)),True,(28,0,0))
-        text_time     = self.font.render("Time(sec) : "+str(round(self.state[6],8)),True,(28,0,0))
-        text_frontRPM = self.font.render("Front RPM(%) : "+str(round(self.frontRPM*100,8)),True,(28,0,0))
-        text_rearRPM  = self.font.render("Rear RPM(%) : "+str(round(self.rearRPM*100,8)),True,(28,0,0))
-        text_elev_deg = self.font.render("Elevator(deg) : "+str(round(self.elev_deg,8)),True,(28,0,0))
-        text_tilt_deg = self.font.render("Tilt_Angle(deg) : "+str(round(self.tilt_deg,8)),True,(28,0,0))
-        text_Tf       = self.font.render("Front Thrust(N) : "+str(round(self.frontThrust,8)),True,(28,0,0))
-        text_Tr       = self.font.render("Rear Thrust(N) : "+str(round(self.rearThrust,8)),True,(28,0,0))
-        text_W        = self.font.render("Weight(N) : "+str(round(self.m*self.g,8)),True,(28,0,0))
-        text_W        = self.font.render("G(N) : "+str(round(self.gForce,8)),True,(28,0,0))
-
-        text_L        = self.font.render("Lift(N) : "+str(round(self.L,8)),True,(28,0,0))
-        text_D        = self.font.render("Drag(N) : "+str(round(self.D,8)),True,(28,0,0))
-        text_LperD    = self.font.render(f"Lift/Weight: {str(round(self.L/(self.m*self.g),8))}", True, (28,0,0))
-        text_LTperD   = self.font.render(f"Lift+Thrust/Weight: {str(round((self.L + self.frontThrust + self.rearThrust)/(self.m*self.g),8))}", True, (28,0,0))
-        text_M        = self.font.render("Pithching(N) : "+str(round(self.Mp,8)),True,(28,0,0))
-        text_alpha    = self.font.render("AoA(deg) : "+str(round(self.aoa,1)),True,(28,0,0))
+        texts = [
+            ("Distance(m): ", round(self.state[0], 8)),
+            ("Altitude(m): ", round(-self.state[1], 8)),
+            ("Pitch(deg): ", round(math.degrees(self.state[2]), 8)),
+            ("U(m/s): ", round(self.state[3], 8)),
+            ("W(m/s): ", round(-self.state[4], 8)),
+            ("Time(sec): ", round(self.state[6], 8)),
+            ("Front RPM(%): ", round(self.frontRPM * 100, 8)),
+            ("Rear RPM(%): ", round(self.rearRPM * 100, 8)),
+            ("Elevator(deg): ", round(self.elev_deg, 8)),
+            ("Tilt_Angle(deg): ", round(self.tilt_deg, 8)),
+            ("Front Thrust(N): ", round(self.frontThrust, 8)),
+            ("Rear Thrust(N): ", round(self.rearThrust, 8)),
+            ("Weight(N): ", round(self.m * self.g, 8)),
+            ("G(N): ", round(self.gForce, 8)),
+            ("Lift(N): ", round(self.L, 8)),
+            ("Drag(N): ", round(self.D, 8)),
+            ("Lift/Weight: ", round(self.L / (self.m * self.g), 8)),
+            ("Lift+Thrust/Weight: ", round((self.L + self.frontThrust + self.rearThrust) / (self.m * self.g), 8)),
+            ("Pithching(N): ", round(self.Mp, 8)),
+            ("AoA(deg): ", round(self.aoa, 1))
+        ]
         
-        self.screen.blit(self.Textboard, (700, 10))
-        self.screen.blit(text_x, (700,10))
-        self.screen.blit(text_z, (700,30))
-        self.screen.blit(text_pitch, (700,50))
-        self.screen.blit(text_u, (700,70))
-        self.screen.blit(text_w, (700,90))
-        self.screen.blit(text_time, (700,110))
-        self.screen.blit(text_frontRPM, (700,130))
-        self.screen.blit(text_rearRPM, (700,150))
-        self.screen.blit(text_elev_deg, (700,170))
-        self.screen.blit(text_tilt_deg, (700,190))
-        self.screen.blit(text_Tf, (700,210))
-        self.screen.blit(text_Tr, (700,230))
-        self.screen.blit(text_W, (700,250))
-        self.screen.blit(text_L, (700,270))
-        self.screen.blit(text_LperD, (700,290))
-        self.screen.blit(text_LTperD, (700,310))
-        self.screen.blit(text_D, (700,330))
-        self.screen.blit(text_M, (700,350))
-        self.screen.blit(text_alpha, (700,370))
-        
+        y = 10
+        for text in texts:
+            label = self.font.render(text[0] + str(text[1]), True, (28, 0, 0))
+            self.screen.blit(label, (700, y))
+            y += 20
         self.clock.tick(120)
         pygame.display.flip() 
     
