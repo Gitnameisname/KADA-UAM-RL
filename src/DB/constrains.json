@@ -1,0 +1,14 @@
+{
+    "Constrains": {
+        "altitudeDelta": 15,
+        "VcruiseMax": 50,
+        "pitchMin": -5,
+        "pitchMax": 15,
+        "g-forceMax": 1
+    },
+    "Target": {
+        "Vcruise": 30,
+        "pitch": 0,
+        "g-force": 0.3
+    }
+}
