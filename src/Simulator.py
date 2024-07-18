@@ -432,7 +432,7 @@ class TiltrotorTransitionSimulator(gym.Env):
 
     #################### render ####################
     def render(self, mode='human'):
-        self.draw_vehicle(self.state[0], self.state[1], self.state[2], self.tilt_deg*math.pi/180)
+        self.draw_vehicle(self.state[0], self.state[1], self.state[2], math.radians(self.tilt_deg))
         
         texts = [
             ("Distance(m): ", round(self.state[0], 8)),
@@ -466,9 +466,9 @@ class TiltrotorTransitionSimulator(gym.Env):
         pygame.display.flip() 
     
     
-    def draw_vehicle(self, x, z, the, tilt_deg):
-        rotated_image_vehicle = pygame.transform.rotate(self.vehicle,((the)*180/math.pi))
-        rotated_image_Tilt_Prop = pygame.transform.rotate(self.Tilt_Prop, ((the + tilt_deg - math.pi/2)*180/math.pi))   
+    def draw_vehicle(self, x, z, theta, tilt_rad):
+        rotated_image_vehicle = pygame.transform.rotate(self.vehicle,((math.degrees(theta))))
+        rotated_image_Tilt_Prop = pygame.transform.rotate(self.Tilt_Prop, (math.degrees(theta + tilt_rad - math.pi/2)))
     
         f_tilt_rotate_pos_x = (270 - self.vehicle_width/2)
         f_tilt_rotate_pos_z = (self.vehicle_height/2 - 153)
@@ -492,73 +492,73 @@ class TiltrotorTransitionSimulator(gym.Env):
         if x <= 200:
             self.screen.blit(rotated_image_vehicle, ((200 + x - rotated_image_vehicle.get_width()/2), (self.window_size[1]/2 + z - rotated_image_vehicle.get_height()/2)))
             
-            self.screen.blit(rotated_image_Tilt_Prop, (200 + x + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + the) \
+            self.screen.blit(rotated_image_Tilt_Prop, (200 + x + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + theta) \
                                                        
-                                             + (self.Tilt_Prop_height/2)*math.cos(vehicle_f_tilt_angle + the + tilt_deg) - rotated_image_Tilt_Prop.get_width()/2,\
+                                             + (self.Tilt_Prop_height/2)*math.cos(vehicle_f_tilt_angle + theta + tilt_rad) - rotated_image_Tilt_Prop.get_width()/2,\
                                                  
-                                             self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + the) - (self.Tilt_Prop_height/2)*math.sin(vehicle_f_tilt_angle + the + tilt_deg)\
+                                             self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + theta) - (self.Tilt_Prop_height/2)*math.sin(vehicle_f_tilt_angle + theta + tilt_rad)\
                                                  
                                              - rotated_image_Tilt_Prop.get_height()/2))
             
             pygame.draw.line(self.screen, (179,179,179),\
                              
-                             (200 + x + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + the), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + the)),\
+                             (200 + x + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + theta), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + theta)),\
                              
-                             (200 + x + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + the) + 50*math.cos(the + tilt_deg), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + the) - 50*math.sin(the + tilt_deg)), 4)
+                             (200 + x + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + theta) + 50*math.cos(theta + tilt_rad), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + theta) - 50*math.sin(theta + tilt_rad)), 4)
             
             pygame.draw.line(self.screen, (255,0,0),\
                              
-                             (200 + x + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + the), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + the)),\
+                             (200 + x + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + theta), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + theta)),\
                              
-                             (200 + x + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + the) + self.frontRPM*50*math.cos(the + tilt_deg), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + the) - self.frontRPM*50*math.sin(the + tilt_deg)), 4)
+                             (200 + x + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + theta) + self.frontRPM*50*math.cos(theta + tilt_rad), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + theta) - self.frontRPM*50*math.sin(theta + tilt_rad)), 4)
             
             pygame.draw.line(self.screen, (179,179,179),\
                              
-                             (200 + x - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + the), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + the)),\
+                             (200 + x - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + theta), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + theta)),\
                              
-                             (200 + x - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + the) + 50*math.cos(the + math.pi/2), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + the) - 50*math.sin(the + math.pi/2)), 4)
+                             (200 + x - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + theta) + 50*math.cos(theta + math.pi/2), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + theta) - 50*math.sin(theta + math.pi/2)), 4)
             
             pygame.draw.line(self.screen, (255,0,0),\
                              
-                             (200 + x - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + the), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + the)),\
+                             (200 + x - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + theta), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + theta)),\
                              
-                             (200 + x - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + the) + self.rearRPM*50*math.cos(the + math.pi/2), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + the) - self.rearRPM*50*math.sin(the + math.pi/2)), 4)
+                             (200 + x - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + theta) + self.rearRPM*50*math.cos(theta + math.pi/2), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + theta) - self.rearRPM*50*math.sin(theta + math.pi/2)), 4)
                 
             
         else:   
             self.screen.blit(rotated_image_vehicle, ((400 - rotated_image_vehicle.get_width()/2), (self.window_size[1]/2 + z - rotated_image_vehicle.get_height()/2)))
             
-            self.screen.blit(rotated_image_Tilt_Prop, (400 + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + the)\
+            self.screen.blit(rotated_image_Tilt_Prop, (400 + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + theta)\
                                                        
-                                             + (self.Tilt_Prop_height/2)*math.cos(vehicle_f_tilt_angle + the + tilt_deg) - rotated_image_Tilt_Prop.get_width()/2,\
+                                             + (self.Tilt_Prop_height/2)*math.cos(vehicle_f_tilt_angle + theta + tilt_rad) - rotated_image_Tilt_Prop.get_width()/2,\
                                                  
-                                             self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + the) - (self.Tilt_Prop_height/2)*math.sin(vehicle_f_tilt_angle + the + tilt_deg)\
+                                             self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + theta) - (self.Tilt_Prop_height/2)*math.sin(vehicle_f_tilt_angle + theta + tilt_rad)\
                                                  
                                              - rotated_image_Tilt_Prop.get_height()/2))
             
             pygame.draw.line(self.screen, (179,179,179),\
                              
-                             (400 + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + the), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + the)),\
+                             (400 + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + theta), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + theta)),\
                              
-                             (400 + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + the) + 50*math.cos(the + tilt_deg), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + the) - 50*math.sin(the + tilt_deg)), 4)
+                             (400 + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + theta) + 50*math.cos(theta + tilt_rad), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + theta) - 50*math.sin(theta + tilt_rad)), 4)
             
             pygame.draw.line(self.screen, (255,0,0),\
                              
-                             (400 + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + the), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + the)),\
+                             (400 + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + theta), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + theta)),\
                              
-                             (400 + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + the) + self.frontRPM*50*math.cos(the + tilt_deg), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + the) - self.frontRPM*50*math.sin(the + tilt_deg)), 4)
+                             (400 + f_tilt_rotate_pos_length*math.cos(vehicle_f_tilt_angle + theta) + self.frontRPM*50*math.cos(theta + tilt_rad), self.window_size[1]/2 + z - f_tilt_rotate_pos_length*math.sin(vehicle_f_tilt_angle + theta) - self.frontRPM*50*math.sin(theta + tilt_rad)), 4)
             
             pygame.draw.line(self.screen, (179,179,179),\
                              
-                             (400 - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + the), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + the)),\
+                             (400 - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + theta), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + theta)),\
                              
-                             (400 - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + the) + 50*math.cos(the + math.pi/2), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + the) - 50*math.sin(the + math.pi/2)), 4)
+                             (400 - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + theta) + 50*math.cos(theta + math.pi/2), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + theta) - 50*math.sin(theta + math.pi/2)), 4)
             
             pygame.draw.line(self.screen, (255,0,0),\
                              
-                             (400 - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + the), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + the)),\
+                             (400 - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + theta), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + theta)),\
                              
-                             (400 - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + the) + self.rearRPM*50*math.cos(the + math.pi/2), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + the) - self.rearRPM*50*math.sin(the + math.pi/2)), 4)
+                             (400 - r_tilt_rotate_pos_length*math.cos(vehicle_r_tilt_angle + theta) + self.rearRPM*50*math.cos(theta + math.pi/2), self.window_size[1]/2 + z + r_tilt_rotate_pos_length*math.sin(vehicle_r_tilt_angle + theta) - self.rearRPM*50*math.sin(theta + math.pi/2)), 4)
                 
     #################### render ####################
 
