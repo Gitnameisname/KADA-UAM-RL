@@ -132,7 +132,7 @@ class TiltrotorTransitionSimulator(gym.Env):
         self.L = 0
         self.D = 0
         self.Mp = 0
-        self.aoa = 0
+        self.aoa = 0                     # radians
         self.gForce = 0
                 
         SCREEN_COLOR = (255, 255, 255)
@@ -244,9 +244,9 @@ class TiltrotorTransitionSimulator(gym.Env):
 
         # 항공기 속도가 stallSpeed 이하일 경우와 이상일 경우, 가중치를 다르게 배정
         if self.state[3] < self.stallSpeed:
-            weight = [500, 100, 20, 100, 100, 100, 2, 10, 1]
+            weight = [500, 100, 20, 100, 100, 100, 2, 0, 0]
         else:
-            weight = [500, 100,  1, 200, 200,  50, 1, 1, 10]
+            weight = [500, 100,  1, 200, 200,  50, 1, 0, 0]
 
         rewards_list = [reward_tilt,     reward_pitch,    reward_time,
                         reward_speed,    reward_altitude, reward_rpm,
@@ -273,7 +273,7 @@ class TiltrotorTransitionSimulator(gym.Env):
         
         self.Simulation()
         
-        reward, reward_detail, step_data = self.calculateReward()
+        reward, reward_detail, value_list = self.calculateReward()
         
         # Sharp reward(editing)
         done = False
@@ -282,7 +282,7 @@ class TiltrotorTransitionSimulator(gym.Env):
         pitch_constrain = 15
         
         if (np.abs(self.state[1])  >= alt_constrain) or \
-           (np.abs(self.state[2])  >= pitch_constrain) or \
+           (np.abs(math.degrees(self.state[2]))  >= pitch_constrain) or \
            (self.tilt_deg < 0 or self.tilt_deg > 90) or \
            (self.state[3] > self.VcruiseMax):
             done = True
@@ -291,15 +291,9 @@ class TiltrotorTransitionSimulator(gym.Env):
                                  self.state[4],self.state[5],self.state[6],self.state[7],
                                  self.frontRPM, self.rearRPM, self.elev_deg, self.tilt_deg))
 
-        step_data = self.dataCollection()
         info = {
-            'Time': self.state[6],
-            'x_pos': self.state[0],
-            'z_pos': self.state[1],
-            'pitch': self.state[2],
-           # 'tilt_deg': self.action[2]
             'reward_detail': reward_detail,
-            'data': step_data
+            'value_detail': value_list
         }
         return observation, reward, done, info
     
@@ -323,14 +317,14 @@ class TiltrotorTransitionSimulator(gym.Env):
     
     # Simulation
     def Simulation(self):
-        self.x            = self.state[0]
-        self.z            = self.state[1]
-        self.theta        = self.state[2]
-        self.u            = self.state[3]
-        self.w            = self.state[4]
-        self.q            = self.state[5]
-        self.Sim_time     = self.state[6]
-        self.gForce       = self.state[7]
+        self.x            = self.state[0] # m
+        self.z            = self.state[1] # m
+        self.theta        = self.state[2] # rad
+        self.u            = self.state[3] # m/s
+        self.w            = self.state[4] # m/s
+        self.q            = self.state[5] # rad/s
+        self.Sim_time     = self.state[6] # sec
+        self.gForce       = self.state[7] # g
         
         # =============== Vehicle Model (Calculate Force&Moments) ===============
         self.frontThrust  = 2*self.K_T * (self.frontRPM * self.rpm_max)**2
@@ -343,11 +337,6 @@ class TiltrotorTransitionSimulator(gym.Env):
             self.aoa = math.atan(self.w/self.u)
         
         self.vel = math.sqrt(self.w**2 + self.u**2)
-        
-        if self.theta == 0:
-            self.aoa = self.theta
-        else:
-            self.aoa = math.atan(self.w/self.u)
         
         aoa_deg = math.degrees(self.aoa)
         if aoa_deg < -15:
@@ -367,11 +356,11 @@ class TiltrotorTransitionSimulator(gym.Env):
             CD_clean = linearInterpolation(25, self.CD_table['25'], 30, self.CD_table['30'], aoa_deg)
             Cm_clean = linearInterpolation(25, self.Cm_table['25'], 30, self.Cm_table['30'], aoa_deg)
 
-        CL_elev = self.elev_CL_0 + self.elev_CL_slop*self.elev_deg
-        CD_elev = self.elev_CD_0 + self.elev_CD_slop*self.elev_deg
-        Cm_elev = self.elev_Cm_0 + self.elev_Cm_slop*self.elev_deg
+        CL_elev = self.elev_CL_0 + self.elev_CL_slop * self.elev_deg
+        CD_elev = self.elev_CD_0 + self.elev_CD_slop * self.elev_deg
+        Cm_elev = self.elev_Cm_0 + self.elev_Cm_slop * self.elev_deg
         
-        if (self.aoa >= (-20*math.pi/180)) and (self.aoa <= (30*math.pi/180)):
+        if (aoa_deg >= -20) and (aoa_deg <= 30):
             self.CL = (CL_clean + CL_elev) # 항공기 전체 양력 계수입니다.
             self.CD = (CD_clean + CD_elev) # 항공기 전체 항력 계수입니다.
 
@@ -383,9 +372,9 @@ class TiltrotorTransitionSimulator(gym.Env):
             self.D  = 0
             self.Mp = 0
         
-        self.Myb = self.cg2FrontProp_z*self.frontThrust*math.cos(math.radians(self.tilt_deg)) + self.cg2FrontProp_x*self.frontThrust*math.sin(math.radians(self.tilt_deg)) + self.cg2RearProp_x*self.rearThrust - self.cg2AeroCenter_z*(self.D*math.cos(math.radians(self.aoa)) + self.L*math.sin(math.radians(self.aoa))) - self.cg2AeroCenter_x*(self.D*math.sin(math.radians(self.aoa)) - self.L*math.cos(math.radians(self.aoa))) + self.Mp
-        self.Fxb = self.frontThrust*math.cos(math.radians(self.tilt_deg)) - self.D*math.cos(math.radians(self.aoa)) - self.L*math.sin(math.radians(self.aoa)) + self.m*self.g*math.sin(math.radians(self.aoa))
-        self.Fzb = -self.rearThrust - self.frontThrust*math.sin(math.radians(self.tilt_deg)) + self.D*math.sin(math.radians(self.aoa)) - self.L*math.cos(math.radians(self.aoa)) + self.m*self.g*math.cos(math.radians(self.aoa))
+        self.Myb = self.cg2FrontProp_z*self.frontThrust*math.cos(math.radians(self.tilt_deg)) + self.cg2FrontProp_x*self.frontThrust*math.sin(math.radians(self.tilt_deg)) + self.cg2RearProp_x*self.rearThrust - self.cg2AeroCenter_z*(self.D*math.cos(self.aoa) + self.L*math.sin(self.aoa)) - self.cg2AeroCenter_x*(self.D*math.sin(self.aoa) - self.L*math.cos(self.aoa)) + self.Mp
+        self.Fxb = self.frontThrust*math.cos(math.radians(self.tilt_deg)) - self.D*math.cos(self.aoa) - self.L*math.sin(self.aoa) + self.m*self.g*math.sin(self.aoa)
+        self.Fzb = -self.rearThrust - self.frontThrust*math.sin(math.radians(self.tilt_deg)) + self.D*math.sin(self.aoa) - self.L*math.cos(self.aoa) + self.m*self.g*math.cos(self.aoa)
         # =============== Vehicle Model (Calculate Force&Moments) ===============
         
         # =============== Flight Dynamics with RK-4 (Calculate Next Status) ===============
@@ -413,7 +402,8 @@ class TiltrotorTransitionSimulator(gym.Env):
         self.Sim_time += self.time_delta
 
         # ckchoi: 가속도 계산 - 중력가속도 대비 비행기가 받는 가속도
-        self.gForce = math.sqrt(self.acceleration_x**2 + self.acceleration_z**2)/self.g
+        # self.gForce = math.sqrt(self.acceleration_x**2 + self.acceleration_z**2)/self.g
+        self.gForce = self.acceleration_x / self.g
         
         # State Update
         self.state = [self.x, self.z, self.theta, self.u, self.w, self.q, self.Sim_time, self.gForce]
@@ -464,7 +454,7 @@ class TiltrotorTransitionSimulator(gym.Env):
             ("Lift/Weight: ", round(self.L / (self.m * self.g), 8)),
             ("Lift+Thrust/Weight: ", round((self.L + self.frontThrust + self.rearThrust) / (self.m * self.g), 8)),
             ("Pithching(N): ", round(self.Mp, 8)),
-            ("AoA(deg): ", round(self.aoa, 1))
+            ("AoA(deg): ", round(math.radians(self.aoa), 1))
         ]
         
         y = 10
