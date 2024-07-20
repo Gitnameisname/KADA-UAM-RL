@@ -47,7 +47,7 @@ class Trainer:
                             f"Pitch      : {info['reward_detail'][1]:.2f}\t| {info['value_detail'][1]:.2}\n"
                             f"Time       : {info['reward_detail'][2]:.2f}\t| {info['value_detail'][2]:.2}\n"
                             f"V_cruise   : {info['reward_detail'][3]:.2f}\t| {info['value_detail'][3]:.2}\n"
-                            f"Altitude   : {info['reward_detail'][4]:.2f}\t| {info['value_detail'][4]:.2}\n"
+                            f"Altitude   : {info['reward_detail'][4]:.2f}\t| {-1*info['value_detail'][4]:.2}\n"
                             f"Rotor RPM  : {info['reward_detail'][5]:.2f}\t| front - {info['value_detail'][5][0]:.2}\t| rear - {info['value_detail'][5][1]:.2}\n"
                             f"Distance   : {info['reward_detail'][6]:.2f}\t| {info['value_detail'][6]:.2}\n"
                             f"G-Force    : {info['reward_detail'][7]:.2f}\t| {info['value_detail'][7]:.2}\n"

@@ -202,7 +202,7 @@ class TiltrotorTransitionSimulator(gym.Env):
         # 속도가 0 이상, VcruiseTarget 이하일 경우
         if 0 <= self.state[3] <= self.VcruiseTarget:
             # gForce가 0 ~ gForceTarget 사이일 경우
-            if 0<= self.gForce <= self.gForceTarget:
+            if -0.2 <= self.gForce <= self.gForceTarget:
                 reward_gForce = 1
             else:
                 reward_gForce = -1
@@ -210,7 +210,7 @@ class TiltrotorTransitionSimulator(gym.Env):
         # 속도가 VcruiseTarget 이상, VcruiseMax 이하일 경우
         elif self.VcruiseTarget < self.state[3] <= self.VcruiseMax:
             # gForce가 -0.1 ~ 0.1 사이일 경우
-            if -0.1 <= self.gForce <= 0.1:
+            if -0.2 <= self.gForce <= 0.2:
                 reward_gForce = 1
             else:
                 reward_gForce = -1
@@ -278,11 +278,10 @@ class TiltrotorTransitionSimulator(gym.Env):
         # Sharp reward(editing)
         done = False
         
-        alt_constrain = 15
-        pitch_constrain = 15
+        alt_constrain = self.altitudeDelta * 1.2
         
         if (np.abs(self.state[1])  >= alt_constrain) or \
-           (np.abs(math.degrees(self.state[2]))  >= pitch_constrain) or \
+           (self.pitchMin * 1.2 <= np.abs(math.degrees(self.state[2]))  <= self.pitchMax * 1.2) or \
            (self.tilt_deg < 0 or self.tilt_deg > 90) or \
            (self.state[3] > self.VcruiseMax):
             done = True
@@ -380,24 +379,24 @@ class TiltrotorTransitionSimulator(gym.Env):
         # =============== Flight Dynamics with RK-4 (Calculate Next Status) ===============
 
         # q
-        self.q += self.fqdot()
+        self.q += self.fqdot() * self.time_delta
         
         # u & ax
-        self.u += self.fudot()
-        self.acceleration_x = self.fudot() / self.time_delta
+        self.u += self.fudot() * self.time_delta
+        self.acceleration_x = self.fudot()
         
         # w & az
-        self.w += self.fwdot()
-        self.acceleration_z = self.fwdot() / self.time_delta
+        self.w += self.fwdot() * self.time_delta
+        self.acceleration_z = self.fwdot()
         
         # the
-        self.theta += self.fthetadot()
+        self.theta += self.fthetadot() * self.time_delta
         
         # x
-        self.x += self.fxdot()
+        self.x += self.fxdot() * self.time_delta
         
         # z
-        self.z += self.fxdot()
+        self.z += self.fxdot() * self.time_delta
 
         self.Sim_time += self.time_delta
 

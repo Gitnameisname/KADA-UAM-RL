@@ -1,0 +1,608 @@
+Episode: 0
+Episode finished at timestep: 1
+Total reward: -14.02
+========================================
+Reward details
+Tilt       : 0.02	| 8.8e+01
+Pitch      : -1.00	| 1.8e+01
+Time       : 0.10	| 0.1
+V_cruise   : -0.82	| 2.8
+Altitude   : 0.81	| 2.8
+Rotor RPM  : 0.69	| front - 0.67	| rear - 0.64
+Distance   : 2.84	| 2.8
+G-Force    : -1.00	| 5.5
+Tilt Delta : 1.00	| -0.86
+========================================
+
+Episode: 1
+Episode finished at timestep: 0
+Total reward: -77.14
+========================================
+Reward details
+Tilt       : 0.03	| 8.7e+01
+Pitch      : -1.00	| 1.9e+01
+Time       : 0.15	| 0.15
+V_cruise   : -1.00	| -0.021
+Altitude   : 0.52	| -7.2
+Rotor RPM  : 0.67	| front - 0.68	| rear - 0.65
+Distance   : -7.16	| -7.2
+G-Force    : 1.00	| 1.8e+01
+Tilt Delta : 1.00	| -0.95
+========================================
+
+Episode: 2
+Episode finished at timestep: 2
+Total reward: -38.99
+========================================
+Reward details
+Tilt       : 0.03	| 8.7e+01
+Pitch      : -1.00	| 3.4e+01
+Time       : 0.15	| 0.15
+V_cruise   : -0.75	| 3.7
+Altitude   : 0.25	| 1.1e+01
+Rotor RPM  : 0.71	| front - 0.66	| rear - 0.63
+Distance   : 11.20	| 1.1e+01
+G-Force    : -1.00	| -7.2
+Tilt Delta : 1.00	| -0.85
+========================================
+
+Episode: 3
+Episode finished at timestep: 1
+Total reward: -161.89
+========================================
+Reward details
+Tilt       : 0.01	| 8.9e+01
+Pitch      : -1.00	| 7e+01
+Time       : 0.15	| 0.15
+V_cruise   : -0.19	| 1.2e+01
+Altitude   : -0.44	| 2.2e+01
+Rotor RPM  : 0.71	| front - 0.66	| rear - 0.63
+Distance   : 21.55	| 2.2e+01
+G-Force    : -1.00	| 5.0
+Tilt Delta : 1.00	| -0.91
+========================================
+
+Episode: 4
+Episode finished at timestep: 0
+Total reward: -39.97
+========================================
+Reward details
+Tilt       : 0.03	| 8.7e+01
+Pitch      : -1.00	| -4.7e+01
+Time       : 0.25	| 0.25
+V_cruise   : -1.00	| -4.0
+Altitude   : 0.54	| 7.0
+Rotor RPM  : 0.74	| front - 0.64	| rear - 0.63
+Distance   : 6.95	| 7.0
+G-Force    : 1.00	| 2.3
+Tilt Delta : 1.00	| -0.32
+========================================
+
+Episode: 5
+Episode finished at timestep: 1
+Total reward: 92.91
+========================================
+Reward details
+Tilt       : 0.01	| 8.9e+01
+Pitch      : 0.53	| 3.5
+Time       : 0.15	| 0.15
+V_cruise   : -0.68	| 4.8
+Altitude   : -0.02	| 1.5e+01
+Rotor RPM  : 0.70	| front - 0.66	| rear - 0.65
+Distance   : 15.34	| 1.5e+01
+G-Force    : -1.00	| -1e+01
+Tilt Delta : 1.00	| -0.93
+========================================
+
+Episode: 6
+Episode finished at timestep: 1
+Total reward: 139.56
+========================================
+Reward details
+Tilt       : -0.01	| 9.1e+01
+Pitch      : 0.50	| -1.2
+Time       : 0.10	| 0.1
+V_cruise   : -0.35	| 9.7
+Altitude   : 0.35	| 9.7
+Rotor RPM  : 0.71	| front - 0.65	| rear - 0.65
+Distance   : 9.73	| 9.7
+G-Force    : -1.00	| 2e+01
+Tilt Delta : -1.00	| 0.79
+========================================
+
+Episode: 7
+Episode finished at timestep: 1
+Total reward: 180.31
+========================================
+Reward details
+Tilt       : -0.01	| 9.1e+01
+Pitch      : 0.93	| 0.53
+Time       : 0.10	| 0.1
+V_cruise   : -0.36	| 9.7
+Altitude   : 0.35	| 9.7
+Rotor RPM  : 0.70	| front - 0.65	| rear - 0.65
+Distance   : 9.69	| 9.7
+G-Force    : -1.00	| 2e+01
+Tilt Delta : -1.00	| 0.95
+========================================
+
+Episode: 8
+Episode finished at timestep: 1
+Total reward: -50.44
+========================================
+Reward details
+Tilt       : 0.02	| 8.8e+01
+Pitch      : -1.00	| 2.4e+01
+Time       : 0.15	| 0.15
+V_cruise   : -0.54	| 6.9
+Altitude   : -0.11	| 1.7e+01
+Rotor RPM  : 0.70	| front - 0.66	| rear - 0.64
+Distance   : 16.58	| 1.7e+01
+G-Force    : -1.00	| -5.8
+Tilt Delta : 1.00	| -0.95
+========================================
+
+Episode: 9
+Episode finished at timestep: 1
+Total reward: 141.45
+========================================
+Reward details
+Tilt       : -0.01	| 9.1e+01
+Pitch      : 0.54	| 3.4
+Time       : 0.10	| 0.1
+V_cruise   : -0.36	| 9.6
+Altitude   : 0.36	| 9.6
+Rotor RPM  : 0.70	| front - 0.65	| rear - 0.65
+Distance   : 9.63	| 9.6
+G-Force    : -1.00	| 2e+01
+Tilt Delta : -1.00	| 0.95
+========================================
+
+Episode: 10
+Episode finished at timestep: 1
+Total reward: 142.75
+========================================
+Reward details
+Tilt       : -0.01	| 9.1e+01
+Pitch      : 0.55	| 3.3
+Time       : 0.10	| 0.1
+V_cruise   : -0.36	| 9.6
+Altitude   : 0.36	| 9.6
+Rotor RPM  : 0.70	| front - 0.65	| rear - 0.65
+Distance   : 9.64	| 9.6
+G-Force    : -1.00	| 2e+01
+Tilt Delta : -1.00	| 0.97
+========================================
+
+Episode: 11
+Episode finished at timestep: 1
+Total reward: -47.95
+========================================
+Reward details
+Tilt       : 0.01	| 8.9e+01
+Pitch      : -1.00	| 3.3e+01
+Time       : 0.15	| 0.15
+V_cruise   : -0.47	| 7.9
+Altitude   : -0.16	| 1.7e+01
+Rotor RPM  : 0.70	| front - 0.65	| rear - 0.64
+Distance   : 17.38	| 1.7e+01
+G-Force    : -1.00	| -3.9
+Tilt Delta : 1.00	| -0.86
+========================================
+
+Episode: 12
+Episode finished at timestep: 1
+Total reward: 159.64
+========================================
+Reward details
+Tilt       : -0.01	| 9.1e+01
+Pitch      : 0.72	| 2.1
+Time       : 0.10	| 0.1
+V_cruise   : -0.36	| 9.7
+Altitude   : 0.35	| 9.7
+Rotor RPM  : 0.70	| front - 0.65	| rear - 0.65
+Distance   : 9.69	| 9.7
+G-Force    : -1.00	| 2e+01
+Tilt Delta : -1.00	| 0.96
+========================================
+
+Episode: 13
+Episode finished at timestep: 1
+Total reward: -47.48
+========================================
+Reward details
+Tilt       : 0.02	| 8.8e+01
+Pitch      : -1.00	| 3.2e+01
+Time       : 0.15	| 0.15
+V_cruise   : -0.49	| 7.6
+Altitude   : -0.14	| 1.7e+01
+Rotor RPM  : 0.70	| front - 0.66	| rear - 0.64
+Distance   : 17.07	| 1.7e+01
+G-Force    : -1.00	| -4.3
+Tilt Delta : 1.00	| -0.93
+========================================
+
+Episode: 14
+Episode finished at timestep: 1
+Total reward: 166.70
+========================================
+Reward details
+Tilt       : -0.01	| 9.1e+01
+Pitch      : 0.79	| 1.6
+Time       : 0.10	| 0.1
+V_cruise   : -0.35	| 9.7
+Altitude   : 0.35	| 9.7
+Rotor RPM  : 0.70	| front - 0.65	| rear - 0.65
+Distance   : 9.70	| 9.7
+G-Force    : -1.00	| 2e+01
+Tilt Delta : -1.00	| 0.94
+========================================
+
+Episode: 15
+Episode finished at timestep: 1
+Total reward: 166.46
+========================================
+Reward details
+Tilt       : -0.01	| 9.1e+01
+Pitch      : 0.78	| 1.6
+Time       : 0.10	| 0.1
+V_cruise   : -0.36	| 9.7
+Altitude   : 0.35	| 9.7
+Rotor RPM  : 0.70	| front - 0.65	| rear - 0.65
+Distance   : 9.69	| 9.7
+G-Force    : -1.00	| 2e+01
+Tilt Delta : -1.00	| 0.93
+========================================
+
+Episode: 16
+Episode finished at timestep: 1
+Total reward: -49.29
+========================================
+Reward details
+Tilt       : 0.02	| 8.8e+01
+Pitch      : -1.00	| 2.6e+01
+Time       : 0.15	| 0.15
+V_cruise   : -0.53	| 7.1
+Altitude   : -0.11	| 1.7e+01
+Rotor RPM  : 0.70	| front - 0.66	| rear - 0.64
+Distance   : 16.71	| 1.7e+01
+G-Force    : -1.00	| -5.3
+Tilt Delta : 1.00	| -0.94
+========================================
+
+Episode: 17
+Episode finished at timestep: 1
+Total reward: 170.40
+========================================
+Reward details
+Tilt       : -0.01	| 9.1e+01
+Pitch      : 0.82	| 1.3
+Time       : 0.10	| 0.1
+V_cruise   : -0.36	| 9.7
+Altitude   : 0.35	| 9.7
+Rotor RPM  : 0.70	| front - 0.65	| rear - 0.65
+Distance   : 9.69	| 9.7
+G-Force    : -1.00	| 2e+01
+Tilt Delta : -1.00	| 0.93
+========================================
+
+Episode: 18
+Episode finished at timestep: 1
+Total reward: 170.78
+========================================
+Reward details
+Tilt       : -0.01	| 9.1e+01
+Pitch      : 0.82	| 1.3
+Time       : 0.10	| 0.1
+V_cruise   : -0.36	| 9.7
+Altitude   : 0.35	| 9.7
+Rotor RPM  : 0.71	| front - 0.65	| rear - 0.65
+Distance   : 9.69	| 9.7
+G-Force    : -1.00	| 2e+01
+Tilt Delta : -1.00	| 0.91
+========================================
+
+Episode: 19
+Episode finished at timestep: 1
+Total reward: -50.34
+========================================
+Reward details
+Tilt       : 0.02	| 8.8e+01
+Pitch      : -1.00	| 2.2e+01
+Time       : 0.15	| 0.15
+V_cruise   : -0.55	| 6.7
+Altitude   : -0.10	| 1.6e+01
+Rotor RPM  : 0.70	| front - 0.66	| rear - 0.64
+Distance   : 16.44	| 1.6e+01
+G-Force    : -1.00	| -6.2
+Tilt Delta : 1.00	| -0.93
+========================================
+
+Episode: 20
+Episode finished at timestep: 1
+Total reward: 174.18
+========================================
+Reward details
+Tilt       : -0.01	| 9.1e+01
+Pitch      : 0.85	| 1.1
+Time       : 0.10	| 0.1
+V_cruise   : -0.36	| 9.6
+Altitude   : 0.36	| 9.7
+Rotor RPM  : 0.71	| front - 0.65	| rear - 0.65
+Distance   : 9.67	| 9.7
+G-Force    : -1.00	| 2e+01
+Tilt Delta : -1.00	| 0.86
+========================================
+
+Episode: 21
+Episode finished at timestep: 1
+Total reward: 176.42
+========================================
+Reward details
+Tilt       : -0.01	| 9e+01
+Pitch      : 0.87	| 0.96
+Time       : 0.10	| 0.1
+V_cruise   : -0.36	| 9.6
+Altitude   : 0.36	| 9.7
+Rotor RPM  : 0.71	| front - 0.65	| rear - 0.64
+Distance   : 9.66	| 9.7
+G-Force    : -1.00	| 2e+01
+Tilt Delta : -1.00	| 0.85
+========================================
+
+Episode: 22
+Episode finished at timestep: 1
+Total reward: 176.43
+========================================
+Reward details
+Tilt       : -0.01	| 9e+01
+Pitch      : 0.87	| 0.97
+Time       : 0.10	| 0.1
+V_cruise   : -0.36	| 9.6
+Altitude   : 0.36	| 9.6
+Rotor RPM  : 0.71	| front - 0.65	| rear - 0.64
+Distance   : 9.65	| 9.6
+G-Force    : -1.00	| 2e+01
+Tilt Delta : -1.00	| 0.85
+========================================
+
+Episode: 23
+Episode finished at timestep: 1
+Total reward: 179.76
+========================================
+Reward details
+Tilt       : -0.00	| 9e+01
+Pitch      : 0.90	| 0.73
+Time       : 0.10	| 0.1
+V_cruise   : -0.36	| 9.6
+Altitude   : 0.36	| 9.6
+Rotor RPM  : 0.71	| front - 0.65	| rear - 0.64
+Distance   : 9.64	| 9.6
+G-Force    : -1.00	| 2e+01
+Tilt Delta : -1.00	| 0.83
+========================================
+
+Episode: 24
+Episode finished at timestep: 1
+Total reward: 178.70
+========================================
+Reward details
+Tilt       : -0.00	| 9e+01
+Pitch      : 0.89	| 0.83
+Time       : 0.10	| 0.1
+V_cruise   : -0.36	| 9.6
+Altitude   : 0.36	| 9.6
+Rotor RPM  : 0.71	| front - 0.65	| rear - 0.64
+Distance   : 9.62	| 9.6
+G-Force    : -1.00	| 1.9e+01
+Tilt Delta : -1.00	| 0.81
+========================================
+
+Episode: 25
+Episode finished at timestep: 1
+Total reward: 181.68
+========================================
+Reward details
+Tilt       : -0.00	| 9e+01
+Pitch      : 0.92	| 0.59
+Time       : 0.10	| 0.1
+V_cruise   : -0.36	| 9.6
+Altitude   : 0.36	| 9.6
+Rotor RPM  : 0.71	| front - 0.65	| rear - 0.64
+Distance   : 9.62	| 9.6
+G-Force    : -1.00	| 1.9e+01
+Tilt Delta : -1.00	| 0.84
+========================================
+
+Episode: 26
+Episode finished at timestep: 1
+Total reward: -46.25
+========================================
+Reward details
+Tilt       : 0.02	| 8.8e+01
+Pitch      : -1.00	| 2.2e+01
+Time       : 0.15	| 0.15
+V_cruise   : -0.56	| 6.6
+Altitude   : -0.07	| 1.6e+01
+Rotor RPM  : 0.71	| front - 0.65	| rear - 0.64
+Distance   : 16.09	| 1.6e+01
+G-Force    : -1.00	| -5.9
+Tilt Delta : 1.00	| -0.91
+========================================
+
+Episode: 27
+Episode finished at timestep: 1
+Total reward: 183.25
+========================================
+Reward details
+Tilt       : -0.00	| 9e+01
+Pitch      : 0.93	| 0.52
+Time       : 0.10	| 0.1
+V_cruise   : -0.37	| 9.5
+Altitude   : 0.36	| 9.5
+Rotor RPM  : 0.71	| front - 0.65	| rear - 0.64
+Distance   : 9.54	| 9.5
+G-Force    : -1.00	| 1.9e+01
+Tilt Delta : -1.00	| 0.81
+========================================
+
+Episode: 28
+Episode finished at timestep: 0
+Total reward: -46.48
+========================================
+Reward details
+Tilt       : 0.02	| 8.8e+01
+Pitch      : -1.00	| -2.3e+01
+Time       : 0.20	| 0.2
+V_cruise   : -1.00	| -6.4
+Altitude   : 0.55	| 6.7
+Rotor RPM  : 0.72	| front - 0.64	| rear - 0.64
+Distance   : 6.68	| 6.7
+G-Force    : -1.00	| -2.2e+01
+Tilt Delta : 1.00	| -0.6
+========================================
+
+Episode: 29
+Episode finished at timestep: 1
+Total reward: 185.60
+========================================
+Reward details
+Tilt       : -0.00	| 9e+01
+Pitch      : 0.96	| 0.34
+Time       : 0.10	| 0.1
+V_cruise   : -0.38	| 9.3
+Altitude   : 0.38	| 9.4
+Rotor RPM  : 0.71	| front - 0.65	| rear - 0.64
+Distance   : 9.36	| 9.4
+G-Force    : -1.00	| 1.9e+01
+Tilt Delta : -1.00	| 0.89
+========================================
+
+Episode: 30
+Episode finished at timestep: 1
+Total reward: 187.90
+========================================
+Reward details
+Tilt       : -0.00	| 9e+01
+Pitch      : 0.98	| 0.17
+Time       : 0.10	| 0.1
+V_cruise   : -0.38	| 9.3
+Altitude   : 0.38	| 9.3
+Rotor RPM  : 0.71	| front - 0.65	| rear - 0.64
+Distance   : 9.31	| 9.3
+G-Force    : -1.00	| 1.9e+01
+Tilt Delta : -1.00	| 0.88
+========================================
+
+Episode: 31
+Episode finished at timestep: 1
+Total reward: 187.26
+========================================
+Reward details
+Tilt       : -0.00	| 9e+01
+Pitch      : 0.97	| 0.23
+Time       : 0.10	| 0.1
+V_cruise   : -0.38	| 9.3
+Altitude   : 0.38	| 9.4
+Rotor RPM  : 0.71	| front - 0.65	| rear - 0.64
+Distance   : 9.36	| 9.4
+G-Force    : -1.00	| 1.9e+01
+Tilt Delta : -1.00	| 0.87
+========================================
+
+Episode: 32
+Episode finished at timestep: 1
+Total reward: -45.86
+========================================
+Reward details
+Tilt       : 0.03	| 8.8e+01
+Pitch      : -1.00	| 1.9e+01
+Time       : 0.15	| 0.15
+V_cruise   : -0.58	| 6.4
+Altitude   : -0.06	| 1.6e+01
+Rotor RPM  : 0.70	| front - 0.65	| rear - 0.64
+Distance   : 15.89	| 1.6e+01
+G-Force    : -1.00	| -6.3
+Tilt Delta : 1.00	| -0.9
+========================================
+
+Episode: 33
+Episode finished at timestep: 0
+Total reward: -60.77
+========================================
+Reward details
+Tilt       : 0.01	| 8.9e+01
+Pitch      : -1.00	| -2.1e+01
+Time       : 0.15	| 0.15
+V_cruise   : -0.86	| 2.1
+Altitude   : 0.24	| 1.1e+01
+Rotor RPM  : 0.71	| front - 0.65	| rear - 0.64
+Distance   : 11.37	| 1.1e+01
+G-Force    : -1.00	| -1.4e+01
+Tilt Delta : 1.00	| -0.66
+========================================
+
+Episode: 34
+Episode finished at timestep: 1
+Total reward: -46.98
+========================================
+Reward details
+Tilt       : 0.02	| 8.8e+01
+Pitch      : -1.00	| 2.3e+01
+Time       : 0.15	| 0.15
+V_cruise   : -0.54	| 6.8
+Altitude   : -0.10	| 1.6e+01
+Rotor RPM  : 0.70	| front - 0.65	| rear - 0.64
+Distance   : 16.49	| 1.6e+01
+G-Force    : -1.00	| -5.8
+Tilt Delta : 1.00	| -0.9
+========================================
+
+Episode: 35
+Episode finished at timestep: 1
+Total reward: -44.84
+========================================
+Reward details
+Tilt       : 0.03	| 8.8e+01
+Pitch      : -1.00	| 2e+01
+Time       : 0.15	| 0.15
+V_cruise   : -0.57	| 6.4
+Altitude   : -0.06	| 1.6e+01
+Rotor RPM  : 0.70	| front - 0.65	| rear - 0.64
+Distance   : 15.87	| 1.6e+01
+G-Force    : -1.00	| -6.0
+Tilt Delta : 1.00	| -0.93
+========================================
+
+Episode: 36
+Episode finished at timestep: 1
+Total reward: -47.73
+========================================
+Reward details
+Tilt       : 0.02	| 8.8e+01
+Pitch      : -1.00	| 2.3e+01
+Time       : 0.15	| 0.15
+V_cruise   : -0.54	| 6.8
+Altitude   : -0.11	| 1.7e+01
+Rotor RPM  : 0.71	| front - 0.65	| rear - 0.64
+Distance   : 16.58	| 1.7e+01
+G-Force    : -1.00	| -6.1
+Tilt Delta : 1.00	| -0.95
+========================================
+
+Episode: 37
+Episode finished at timestep: 1
+Total reward: 184.99
+========================================
+Reward details
+Tilt       : -0.00	| 9e+01
+Pitch      : 0.95	| 0.36
+Time       : 0.10	| 0.1
+V_cruise   : -0.37	| 9.4
+Altitude   : 0.37	| 9.4
+Rotor RPM  : 0.71	| front - 0.65	| rear - 0.64
+Distance   : 9.44	| 9.4
+G-Force    : -1.00	| 1.9e+01
+Tilt Delta : -1.00	| 0.91
+========================================
+
