@@ -11,7 +11,7 @@ class Trainer:
         # Parallel environments
         self.env = TiltrotorTransitionSimulator()
         self.device = device
-        policy_kwargs = dict(activation_fn=th.nn.ReLU, net_arch=dict(pi=[256,256,256], qf=[128,128]))
+        policy_kwargs = dict(activation_fn=th.nn.ReLU, net_arch=dict(pi=[256,256,256,256], qf=[128,128,128]))
         self.model = SAC("MlpPolicy", self.env, policy_kwargs=policy_kwargs, verbose=1, device=device)
 
     def get_filename(self):
@@ -30,6 +30,9 @@ class Trainer:
 
     def startTraining(self, maximum_eps=1000, maximum_timestep=10000):
         best_reward = 0
+
+        with open(f'./src/results/{self.filename}-reward_weight.txt', 'w') as file:
+            file.write(f'{self.env.reward_weight}')
 
         with open(f'./src/results/{self.filename}.txt', 'w') as file:
             for eps in range(maximum_eps):

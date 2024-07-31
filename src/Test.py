@@ -1,34 +1,14 @@
 import time
-from stable_baselines3.common.vec_env import DummyVecEnv, VecMonitor, VecExtractDictObs
+from src.Simulator import TiltrotorTransitionSimulator
 from stable_baselines3 import SAC
 
 class Tester:
-    def __init__(self, modelName, simulator_name="Simulator", num_envs=1):
-        self.simulator_name = simulator_name
-        self.num_envs = num_envs
-        self.env = self.create_vec_envs()
+    def __init__(self, modelName, simulator_name="Simulator", waitingTime=1):
+        self.env = TiltrotorTransitionSimulator()
         self.loadModel(modelName=modelName)
-        self.waitingTime = 5 # seconds
+        self.waitingTime = waitingTime
         self.flightData = self.initData()
         self.actionData = self.initActionData()
-    
-    def create_vec_envs(self):
-        def make_env():
-            def _init():
-                if self.simulator_name == "Simulator":
-                    from src.Simulator import TiltrotorTransitionSimulator
-                    return TiltrotorTransitionSimulator()
-                elif self.simulator_name == "Simulator_7act":
-                    from src.Simulator_7act import TiltrotorTransitionSimulator
-                    return TiltrotorTransitionSimulator()
-            return _init
-
-        envs = [make_env() for _ in range(self.num_envs)]
-        env = DummyVecEnv(envs)
-        env = VecMonitor(env)
-        # env = VecExtractDictObs(env, "observation")
-        return env
-
 
     def loadModel(self, modelName):
         self.model = SAC.load(f'./src/model/{modelName}')
@@ -46,7 +26,7 @@ class Tester:
             self.addActionData(action)
 
             obs, reward, done, info = self.env.step(action)
-            # self.addFlightData(info['data'])
+            self.addFlightData(info['data'])
             self.env.render()
             if done:
                 obs = self.env.reset()
@@ -59,10 +39,10 @@ class Tester:
             "X": [],
             "Z": [],
             "theta": [],
-            "f_rpm": [],
-            "r_rpm": [],
+            "frontRPM": [],
+            "rearRPM": [],
             "U": [], 
-            "tilt": [],
+            "tilt_deg": [],
             "Lift": [],
             "L/W": [],
             "(L+T)/W": []
@@ -85,19 +65,19 @@ class Tester:
         self.flightData["X"].append(data["X"])
         self.flightData["Z"].append(data["Z"])
         self.flightData["theta"].append(data["theta"])
-        self.flightData["f_rpm"].append(data["f_rpm"])
-        self.flightData["r_rpm"].append(data["r_rpm"])
+        self.flightData["frontRPM"].append(data["frontRPM"])
+        self.flightData["rearRPM"].append(data["rearRPM"])
         self.flightData["U"].append(data["U"])
-        self.flightData["tilt"].append(data["tilt"])
+        self.flightData["tilt_deg"].append(data["tilt_deg"])
         self.flightData["Lift"].append(data["Lift"])
         self.flightData["L/W"].append(data["L/W"])
         self.flightData["(L+T)/W"].append(data["(L+T)/W"])
 
     def addActionData(self, action):
         print(f'action: {action}')
-        self.actionData["action_0"].append(action[0][0])
-        self.actionData["action_1"].append(action[0][1])
-        self.actionData["action_2"].append(action[0][2])
-        self.actionData["action_3"].append(action[0][3])
+        self.actionData["action_0"].append(action[0])
+        self.actionData["action_1"].append(action[1])
+        self.actionData["action_2"].append(action[2])
+        self.actionData["action_3"].append(action[3])
 
     
